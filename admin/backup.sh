@@ -1,21 +1,13 @@
 
 #!/bin/bash
 
-# Check if we're connected to the remote repository
-if ! git remote get-url origin >/dev/null 2>&1; then
-    echo "Remote 'origin' not found. Adding remote..."
-    git remote add origin https://github.com/0xe184d6c/xft-deploy-monorepo-001.git
-else
-    CURRENT_REMOTE=$(git remote get-url origin)
-    if [ "$CURRENT_REMOTE" != "https://github.com/0xe184d6c/xft-deploy-monorepo-001.git" ]; then
-        echo "Updating remote URL..."
-        git remote set-url origin https://github.com/0xe184d6c/xft-deploy-monorepo-001.git
-    fi
-fi
+# Set up Git configuration
+git config --global user.name "0xe184d6c"
+git config --global user.email "0xe184d6c@users.noreply.github.com"
 
-# Get current timestamp with time
+# Get current timestamp
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-BRANCH_NAME="mono-repl-$TIMESTAMP"
+BRANCH_NAME="replit-backup-$TIMESTAMP"
 
 # Create and checkout new branch
 git checkout -b $BRANCH_NAME
@@ -24,7 +16,16 @@ git checkout -b $BRANCH_NAME
 git add .
 
 # Commit changes
-git commit -m "Hardhat Mono Repl Backup $TIMESTAMP"
+git commit -m "Replit Backup $TIMESTAMP"
+
+# Set the remote URL with token
+GITHUB_URL="https://0xe184d6c:$GH_REPL_BACKUP@github.com/0xe184d6c/xft-deploy-monorepo-001.git"
+
+# Remove existing origin if it exists
+git remote remove origin || true
+
+# Add new origin with token
+git remote add origin $GITHUB_URL
 
 # Push to remote
 git push origin $BRANCH_NAME

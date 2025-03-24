@@ -25,8 +25,7 @@ async function main() {
   console.log("\nDeploying DSToken implementation...");
   const DSToken = await hre.ethers.getContractFactory("DSToken", {
     libraries: {
-      TokenLibrary: tokenLibrary.address,
-      TokenPartitionsLibrary: tokenPartitionsLibrary.address
+      TokenLibrary: tokenLibrary.address
     }
   });
   const implementation = await DSToken.deploy();

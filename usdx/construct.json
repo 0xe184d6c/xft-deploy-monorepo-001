@@ -1,0 +1,23 @@
+{
+  "functionName": "initialize",
+  "parameters": [
+    {
+      "name": "name_",
+      "type": "string",
+      "description": "Required parameter: name_ (string)",
+      "example": "USD Stablecoin"
+    },
+    {
+      "name": "symbol_",
+      "type": "string",
+      "description": "Required parameter: symbol_ (string)",
+      "example": "USDX"
+    },
+    {
+      "name": "owner",
+      "type": "address",
+      "description": "Required parameter: owner (address)",
+      "example": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+    }
+  ]
+}

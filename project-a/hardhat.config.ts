@@ -29,8 +29,6 @@ const config: HardhatUserConfig = {
       url: `https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
       accounts: [PRIVATE_KEY],
       chainId: 11155111,
-      gas: 1000000,
-      gasPrice: 3000000000,
     },
   },
   etherscan: {

@@ -1,0 +1,36 @@
+# Foundry specific
+out/
+cache/
+forge-cache/
+broadcast/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Build artifacts
+artifacts/
+build/
+
+# Dependencies
+node_modules/
+lib/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Generated files
+typechain-types/
+coverage/
+coverage.json
+
+# Logs
+*.log

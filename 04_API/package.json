@@ -1,0 +1,17 @@
+{
+  "name": "ethereum-api",
+  "version": "1.0.0",
+  "description": "JSON REST API for Ethereum",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["ethereum", "api", "rest"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "axios": "^1.6.2"
+  }
+}

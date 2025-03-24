@@ -1,8 +1,9 @@
-const { expect } = require("chai");
-const hre = require("hardhat");
+import { expect } from "chai";
+import hre from "hardhat";
+import { Contract } from "ethers";
 
 describe("Storage1", function () {
-  let storage;
+  let storage: Contract;
 
   beforeEach(async function () {
     // Deploy a new Storage1 contract before each test

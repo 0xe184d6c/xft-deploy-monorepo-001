@@ -1,7 +1,8 @@
+
 #!/bin/bash
 
-# Get current timestamp
-TIMESTAMP=$(date +%Y%m%d)
+# Get current timestamp with time
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 BRANCH_NAME="mono-repl-$TIMESTAMP"
 
 # Create and checkout new branch

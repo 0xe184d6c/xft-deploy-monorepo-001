@@ -1,0 +1,57 @@
+~/workspace/usdx$ npx hardhat run scripts/01_deploy.ts --network sepolia
+==========================================
+USDX DEPLOYMENT - SEPOLIA
+==========================================
+Deployer: 0x2f572059DbC598C8acfeA4AF06FE4f7669D1b3b1
+Balance: 0.100079551221729983 ETH
+Token Name: XFT Digital Dollar
+Token Symbol: USDX
+Owner Address: 0x2f572059DbC598C8acfeA4AF06FE4f7669D1b3b1
+
+STEP 1: Deploying USDX proxy contract...
+Deployment successful in 15.86s
+Proxy Address: 0x421C76cd7C1550c4fcc974F4d74c870150c45995
+Implementation Address: 0xf6080682dFCa67A25F294343a03C8cd8675cc41E
+Transaction Hash: 0xe03c2db67f323461692e5bd0743d26716797a453e82c33b1f79c4dbedc98f23f
+Deployment data saved to deployments/usdx-sepolia-2025-03-24T07-40-38.json
+
+STEP 2: Verifying contract on Etherscan...
+Waiting for 6 block confirmations...
+Received 6 confirmations
+Submitting verification request...
+Nothing to compile
+No need to generate any newer typings.
+Successfully submitted source code for contract
+contracts/USDX.sol:USDX at 0xf6080682dFCa67A25F294343a03C8cd8675cc41E
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract USDX on Etherscan.
+https://sepolia.etherscan.io/address/0xf6080682dFCa67A25F294343a03C8cd8675cc41E#code
+Contract verification successful
+
+STEP 3: Validating deployment...
+Contract name: XFT Digital Dollar
+Contract symbol: USDX
+Owner has admin role: true
+Deployment validation successful
+
+==========================================
+DEPLOYMENT SUMMARY
+==========================================
+Network: sepolia (ChainId: 11155111)
+Token Name: XFT Digital Dollar
+Token Symbol: USDX
+Proxy Address: 0x421C76cd7C1550c4fcc974F4d74c870150c45995
+Implementation Address: 0xf6080682dFCa67A25F294343a03C8cd8675cc41E
+Owner (Admin): 0x2f572059DbC598C8acfeA4AF06FE4f7669D1b3b1
+Deployed by: 0x2f572059DbC598C8acfeA4AF06FE4f7669D1b3b1
+
+Next steps:
+1. Grant roles to appropriate addresses:
+   - MINTER_ROLE to allow minting tokens
+   - BURNER_ROLE to allow burning tokens
+   - ORACLE_ROLE to manage reward multiplier
+   - UPGRADE_ROLE for future upgrades
+2. Mint initial tokens to desired recipients
+==========================================
+~/workspace/usdx$ 

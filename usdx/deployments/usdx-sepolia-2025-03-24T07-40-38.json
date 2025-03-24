@@ -1,0 +1,16 @@
+{
+  "network": "sepolia",
+  "chainId": 11155111,
+  "token": {
+    "name": "XFT Digital Dollar",
+    "symbol": "USDX",
+    "owner": "0x2f572059DbC598C8acfeA4AF06FE4f7669D1b3b1"
+  },
+  "addresses": {
+    "proxy": "0x421C76cd7C1550c4fcc974F4d74c870150c45995",
+    "implementation": "0xf6080682dFCa67A25F294343a03C8cd8675cc41E"
+  },
+  "transaction": "0xe03c2db67f323461692e5bd0743d26716797a453e82c33b1f79c4dbedc98f23f",
+  "timestamp": "2025-03-24T07:40:38.331Z",
+  "deployer": "0x2f572059DbC598C8acfeA4AF06FE4f7669D1b3b1"
+}

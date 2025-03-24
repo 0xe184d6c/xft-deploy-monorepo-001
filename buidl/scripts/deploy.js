@@ -1,25 +1,15 @@
-// Deploy script for DSToken
 const hre = require("hardhat");
 
 async function main() {
-  console.log("Deploying DSToken to network:", hre.network.name);
+  const [deployer] = await hre.ethers.getSigners();
+  console.log("Deploying contracts with:", deployer.address);
 
-  // Get the contract factory
+  // Deploy DSToken
   const DSToken = await hre.ethers.getContractFactory("DSToken");
-  
-  // Deploy the proxy implementation
-  console.log("Deploying DSToken implementation...");
-  const dsTokenImpl = await DSToken.deploy();
-  
-  // Wait for deployment to complete
-  await dsTokenImpl.deployed();
-  console.log("DSToken implementation deployed to:", dsTokenImpl.address);
-  
-  // For a more complete implementation, you would typically:
-  // 1. Deploy a proxy contract
-  // 2. Initialize the token with name, symbol, decimals
-  // 3. Set up any required features
-  
+  const token = await DSToken.deploy();
+  await token.deployed();
+  console.log("DSToken deployed to:", token.address);
+
   // Example parameters for token initialization (would be used with a proxy)
   const tokenName = "Example Token";
   const tokenSymbol = "EXTKN";
@@ -29,10 +19,13 @@ async function main() {
   console.log("Token Name:", tokenName);
   console.log("Token Symbol:", tokenSymbol);
   console.log("Token Decimals:", tokenDecimals);
-  console.log("Implementation Address:", dsTokenImpl.address);
+  console.log("Implementation Address:", token.address);
+
+
+  // Deploy other contracts similarly
+  // Add deployment code for other contracts in your protocol
 }
 
-// Pattern to properly handle async/await in the main function
 main()
   .then(() => process.exit(0))
   .catch((error) => {

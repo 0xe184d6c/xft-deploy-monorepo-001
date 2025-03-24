@@ -1,0 +1,132 @@
+Here's a minimal monorepo setup with two independent Hardhat projects using TypeScript:
+
+```bash
+monorepo-hardhat-example/
+├── project1/
+│   ├── contracts/
+│   │   └── Storage1.sol
+│   ├── scripts/
+│   │   └── deploy.ts
+│   ├── test/
+│   ├── hardhat.config.ts
+│   ├── package.json
+│   └── tsconfig.json
+├── project2/
+│   ├── contracts/
+│   │   └── Storage2.sol
+│   ├── scripts/
+│   │   └── deploy.ts
+│   ├── test/
+│   ├── hardhat.config.ts
+│   ├── package.json
+│   └── tsconfig.json
+└── README.md
+```
+
+Here are the key files for each project:
+
+**project1/contracts/Storage1.sol**
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.9;
+
+contract Storage1 {
+    uint256 number;
+
+    function store(uint256 num) public {
+        number = num;
+    }
+
+    function retrieve() public view returns (uint256) {
+        return number;
+    }
+}
+```
+
+**project1/scripts/deploy.ts**
+```typescript
+import { ethers } from "hardhat";
+
+async function main() {
+  const Storage1 = await ethers.getContractFactory("Storage1");
+  const storage = await Storage1.deploy();
+  await storage.deployed();
+  console.log(`Storage1 deployed to ${storage.address}`);
+}
+
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
+```
+
+**project1/hardhat.config.ts**
+```typescript
+import { HardhatUserConfig } from "hardhat/config";
+import "@nomicfoundation/hardhat-toolbox";
+
+const config: HardhatUserConfig = {
+  solidity: "0.8.9",
+  paths: {
+    artifacts: "./artifacts",
+    sources: "./contracts",
+    tests: "./test",
+  },
+};
+
+export default config;
+```
+
+**project1/package.json**
+```json
+{
+  "name": "project1",
+  "scripts": {
+    "compile": "hardhat compile",
+    "deploy": "hardhat run scripts/deploy.ts"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.0",
+    "hardhat": "^2.12.6",
+    "typescript": "^4.9.4"
+  }
+}
+```
+
+Repeat the same structure for project2 with these changes:
+
+1. Rename `Storage1.sol` to `Storage2.sol` (update contract name accordingly)
+2. Update package.json name to "project2"
+3. Update deploy.ts to reference Storage2 contract
+
+To set up and test:
+
+```bash
+# Initialize project1
+cd project1
+npm install
+npm run compile
+npm run deploy
+
+# Initialize project2
+cd ../project2
+npm install
+npm run compile
+npm run deploy
+```
+
+Key features:
+- Fully independent projects with separate configurations
+- TypeScript support in both projects
+- Minimal Solidity contracts for compilation testing
+- Separate dependency management (no shared node_modules)
+- Simple deployment scripts
+
+Each project maintains its own:
+- Smart contract implementations
+- Deployment scripts
+- Hardhat configuration
+- Dependency tree
+- Build artifacts
+
+To reduce redundancy in real-world projects, you might want to consider shared configurations or dependencies, but this setup maintains strict independence as requested.

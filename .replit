@@ -1,0 +1,87 @@
+modules = ["nodejs-20"]
+
+[nix]
+channel = "stable-24_05"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Simple Monorepo Tests"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Test All Projects"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Test Project A"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Test Project B"
+
+[[workflows.workflow]]
+name = "Simple Monorepo Tests"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd project-a && npm install --no-audit --no-fund && npx hardhat test && cd ../project-b && npm install --no-audit --no-fund && npx hardhat test"
+
+[[workflows.workflow]]
+name = "Test All Projects"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd project-a && npm run compile && npm run test && cd ../project-b && npm run compile && npm run test"
+
+[[workflows.workflow]]
+name = "Test Project A"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd project-a && npm run compile && npm run test"
+
+[[workflows.workflow]]
+name = "Test Project B"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd project-b && npm run compile && npm run test"
+
+[deployment]
+run = ["sh", "-c", "cd project-a && npm install && npx hardhat test && cd ../project-b && npm install && npx hardhat test"]

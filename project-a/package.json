@@ -1,0 +1,14 @@
+{
+  "name": "project-a",
+  "version": "1.0.0",
+  "description": "A simple Hardhat project with Storage1 contract",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy": "hardhat run scripts/deploy.js"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.0",
+    "hardhat": "^2.12.6"
+  }
+}

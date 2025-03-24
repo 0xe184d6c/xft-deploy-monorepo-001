@@ -1,0 +1,4 @@
+forge-std/=lib/forge-std/src/
+@openzeppelin/=lib/@openzeppelin/
+contracts/lib/=src/lib/
+contracts/YBSV1_1.sol/=src/YBSV1_1.sol/

@@ -27,6 +27,30 @@ args = "Test Project A"
 task = "workflow.run"
 args = "Test Project B"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Compile All Projects"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Compile All"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Setup All Projects"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Deploy Project A"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Deploy Project B"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Clean All Projects"
+
 [[workflows.workflow]]
 name = "Simple Monorepo Tests"
 author = "agent"
@@ -82,6 +106,90 @@ task = "packager.installForAll"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd project-b && npm run compile && npm run test"
+
+[[workflows.workflow]]
+name = "Compile All Projects"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd project-a && npm run compile && cd ../project-b && npm run compile"
+
+[[workflows.workflow]]
+name = "Compile All"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "./compile-all.sh"
+
+[[workflows.workflow]]
+name = "Setup All Projects"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd project-a && npm install && cd ../project-b && npm install"
+
+[[workflows.workflow]]
+name = "Deploy Project A"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd project-a && npx hardhat run scripts/deploy.js"
+
+[[workflows.workflow]]
+name = "Deploy Project B"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd project-b && npx hardhat run scripts/deploy.js"
+
+[[workflows.workflow]]
+name = "Clean All Projects"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "rm -rf project-a/artifacts project-b/artifacts project-a/cache project-b/cache"
 
 [deployment]
 run = ["sh", "-c", "cd project-a && npm install && npx hardhat test && cd ../project-b && npm install && npx hardhat test"]

@@ -191,5 +191,14 @@ task = "packager.installForAll"
 task = "shell.exec"
 args = "rm -rf project-a/artifacts project-b/artifacts project-a/cache project-b/cache"
 
+[[workflows.workflow]]
+name = "Test Buidl"
+author = 33105251
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd buidl && npm run test"
+
 [deployment]
 run = ["sh", "-c", "cd project-a && npm install && npx hardhat test && cd ../project-b && npm install && npx hardhat test"]

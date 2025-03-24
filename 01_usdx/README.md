@@ -61,3 +61,73 @@ To deploy to a network:
 ## License
 
 This project is licensed under the MIT License.
+
+
+Foundry Project Setup for USDX
+Directory Structure
+I've created the standard Foundry project structure:
+
+src/ - Contains contract source files
+test/ - Contains test files
+script/ - Contains deployment scripts
+lib/ - Will hold dependencies (when installed with Forge)
+Configuration Files
+foundry.toml:
+
+Configured compiler settings (Solidity 0.8.19)
+Set up source, test, and output directories
+Added RPC endpoints configuration for various networks
+Added Etherscan API configuration for contract verification
+remappings.txt:
+
+Added standard remappings for OpenZeppelin contracts
+Set up forge-std and ds-test remappings for testing
+.env.example:
+
+Template for environment variables such as RPC URLs, API keys, and private keys
+(User should create an actual .env file from this template)
+.gitignore:
+
+Set up to ignore Foundry build artifacts
+Ignores environment files and dependencies
+Smart Contract
+Created the USDX.sol contract with features:
+
+ERC20 functionality
+Role-based access control
+Blocklisting capability
+Pausable functionality
+Reward multiplier mechanism
+Testing
+Created a comprehensive test file (USDX.t.sol) that tests:
+
+Initial contract state
+Minting and burning
+Token transfers
+Reward multiplier adjustments
+Blocklisting functionality
+Pausing functionality
+Share calculations
+Deployment
+Created a deployment script (DeployUSDX.s.sol) that:
+
+Reads private key from environment variables
+Deploys the USDX contract
+Returns the deployed contract instance
+Documentation
+Added a README.md with:
+
+Project overview
+Feature list
+Setup instructions
+Testing and deployment instructions
+Next Steps
+Once Foundry is properly installed, you'll need to:
+
+Run forge install to fetch dependencies (OpenZeppelin contracts, forge-std)
+Create a .env file based on the example
+Run tests with forge test
+When you're ready to deploy:
+
+Set the appropriate environment variables
+Run the deployment script with forge script script/DeployUSDX.s.sol --rpc-url $RPC_URL --broadcast

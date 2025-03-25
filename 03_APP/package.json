@@ -4,7 +4,7 @@
   "description": "USDX Protocol Dashboard",
   "main": "script.js",
   "scripts": {
-    "start": "http-server . -p 3000 --bind 0.0.0.0"
+    "start": "http-server . -p 5000 --bind 0.0.0.0"
   },
   "dependencies": {
     "ethers": "^5.7.2",

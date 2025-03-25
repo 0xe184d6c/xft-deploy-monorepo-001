@@ -34,9 +34,20 @@ export default function TransactionsTable() {
     <div className="mb-8">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-bold">Recent Transactions</h2>
-        <Link href="/transactions">
-          <Button variant="link" className="text-sm underline">View All</Button>
-        </Link>
+        <div className="flex items-center gap-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="text-xs px-3"
+            onClick={loadTransactions}
+            disabled={isLoading}
+          >
+            {isLoading ? "Loading..." : "Refresh"}
+          </Button>
+          <Link href="/transactions">
+            <Button variant="link" className="text-sm underline">View All</Button>
+          </Link>
+        </div>
       </div>
       
       <div className="bg-white border border-neutral-300 rounded overflow-hidden">
@@ -58,7 +69,21 @@ export default function TransactionsTable() {
             <tbody className="text-sm">
               {transactions.map((tx) => (
                 <tr key={tx.hash} className="border-t border-neutral-300">
-                  <td className="py-3 px-4">{tx.type}</td>
+                  <td className="py-3 px-4">
+                    <div className="flex flex-col">
+                      <span>{tx.type}</span>
+                      {tx.hash && (
+                        <a 
+                          href={`https://sepolia.etherscan.io/tx/${tx.hash}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-accent-500 hover:underline mt-1"
+                        >
+                          {formatAddress(tx.hash, false)}
+                        </a>
+                      )}
+                    </div>
+                  </td>
                   <td className="py-3 px-4 text-accent-500">
                     <a 
                       href={`https://sepolia.etherscan.io/address/${tx.from}`} 
@@ -81,7 +106,7 @@ export default function TransactionsTable() {
                   </td>
                   <td className="py-3 px-4 text-right">{tx.amount} USDX</td>
                   <td className="py-3 px-4 text-right">
-                    <span className={`inline-block px-2 py-0.5 ${tx.status === 'confirmed' ? 'bg-success' : 'bg-warning'} text-white text-xs rounded`}>
+                    <span className={`inline-block px-2 py-0.5 ${tx.status === 'confirmed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'} text-xs rounded`}>
                       {tx.status === 'confirmed' ? 'Confirmed' : 'Pending'}
                     </span>
                   </td>

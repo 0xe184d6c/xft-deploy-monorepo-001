@@ -791,14 +791,28 @@ export const ContractProvider = ({ children }: ContractProviderProps) => {
       
       // Add addresses from events to our tracking map
       for (const event of blockedEvents) {
-        if (event.args && event.args.addr) {
-          addressesMap.set(event.args.addr, true);
+        // Cast to get typed access to args
+        const typedEvent = event as unknown as {
+          args: {
+            addr: string;
+          };
+        };
+        
+        if (typedEvent.args && typedEvent.args.addr) {
+          addressesMap.set(typedEvent.args.addr, true);
         }
       }
       
       for (const event of unblockedEvents) {
-        if (event.args && event.args.addr) {
-          addressesMap.set(event.args.addr, false);
+        // Cast to get typed access to args
+        const typedEvent = event as unknown as {
+          args: {
+            addr: string;
+          };
+        };
+        
+        if (typedEvent.args && typedEvent.args.addr) {
+          addressesMap.set(typedEvent.args.addr, false);
         }
       }
       
@@ -821,12 +835,13 @@ export const ContractProvider = ({ children }: ContractProviderProps) => {
       }
       
       // Convert map to array of BlocklistInfo objects
-      for (const [addr, isBlocked] of addressesMap.entries()) {
+      // Using Array.from to avoid TypeScript iterator errors
+      Array.from(addressesMap.entries()).forEach(([addr, isBlocked]) => {
         blocklistInfo.push({
           address: addr,
           isBlocked
         });
-      }
+      });
       
       // Sort by blocked status (blocked first) then by address
       return blocklistInfo.sort((a, b) => {

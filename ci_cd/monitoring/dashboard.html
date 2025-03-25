@@ -38,9 +38,30 @@
       margin-bottom: 2rem;
     }
     
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
     header h1 {
       margin: 0;
       font-size: 1.5rem;
+    }
+    
+    .home-btn {
+      background-color: white;
+      color: var(--primary);
+      padding: 0.5rem 1rem;
+      border-radius: 0.25rem;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background-color 0.2s, color 0.2s;
+    }
+    
+    .home-btn:hover {
+      background-color: var(--bg-color);
+      color: var(--primary-dark);
     }
     
     .dashboard {
@@ -177,7 +198,10 @@
 <body>
   <header>
     <div class="container">
-      <h1>USDX Token Dashboard CI/CD Monitoring</h1>
+      <div class="header-content">
+        <h1>USDX Token Dashboard CI/CD Monitoring</h1>
+        <a href="/" class="home-btn">Back to Dashboard</a>
+      </div>
     </div>
   </header>
   

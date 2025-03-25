@@ -27,6 +27,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     next();
   }, express.static(docsPath));
+  
+  // Serve CI/CD monitoring dashboard
+  const monitoringPath = path.join(process.cwd(), "ci_cd/monitoring");
+  app.use("/monitoring", (req, res, next) => {
+    // Check if this is the monitoring root and redirect to dashboard.html
+    if (req.path === '/' || req.path === '') {
+      return res.redirect("/monitoring/dashboard.html");
+    }
+    next();
+  }, express.static(monitoringPath));
+  
+  // Serve CI/CD reports
+  const reportsPath = path.join(process.cwd(), "ci_cd/reports");
+  app.use("/ci_cd/reports", express.static(reportsPath));
+  
+  // Serve version.json at root
+  app.get('/version.json', (req, res) => {
+    res.sendFile(path.join(process.cwd(), "version.json"));
+  });
 
   // Register API routes
   app.use("/api", apiRouter);

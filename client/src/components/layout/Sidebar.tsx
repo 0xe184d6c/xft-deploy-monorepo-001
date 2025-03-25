@@ -14,6 +14,28 @@ import { useEffect, useState } from "react";
 
 export default function Sidebar() {
   const [location] = useLocation();
+  const { address, connected } = useWallet();
+  const { hasAdminRole } = useContract();
+  const [isAdmin, setIsAdmin] = useState(false);
+  
+  // Check if user has admin role
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      if (connected && address) {
+        try {
+          const adminStatus = await hasAdminRole(address);
+          setIsAdmin(adminStatus);
+        } catch (error) {
+          console.error("Error checking admin status:", error);
+          setIsAdmin(false);
+        }
+      } else {
+        setIsAdmin(false);
+      }
+    };
+
+    checkAdminStatus();
+  }, [connected, address, hasAdminRole]);
   
   const isActive = (path: string) => {
     return location === path;
@@ -64,6 +86,16 @@ export default function Sidebar() {
                 <span>Settings</span>
             </Link>
           </li>
+          
+          {/* Admin Panel - Only visible to users with DEFAULT_ADMIN_ROLE */}
+          {isAdmin && (
+            <li className="mt-4">
+              <Link href="/admin" className={`flex items-center px-6 py-3 ${isActive("/admin") ? "bg-neutral-100 border-l-4 border-black" : "bg-black text-white hover:bg-neutral-800 transition-colors"}`}>
+                  <ShieldAlert className="w-5 h-5 mr-2" />
+                  <span>Admin Panel</span>
+              </Link>
+            </li>
+          )}
         </ul>
       </nav>
     </aside>

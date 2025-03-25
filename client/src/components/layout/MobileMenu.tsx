@@ -6,8 +6,11 @@ import {
   UserCog, 
   Shield, 
   Settings,
-  DollarSign
+  DollarSign,
+  ShieldAlert
 } from "lucide-react";
+import { useWallet } from "@/lib/wallet";
+import { useContract } from "@/lib/contract";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState, useEffect } from "react";
@@ -21,6 +24,28 @@ interface MobileMenuProps {
 export default function MobileMenu({ isOpen, onOpen, onClose }: MobileMenuProps) {
   const [location] = useLocation();
   const [open, setOpen] = useState(false);
+  const { address, connected } = useWallet();
+  const { hasAdminRole } = useContract();
+  const [isAdmin, setIsAdmin] = useState(false);
+  
+  // Check if user has admin role
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      if (connected && address) {
+        try {
+          const adminStatus = await hasAdminRole(address);
+          setIsAdmin(adminStatus);
+        } catch (error) {
+          console.error("Error checking admin status:", error);
+          setIsAdmin(false);
+        }
+      } else {
+        setIsAdmin(false);
+      }
+    };
+
+    checkAdminStatus();
+  }, [connected, address, hasAdminRole]);
   
   // Sync the open state with the parent's isOpen state
   useEffect(() => {
@@ -111,6 +136,18 @@ export default function MobileMenu({ isOpen, onOpen, onClose }: MobileMenuProps)
                     </a>
                   </Link>
                 </li>
+                
+                {/* Admin Panel - Only visible to users with DEFAULT_ADMIN_ROLE */}
+                {isAdmin && (
+                  <li className="mt-4">
+                    <Link href="/admin">
+                      <a className={`flex items-center px-6 py-3 ${isActive("/admin") ? "bg-neutral-100 border-l-4 border-black" : "bg-black text-white"}`}>
+                        <ShieldAlert className="w-5 h-5 mr-2" />
+                        <span>Admin Panel</span>
+                      </a>
+                    </Link>
+                  </li>
+                )}
               </ul>
             </nav>
             

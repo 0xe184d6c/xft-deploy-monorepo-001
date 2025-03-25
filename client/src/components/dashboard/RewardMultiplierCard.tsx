@@ -4,7 +4,11 @@ import { useWallet } from "@/lib/wallet";
 import { useContract } from "@/lib/contract";
 import RewardMultiplierModal from "@/components/modals/RewardMultiplierModal";
 
-export default function RewardMultiplierCard() {
+interface RewardMultiplierCardProps {
+  className?: string;
+}
+
+export default function RewardMultiplierCard({ className = "" }: RewardMultiplierCardProps) {
   const { connected } = useWallet();
   const { rewardMultiplier, hasOracleRole, loadRewardMultiplier } = useContract();
   const [isRewardModalOpen, setIsRewardModalOpen] = useState(false);
@@ -45,7 +49,7 @@ export default function RewardMultiplierCard() {
 
   return (
     <>
-      <div className="bg-white border border-neutral-300 rounded p-4">
+      <div className={`bg-white border border-neutral-300 rounded p-4 ${className}`}>
         <div className="flex justify-between items-center mb-2">
           <h3 className="text-sm font-bold uppercase">Reward Multiplier</h3>
           <span className="text-xs px-2 py-0.5 bg-neutral-200 rounded">BASE: 1e18</span>
@@ -76,9 +80,7 @@ export default function RewardMultiplierCard() {
         </Button>
       </div>
 
-      {isRewardModalOpen && (
-        <RewardMultiplierModal isOpen={isRewardModalOpen} onClose={handleCloseRewardModal} />
-      )}
+      <RewardMultiplierModal isOpen={isRewardModalOpen} onClose={handleCloseRewardModal} />
     </>
   );
 }

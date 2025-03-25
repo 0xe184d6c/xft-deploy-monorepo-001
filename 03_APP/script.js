@@ -720,3 +720,208 @@ function updateActivityLog() {
         console.error('Error updating activity log display:', error);
     }
 }
+
+// Block account function 
+async function blockAccount() {
+    const address = document.getElementById('blockAddress').value;
+    
+    if (!ethers.utils.isAddress(address)) {
+        alert('Please enter a valid address');
+        return;
+    }
+    
+    try {
+        const tx = await contract.blockAccounts([address]);
+        addToActivityLog(`Blocking address ${address.slice(0,6)}...${address.slice(-4)}`, 'pending', tx.hash);
+        
+        await tx.wait();
+        
+        // Update UI
+        document.getElementById('accountBlockStatus').textContent = 'BLOCKED';
+        document.getElementById('accountBlockStatus').style.color = 'red';
+        
+        addToActivityLog(`Address ${address.slice(0,6)}...${address.slice(-4)} has been blocked`, 'success', tx.hash);
+    } catch (error) {
+        console.error('Error blocking account:', error);
+        addToActivityLog('Error blocking account: ' + error.message, 'error');
+        alert(`Error blocking account: ${error.message}`);
+    }
+}
+
+// Unblock account function
+async function unblockAccount() {
+    const address = document.getElementById('blockAddress').value;
+    
+    if (!ethers.utils.isAddress(address)) {
+        alert('Please enter a valid address');
+        return;
+    }
+    
+    try {
+        const tx = await contract.unblockAccounts([address]);
+        addToActivityLog(`Unblocking address ${address.slice(0,6)}...${address.slice(-4)}`, 'pending', tx.hash);
+        
+        await tx.wait();
+        
+        // Update UI
+        document.getElementById('accountBlockStatus').textContent = 'NOT BLOCKED';
+        document.getElementById('accountBlockStatus').style.color = 'green';
+        
+        addToActivityLog(`Address ${address.slice(0,6)}...${address.slice(-4)} has been unblocked`, 'success', tx.hash);
+    } catch (error) {
+        console.error('Error unblocking account:', error);
+        addToActivityLog('Error unblocking account: ' + error.message, 'error');
+        alert(`Error unblocking account: ${error.message}`);
+    }
+}
+
+// Burn tokens function
+async function burnTokens() {
+    const from = document.getElementById('mintAddress').value;
+    const amount = document.getElementById('mintAmount').value;
+    
+    if (!ethers.utils.isAddress(from)) {
+        alert('Please enter a valid address');
+        return;
+    }
+    
+    if (!amount || amount <= 0) {
+        alert('Please enter a valid amount');
+        return;
+    }
+    
+    try {
+        const tx = await contract.burn(from, ethers.utils.parseUnits(amount, 18));
+        addToActivityLog(`Burning ${amount} tokens from ${from.slice(0,6)}...${from.slice(-4)}`, 'pending', tx.hash);
+        
+        await tx.wait();
+        
+        updateDashboard();
+        addToActivityLog(`Burned ${amount} tokens from ${from.slice(0,6)}...${from.slice(-4)}`, 'success', tx.hash);
+    } catch (error) {
+        console.error('Error burning tokens:', error);
+        addToActivityLog('Error burning tokens: ' + error.message, 'error');
+        alert(`Error burning tokens: ${error.message}`);
+    }
+}
+
+// Toggle pause function
+async function togglePause() {
+    try {
+        let tx;
+        const isPaused = await contract.paused();
+        
+        if (isPaused) {
+            tx = await contract.unpause();
+            addToActivityLog('Unpausing protocol', 'pending', tx.hash);
+        } else {
+            tx = await contract.pause();
+            addToActivityLog('Pausing protocol', 'pending', tx.hash);
+        }
+        
+        await tx.wait();
+        
+        // Update UI
+        updateDashboard();
+        
+        if (isPaused) {
+            addToActivityLog('Protocol unpaused successfully', 'success', tx.hash);
+        } else {
+            addToActivityLog('Protocol paused successfully', 'success', tx.hash);
+        }
+    } catch (error) {
+        console.error('Error toggling pause state:', error);
+        addToActivityLog('Error toggling pause state: ' + error.message, 'error');
+        alert(`Error toggling pause state: ${error.message}`);
+    }
+}
+
+// Grant role function
+async function grantRole() {
+    const address = document.getElementById('roleAddress').value;
+    const roleKey = document.getElementById('roleSelect').value;
+    
+    if (!ethers.utils.isAddress(address)) {
+        alert('Please enter a valid address');
+        return;
+    }
+    
+    try {
+        const tx = await contract.grantRole(contract[roleKey](), address);
+        const roleName = roleKey.replace('_ROLE', '');
+        
+        addToActivityLog(`Granting ${roleName} role to ${address.slice(0,6)}...${address.slice(-4)}`, 'pending', tx.hash);
+        
+        await tx.wait();
+        
+        addToActivityLog(`Granted ${roleName} role to ${address.slice(0,6)}...${address.slice(-4)}`, 'success', tx.hash);
+        
+        // Update role check result
+        const resultElement = document.getElementById('roleCheckResult');
+        resultElement.textContent = `Address ${address.slice(0,6)}...${address.slice(-4)} now has the ${roleName} role.`;
+        resultElement.style.color = 'green';
+    } catch (error) {
+        console.error('Error granting role:', error);
+        addToActivityLog('Error granting role: ' + error.message, 'error');
+        alert(`Error granting role: ${error.message}`);
+    }
+}
+
+// Revoke role function
+async function revokeRole() {
+    const address = document.getElementById('roleAddress').value;
+    const roleKey = document.getElementById('roleSelect').value;
+    
+    if (!ethers.utils.isAddress(address)) {
+        alert('Please enter a valid address');
+        return;
+    }
+    
+    try {
+        const tx = await contract.revokeRole(contract[roleKey](), address);
+        const roleName = roleKey.replace('_ROLE', '');
+        
+        addToActivityLog(`Revoking ${roleName} role from ${address.slice(0,6)}...${address.slice(-4)}`, 'pending', tx.hash);
+        
+        await tx.wait();
+        
+        addToActivityLog(`Revoked ${roleName} role from ${address.slice(0,6)}...${address.slice(-4)}`, 'success', tx.hash);
+        
+        // Update role check result
+        const resultElement = document.getElementById('roleCheckResult');
+        resultElement.textContent = `Address ${address.slice(0,6)}...${address.slice(-4)} no longer has the ${roleName} role.`;
+        resultElement.style.color = 'red';
+    } catch (error) {
+        console.error('Error revoking role:', error);
+        addToActivityLog('Error revoking role: ' + error.message, 'error');
+        alert(`Error revoking role: ${error.message}`);
+    }
+}
+
+// Function to increment reward multiplier 
+async function incrementRewardMultiplier() {
+    const incrementValue = document.getElementById('newMultiplier').value;
+    
+    if (!incrementValue || incrementValue <= 0) {
+        alert('Please enter a valid amount to add to the multiplier');
+        return;
+    }
+    
+    try {
+        const tx = await contract.addRewardMultiplier(parseInt(incrementValue));
+        addToActivityLog(`Adding ${incrementValue} basis points to reward multiplier`, 'pending', tx.hash);
+        
+        await tx.wait();
+        
+        updateDashboard();
+        
+        // Clear the input field
+        document.getElementById('newMultiplier').value = '';
+        
+        addToActivityLog(`Added ${incrementValue} basis points to reward multiplier`, 'success', tx.hash);
+    } catch (error) {
+        console.error('Error incrementing reward multiplier:', error);
+        addToActivityLog('Error incrementing reward multiplier: ' + error.message, 'error');
+        alert(`Error incrementing reward multiplier: ${error.message}`);
+    }
+}

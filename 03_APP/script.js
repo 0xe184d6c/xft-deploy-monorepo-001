@@ -3,8 +3,57 @@ let provider, signer, contract;
 let activityLog = [];
 let isDarkMode = false;
 
+// Check if ethers library is available
+function isEthersAvailable() {
+    return typeof window.ethers !== 'undefined';
+}
+
+// Load ethers from local file
+function loadEthers() {
+    return new Promise((resolve, reject) => {
+        // If ethers is already defined, resolve immediately
+        if (isEthersAvailable()) {
+            console.log('Ethers is already loaded');
+            return resolve(true);
+        }
+        
+        console.log('Attempting to dynamically load ethers.js...');
+        
+        // Create script element to load ethers
+        const script = document.createElement('script');
+        script.src = 'ethers.umd.min.js';
+        script.type = 'text/javascript';
+        
+        // Set up event handlers
+        script.onload = () => {
+            console.log('Ethers library loaded successfully');
+            if (isEthersAvailable()) {
+                resolve(true);
+            } else {
+                reject(new Error('Ethers loaded but not defined'));
+            }
+        };
+        
+        script.onerror = (err) => {
+            console.error('Failed to load ethers library:', err);
+            reject(new Error('Failed to load ethers library'));
+        };
+        
+        // Add script to the document
+        document.head.appendChild(script);
+    });
+}
+
 // Initialize the dashboard
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // Try to load ethers.js
+    try {
+        await loadEthers();
+    } catch (error) {
+        console.error('Failed to load ethers:', error);
+        alert('Failed to load Ethereum library. Some features might not work properly.');
+    }
+    
     // Set up tab navigation
     const tabs = document.querySelectorAll('.tab');
     tabs.forEach(tab => {
@@ -24,27 +73,31 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Initialize token amount converter
-    const tokenAmountInput = document.getElementById('tokenAmount');
-    if (tokenAmountInput) {
-        tokenAmountInput.addEventListener('input', async () => {
-            if (contract) {
-                try {
-                    const amount = tokenAmountInput.value;
-                    if (amount && amount > 0) {
-                        const shares = await contract.convertToShares(ethers.utils.parseUnits(amount, 18));
-                        document.getElementById('sharesAmount').value = ethers.utils.formatUnits(shares, 18);
+    // Initialize token amount converter only if ethers is available
+    if (isEthersAvailable()) {
+        const tokenAmountInput = document.getElementById('tokenAmount');
+        if (tokenAmountInput) {
+            tokenAmountInput.addEventListener('input', async () => {
+                if (contract) {
+                    try {
+                        const amount = tokenAmountInput.value;
+                        if (amount && amount > 0) {
+                            const shares = await contract.convertToShares(ethers.utils.parseUnits(amount, 18));
+                            document.getElementById('sharesAmount').value = ethers.utils.formatUnits(shares, 18);
+                        }
+                    } catch (error) {
+                        console.error('Error converting tokens:', error);
                     }
-                } catch (error) {
-                    console.error('Error converting tokens:', error);
                 }
-            }
-        });
-    }
+            });
+        }
 
-    // Check if MetaMask is already connected
-    if (window.ethereum && window.ethereum.selectedAddress) {
-        connectWallet();
+        // Check if MetaMask is already connected
+        if (window.ethereum && window.ethereum.selectedAddress) {
+            connectWallet();
+        }
+    } else {
+        addToActivityLog('Ethereum library not available. Connect wallet feature disabled.', 'error');
     }
 });
 

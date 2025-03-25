@@ -203,3 +203,7 @@ channel = "stable-24_05"
 
 [deployment]
 run = ["sh", "-c", "cd project-a && npm install && npx hardhat test && cd ../project-b && npm install && npx hardhat test"]
+
+[[ports]]
+localPort = 5000
+externalPort = 80

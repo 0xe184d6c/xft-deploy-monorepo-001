@@ -161,26 +161,34 @@ async function initContract() {
 
 // Connect to wallet
 async function connectWallet() {
-    // Verify ethers is available
-    if (typeof window.ethers === 'undefined') {
-        console.error('Ethers library not loaded');
-        
-        try {
-            // Attempt to load ethers dynamically
-            await loadEthers();
-            console.log('Ethers successfully loaded dynamically');
-        } catch (error) {
-            console.error('Failed to load ethers dynamically:', error);
-            addToActivityLog('Ethers library not loaded. Please refresh the page.', 'error');
-            alert('Ethers library not loaded. Please refresh the page and try again.');
+    try {
+        // Verify ethers is available
+        if (typeof window.ethers === 'undefined') {
+            console.error('Ethers library not loaded');
+            
+            try {
+                // Attempt to load ethers dynamically
+                await loadEthers();
+                console.log('Ethers successfully loaded dynamically');
+            } catch (error) {
+                console.error('Failed to load ethers dynamically:', error);
+                addToActivityLog('Ethers library not loaded. Please refresh the page.', 'error');
+                alert('Ethers library not loaded. Please refresh the page and try again.');
+                return;
+            }
+        }
+
+        // Check if ethereum object exists (MetaMask or other wallet)
+        if (typeof window.ethereum === 'undefined') {
+            console.error('No ethereum provider detected');
+            alert('Please install MetaMask or another Ethereum wallet!');
+            addToActivityLog('No Ethereum provider detected', 'error');
             return;
         }
-    }
-
-    if (!window.ethereum) {
-        alert('Please install MetaMask or another Ethereum wallet!');
-        addToActivityLog('No Ethereum provider detected', 'error');
-        return;
+        
+        console.log('Ethereum provider detected:', window.ethereum);
+    } catch (error) {
+        console.error('Error checking wallet availability:', error);
     }
 
     try {

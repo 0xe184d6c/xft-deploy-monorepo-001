@@ -134,11 +134,19 @@ async function initContract() {
 // Connect to wallet
 async function connectWallet() {
     // Verify ethers is available
-    if (typeof ethers === 'undefined') {
+    if (typeof window.ethers === 'undefined') {
         console.error('Ethers library not loaded');
-        addToActivityLog('Ethers library not loaded. Please refresh the page.', 'error');
-        alert('Ethers library not loaded. Please refresh the page and try again.');
-        return;
+        
+        try {
+            // Attempt to load ethers dynamically
+            await loadEthers();
+            console.log('Ethers successfully loaded dynamically');
+        } catch (error) {
+            console.error('Failed to load ethers dynamically:', error);
+            addToActivityLog('Ethers library not loaded. Please refresh the page.', 'error');
+            alert('Ethers library not loaded. Please refresh the page and try again.');
+            return;
+        }
     }
 
     if (!window.ethereum) {

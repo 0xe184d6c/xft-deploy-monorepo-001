@@ -11,6 +11,7 @@ router.get('/', (req: Request, res: Response) => {
     name: 'USDX Token API',
     version: '1.0.0',
     description: 'API for interacting with the USDX token smart contract',
+    documentation: '/docs/api-reference.html',
     endpoints: {
       health: '/api/health',
       token: '/api/token',

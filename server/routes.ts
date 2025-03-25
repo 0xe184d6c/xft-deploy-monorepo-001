@@ -1,9 +1,10 @@
-import type { Express } from "express";
+import express, { type Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { router as apiRouter, errorHandler } from "../api";
 import * as contractService from "../api/contract";
 import cors from "cors";
+import path from "path";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Apply CORS middleware
@@ -16,6 +17,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   } catch (error) {
     console.error("Failed to initialize smart contract:", error);
   }
+
+  // Serve API documentation
+  const docsPath = path.join(process.cwd(), "docs");
+  app.use("/docs", (req, res, next) => {
+    // Check if this is the docs root and redirect to api-reference.html
+    if (req.path === '/' || req.path === '') {
+      return res.redirect("/docs/api-reference.html");
+    }
+    next();
+  }, express.static(docsPath));
 
   // Register API routes
   app.use("/api", apiRouter);

@@ -114,12 +114,13 @@ export default function EventsCard() {
                 <SelectItem value="all">All Events</SelectItem>
                 <SelectItem value="Transfer">Transfer</SelectItem>
                 <SelectItem value="Approval">Approval</SelectItem>
-                <SelectItem value="Paused">Paused</SelectItem>
-                <SelectItem value="Unpaused">Unpaused</SelectItem>
-                <SelectItem value="RewardMultiplier">Reward Multiplier</SelectItem>
+                <SelectItem value="Pause">Pause</SelectItem>
+                <SelectItem value="Unpause">Unpause</SelectItem>
+                <SelectItem value="RewardMultiplierUpdated">Reward Multiplier</SelectItem>
                 <SelectItem value="RoleGranted">Role Granted</SelectItem>
                 <SelectItem value="RoleRevoked">Role Revoked</SelectItem>
-                <SelectItem value="RoleAdminChanged">Role Admin Changed</SelectItem>
+                <SelectItem value="Blocked">Blocked</SelectItem>
+                <SelectItem value="Unblocked">Unblocked</SelectItem>
               </SelectContent>
             </Select>
           </div>

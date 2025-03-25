@@ -7,7 +7,7 @@ git config --global user.email "0xe184d6c@users.noreply.github.com"
 
 # Get current timestamp
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-BRANCH_NAME="replit-backup-$TIMESTAMP"
+BRANCH_NAME="dashboard-repl-$TIMESTAMP"
 
 # Create and checkout new branch
 git checkout -b $BRANCH_NAME
@@ -16,7 +16,7 @@ git checkout -b $BRANCH_NAME
 git add .
 
 # Commit changes
-git commit -m "Replit Backup $TIMESTAMP"
+git commit -m "Dashboard Repl $TIMESTAMP"
 
 # Set the remote URL with token
 GITHUB_URL="https://0xe184d6c:$GH_REPL_BACKUP@github.com/0xe184d6c/xft-deploy-monorepo-001.git"

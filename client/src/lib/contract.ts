@@ -285,295 +285,529 @@ export const ContractProvider = ({ children }: ContractProviderProps) => {
 
   // Public function to load all contract data
   const loadContractData = async () => {
-    if (!contract) throw new Error("Contract not initialized");
+    if (!contract) {
+      console.log("Contract not initialized yet, skipping data load");
+      return;
+    }
     
-    await Promise.all([
-      loadUserBalanceInternal(contract),
-      loadTotalSupplyInternal(contract),
-      loadRewardMultiplierInternal(contract),
-      loadPauseStateInternal(contract)
-    ]);
+    try {
+      await Promise.all([
+        loadUserBalanceInternal(contract),
+        loadTotalSupplyInternal(contract),
+        loadRewardMultiplierInternal(contract),
+        loadPauseStateInternal(contract)
+      ]);
+    } catch (error) {
+      console.error("Error loading contract data:", error);
+    }
   };
 
   // Public function to load user balance
   const loadUserBalance = async () => {
-    if (!contract) throw new Error("Contract not initialized");
-    await loadUserBalanceInternal(contract);
+    if (!contract) {
+      console.log("Contract not initialized yet, skipping balance load");
+      return;
+    }
+    try {
+      await loadUserBalanceInternal(contract);
+    } catch (error) {
+      console.error("Error loading user balance:", error);
+    }
   };
 
   // Public function to load total supply
   const loadTotalSupply = async () => {
-    if (!contract) throw new Error("Contract not initialized");
-    await loadTotalSupplyInternal(contract);
+    if (!contract) {
+      console.log("Contract not initialized yet, skipping supply load");
+      return;
+    }
+    try {
+      await loadTotalSupplyInternal(contract);
+    } catch (error) {
+      console.error("Error loading total supply:", error);
+    }
   };
 
   // Public function to load reward multiplier
   const loadRewardMultiplier = async () => {
-    if (!contract) throw new Error("Contract not initialized");
-    await loadRewardMultiplierInternal(contract);
+    if (!contract) {
+      console.log("Contract not initialized yet, skipping reward multiplier load");
+      return;
+    }
+    try {
+      await loadRewardMultiplierInternal(contract);
+    } catch (error) {
+      console.error("Error loading reward multiplier:", error);
+    }
   };
 
   // Public function to load pause state
   const loadPauseState = async () => {
-    if (!contract) throw new Error("Contract not initialized");
-    await loadPauseStateInternal(contract);
+    if (!contract) {
+      console.log("Contract not initialized yet, skipping pause state load");
+      return;
+    }
+    try {
+      await loadPauseStateInternal(contract);
+    } catch (error) {
+      console.error("Error loading pause state:", error);
+    }
   };
 
   // Transfer tokens
   const transfer = async (to: string, amount: number) => {
-    if (!contract || !signer) throw new Error("Contract not initialized");
+    if (!contract || !signer) {
+      console.error("Contract or signer not initialized, cannot transfer tokens");
+      showTransactionModal("error", "Wallet not connected or contract not initialized");
+      return null;
+    }
     
-    const amountWei = ethers.parseUnits(amount.toString(), 18);
-    const tx = await contract.transfer(to, amountWei);
-    
-    const receipt = await tx.wait();
-    await loadUserBalance();
-    
-    // Add to transaction history
-    const newTx: Transaction = {
-      hash: tx.hash,
-      type: "Transfer",
-      from: address,
-      to: to,
-      amount: amount.toString(),
-      blockNumber: receipt.blockNumber,
-      timestamp: Date.now(),
-      status: "confirmed"
-    };
-    
-    setTransactionHistory(prev => [newTx, ...prev]);
-    setTransactionModalState(prev => ({
-      ...prev,
-      transactionHash: tx.hash
-    }));
-    
-    return receipt;
+    try {
+      showTransactionModal("pending");
+      
+      const amountWei = ethers.parseUnits(amount.toString(), 18);
+      const tx = await contract.transfer(to, amountWei);
+      
+      const receipt = await tx.wait();
+      await loadUserBalance();
+      
+      // Add to transaction history
+      const newTx: Transaction = {
+        hash: tx.hash,
+        type: "Transfer",
+        from: address,
+        to: to,
+        amount: amount.toString(),
+        blockNumber: receipt.blockNumber,
+        timestamp: Date.now(),
+        status: "confirmed"
+      };
+      
+      setTransactionHistory(prev => [newTx, ...prev]);
+      setTransactionModalState(prev => ({
+        ...prev,
+        status: "success",
+        transactionHash: tx.hash
+      }));
+      
+      return receipt;
+    } catch (error) {
+      console.error("Transfer failed:", error);
+      showTransactionModal("error", error instanceof Error ? error.message : "Unknown error");
+      return null;
+    }
   };
 
   // Mint tokens (requires MINTER_ROLE)
   const mint = async (to: string, amount: number) => {
-    if (!contract || !signer) throw new Error("Contract not initialized");
+    if (!contract || !signer) {
+      console.error("Contract or signer not initialized, cannot mint tokens");
+      showTransactionModal("error", "Wallet not connected or contract not initialized");
+      return null;
+    }
     
-    const amountWei = ethers.parseUnits(amount.toString(), 18);
-    const tx = await contract.mint(to, amountWei);
-    
-    const receipt = await tx.wait();
-    await Promise.all([loadUserBalance(), loadTotalSupply()]);
-    
-    // Add to transaction history
-    const newTx: Transaction = {
-      hash: tx.hash,
-      type: "Mint",
-      from: ethers.ZeroAddress,
-      to: to,
-      amount: amount.toString(),
-      blockNumber: receipt.blockNumber,
-      timestamp: Date.now(),
-      status: "confirmed"
-    };
-    
-    setTransactionHistory(prev => [newTx, ...prev]);
-    setTransactionModalState(prev => ({
-      ...prev,
-      transactionHash: tx.hash
-    }));
-    
-    return receipt;
+    try {
+      showTransactionModal("pending");
+      
+      const amountWei = ethers.parseUnits(amount.toString(), 18);
+      const tx = await contract.mint(to, amountWei);
+      
+      const receipt = await tx.wait();
+      await Promise.all([loadUserBalance(), loadTotalSupply()]);
+      
+      // Add to transaction history
+      const newTx: Transaction = {
+        hash: tx.hash,
+        type: "Mint",
+        from: ethers.ZeroAddress,
+        to: to,
+        amount: amount.toString(),
+        blockNumber: receipt.blockNumber,
+        timestamp: Date.now(),
+        status: "confirmed"
+      };
+      
+      setTransactionHistory(prev => [newTx, ...prev]);
+      setTransactionModalState(prev => ({
+        ...prev,
+        status: "success",
+        transactionHash: tx.hash
+      }));
+      
+      return receipt;
+    } catch (error) {
+      console.error("Mint failed:", error);
+      showTransactionModal("error", error instanceof Error ? error.message : "Unknown error");
+      return null;
+    }
   };
 
   // Burn tokens (requires BURNER_ROLE)
   const burn = async (from: string, amount: number) => {
-    if (!contract || !signer) throw new Error("Contract not initialized");
+    if (!contract || !signer) {
+      console.error("Contract or signer not initialized, cannot burn tokens");
+      showTransactionModal("error", "Wallet not connected or contract not initialized");
+      return null;
+    }
     
-    const amountWei = ethers.parseUnits(amount.toString(), 18);
-    const tx = await contract.burn(from, amountWei);
-    
-    const receipt = await tx.wait();
-    await Promise.all([loadUserBalance(), loadTotalSupply()]);
-    
-    // Add to transaction history
-    const newTx: Transaction = {
-      hash: tx.hash,
-      type: "Burn",
-      from: from,
-      to: ethers.ZeroAddress,
-      amount: amount.toString(),
-      blockNumber: receipt.blockNumber,
-      timestamp: Date.now(),
-      status: "confirmed"
-    };
-    
-    setTransactionHistory(prev => [newTx, ...prev]);
-    setTransactionModalState(prev => ({
-      ...prev,
-      transactionHash: tx.hash
-    }));
-    
-    return receipt;
+    try {
+      showTransactionModal("pending");
+      
+      const amountWei = ethers.parseUnits(amount.toString(), 18);
+      const tx = await contract.burn(from, amountWei);
+      
+      const receipt = await tx.wait();
+      await Promise.all([loadUserBalance(), loadTotalSupply()]);
+      
+      // Add to transaction history
+      const newTx: Transaction = {
+        hash: tx.hash,
+        type: "Burn",
+        from: from,
+        to: ethers.ZeroAddress,
+        amount: amount.toString(),
+        blockNumber: receipt.blockNumber,
+        timestamp: Date.now(),
+        status: "confirmed"
+      };
+      
+      setTransactionHistory(prev => [newTx, ...prev]);
+      setTransactionModalState(prev => ({
+        ...prev,
+        status: "success",
+        transactionHash: tx.hash
+      }));
+      
+      return receipt;
+    } catch (error) {
+      console.error("Burn failed:", error);
+      showTransactionModal("error", error instanceof Error ? error.message : "Unknown error");
+      return null;
+    }
   };
 
   // Block an account (requires BLOCKLIST_ROLE)
   const blockAccount = async (account: string) => {
-    if (!contract || !signer) throw new Error("Contract not initialized");
+    if (!contract || !signer) {
+      console.error("Contract or signer not initialized, cannot block account");
+      showTransactionModal("error", "Wallet not connected or contract not initialized");
+      return null;
+    }
     
-    const tx = await contract.blockAccount(account);
-    const receipt = await tx.wait();
-    
-    setTransactionModalState(prev => ({
-      ...prev,
-      transactionHash: tx.hash
-    }));
-    
-    return receipt;
+    try {
+      showTransactionModal("pending");
+      
+      const tx = await contract.blockAccount(account);
+      const receipt = await tx.wait();
+      
+      setTransactionModalState(prev => ({
+        ...prev,
+        status: "success",
+        transactionHash: tx.hash
+      }));
+      
+      return receipt;
+    } catch (error) {
+      console.error("Block account failed:", error);
+      showTransactionModal("error", error instanceof Error ? error.message : "Unknown error");
+      return null;
+    }
   };
 
   // Unblock an account (requires BLOCKLIST_ROLE)
   const unblockAccount = async (account: string) => {
-    if (!contract || !signer) throw new Error("Contract not initialized");
+    if (!contract || !signer) {
+      console.error("Contract or signer not initialized, cannot unblock account");
+      showTransactionModal("error", "Wallet not connected or contract not initialized");
+      return null;
+    }
     
-    const tx = await contract.unblockAccount(account);
-    const receipt = await tx.wait();
-    
-    setTransactionModalState(prev => ({
-      ...prev,
-      transactionHash: tx.hash
-    }));
-    
-    return receipt;
+    try {
+      showTransactionModal("pending");
+      
+      const tx = await contract.unblockAccount(account);
+      const receipt = await tx.wait();
+      
+      setTransactionModalState(prev => ({
+        ...prev,
+        status: "success",
+        transactionHash: tx.hash
+      }));
+      
+      return receipt;
+    } catch (error) {
+      console.error("Unblock account failed:", error);
+      showTransactionModal("error", error instanceof Error ? error.message : "Unknown error");
+      return null;
+    }
   };
 
   // Pause the contract (requires PAUSE_ROLE)
   const pauseContract = async () => {
-    if (!contract || !signer) throw new Error("Contract not initialized");
+    if (!contract || !signer) {
+      console.error("Contract or signer not initialized, cannot pause contract");
+      showTransactionModal("error", "Wallet not connected or contract not initialized");
+      return null;
+    }
     
-    const tx = await contract.pause();
-    const receipt = await tx.wait();
-    await loadPauseState();
-    
-    setTransactionModalState(prev => ({
-      ...prev,
-      transactionHash: tx.hash
-    }));
-    
-    return receipt;
+    try {
+      showTransactionModal("pending");
+      
+      const tx = await contract.pause();
+      const receipt = await tx.wait();
+      await loadPauseState();
+      
+      setTransactionModalState(prev => ({
+        ...prev,
+        status: "success",
+        transactionHash: tx.hash
+      }));
+      
+      return receipt;
+    } catch (error) {
+      console.error("Pause contract failed:", error);
+      showTransactionModal("error", error instanceof Error ? error.message : "Unknown error");
+      return null;
+    }
   };
 
   // Unpause the contract (requires PAUSE_ROLE)
   const unpauseContract = async () => {
-    if (!contract || !signer) throw new Error("Contract not initialized");
+    if (!contract || !signer) {
+      console.error("Contract or signer not initialized, cannot unpause contract");
+      showTransactionModal("error", "Wallet not connected or contract not initialized");
+      return null;
+    }
     
-    const tx = await contract.unpause();
-    const receipt = await tx.wait();
-    await loadPauseState();
-    
-    setTransactionModalState(prev => ({
-      ...prev,
-      transactionHash: tx.hash
-    }));
-    
-    return receipt;
+    try {
+      showTransactionModal("pending");
+      
+      const tx = await contract.unpause();
+      const receipt = await tx.wait();
+      await loadPauseState();
+      
+      setTransactionModalState(prev => ({
+        ...prev,
+        status: "success",
+        transactionHash: tx.hash
+      }));
+      
+      return receipt;
+    } catch (error) {
+      console.error("Unpause contract failed:", error);
+      showTransactionModal("error", error instanceof Error ? error.message : "Unknown error");
+      return null;
+    }
   };
 
   // Update reward multiplier (requires ORACLE_ROLE)
   const updateRewardMultiplier = async (newValue: string) => {
-    if (!contract || !signer) throw new Error("Contract not initialized");
+    if (!contract || !signer) {
+      console.error("Contract or signer not initialized, cannot update reward multiplier");
+      showTransactionModal("error", "Wallet not connected or contract not initialized");
+      return null;
+    }
     
-    const tx = await contract.setRewardMultiplier(newValue);
-    const receipt = await tx.wait();
-    await Promise.all([
-      loadRewardMultiplier(),
-      loadUserBalance(),
-      loadTotalSupply()
-    ]);
-    
-    setTransactionModalState(prev => ({
-      ...prev,
-      transactionHash: tx.hash
-    }));
-    
-    return receipt;
+    try {
+      showTransactionModal("pending");
+      
+      const tx = await contract.setRewardMultiplier(newValue);
+      const receipt = await tx.wait();
+      await Promise.all([
+        loadRewardMultiplier(),
+        loadUserBalance(),
+        loadTotalSupply()
+      ]);
+      
+      setTransactionModalState(prev => ({
+        ...prev,
+        status: "success",
+        transactionHash: tx.hash
+      }));
+      
+      return receipt;
+    } catch (error) {
+      console.error("Update reward multiplier failed:", error);
+      showTransactionModal("error", error instanceof Error ? error.message : "Unknown error");
+      return null;
+    }
   };
 
   // Grant a role to an account (requires DEFAULT_ADMIN_ROLE)
   const grantRole = async (account: string, roleName: string) => {
-    if (!contract || !signer) throw new Error("Contract not initialized");
+    if (!contract || !signer) {
+      console.error("Contract or signer not initialized, cannot grant role");
+      showTransactionModal("error", "Wallet not connected or contract not initialized");
+      return null;
+    }
     
-    const roleHash = ROLES[roleName as keyof typeof ROLES];
-    if (!roleHash) throw new Error(`Invalid role: ${roleName}`);
-    
-    const tx = await contract.grantRole(roleHash, account);
-    const receipt = await tx.wait();
-    
-    setTransactionModalState(prev => ({
-      ...prev,
-      transactionHash: tx.hash
-    }));
-    
-    return receipt;
+    try {
+      showTransactionModal("pending");
+      
+      const roleHash = ROLES[roleName as keyof typeof ROLES];
+      if (!roleHash) {
+        const errorMsg = `Invalid role: ${roleName}`;
+        console.error(errorMsg);
+        showTransactionModal("error", errorMsg);
+        return null;
+      }
+      
+      const tx = await contract.grantRole(roleHash, account);
+      const receipt = await tx.wait();
+      
+      setTransactionModalState(prev => ({
+        ...prev,
+        status: "success",
+        transactionHash: tx.hash
+      }));
+      
+      return receipt;
+    } catch (error) {
+      console.error("Grant role failed:", error);
+      showTransactionModal("error", error instanceof Error ? error.message : "Unknown error");
+      return null;
+    }
   };
 
   // Revoke a role from an account (requires DEFAULT_ADMIN_ROLE)
   const revokeRole = async (account: string, roleName: string) => {
-    if (!contract || !signer) throw new Error("Contract not initialized");
+    if (!contract || !signer) {
+      console.error("Contract or signer not initialized, cannot revoke role");
+      showTransactionModal("error", "Wallet not connected or contract not initialized");
+      return null;
+    }
     
-    const roleHash = ROLES[roleName as keyof typeof ROLES];
-    if (!roleHash) throw new Error(`Invalid role: ${roleName}`);
-    
-    const tx = await contract.revokeRole(roleHash, account);
-    const receipt = await tx.wait();
-    
-    setTransactionModalState(prev => ({
-      ...prev,
-      transactionHash: tx.hash
-    }));
-    
-    return receipt;
+    try {
+      showTransactionModal("pending");
+      
+      const roleHash = ROLES[roleName as keyof typeof ROLES];
+      if (!roleHash) {
+        const errorMsg = `Invalid role: ${roleName}`;
+        console.error(errorMsg);
+        showTransactionModal("error", errorMsg);
+        return null;
+      }
+      
+      const tx = await contract.revokeRole(roleHash, account);
+      const receipt = await tx.wait();
+      
+      setTransactionModalState(prev => ({
+        ...prev,
+        status: "success",
+        transactionHash: tx.hash
+      }));
+      
+      return receipt;
+    } catch (error) {
+      console.error("Revoke role failed:", error);
+      showTransactionModal("error", error instanceof Error ? error.message : "Unknown error");
+      return null;
+    }
   };
 
   // Check if an account has a specific role
   const hasRole = async (account: string, roleName: string) => {
-    if (!contract) throw new Error("Contract not initialized");
+    if (!contract) {
+      console.log("Contract not initialized yet, cannot check role");
+      return false;
+    }
     
-    const roleHash = ROLES[roleName as keyof typeof ROLES];
-    if (!roleHash) throw new Error(`Invalid role: ${roleName}`);
-    
-    return await contract.hasRole(roleHash, account);
+    try {
+      const roleHash = ROLES[roleName as keyof typeof ROLES];
+      if (!roleHash) {
+        console.error(`Invalid role: ${roleName}`);
+        return false;
+      }
+      
+      return await contract.hasRole(roleHash, account);
+    } catch (error) {
+      console.error(`Error checking ${roleName} role for ${account}:`, error);
+      return false;
+    }
   };
 
   // Check if the current user has admin role
   const hasAdminRole = async (account?: string) => {
-    if (!contract) throw new Error("Contract not initialized");
-    return await contract.hasRole(ROLES.DEFAULT_ADMIN_ROLE, account || address);
+    if (!contract) {
+      console.log("Contract not initialized yet, cannot check admin role");
+      return false;
+    }
+    try {
+      return await contract.hasRole(ROLES.DEFAULT_ADMIN_ROLE, account || address);
+    } catch (error) {
+      console.error("Error checking admin role:", error);
+      return false;
+    }
   };
 
   // Check if the current user has minter role
   const hasMinterRole = async (account?: string) => {
-    if (!contract) throw new Error("Contract not initialized");
-    return await contract.hasRole(ROLES.MINTER_ROLE, account || address);
+    if (!contract) {
+      console.log("Contract not initialized yet, cannot check minter role");
+      return false;
+    }
+    try {
+      return await contract.hasRole(ROLES.MINTER_ROLE, account || address);
+    } catch (error) {
+      console.error("Error checking minter role:", error);
+      return false;
+    }
   };
 
   // Check if the current user has burner role
   const hasBurnerRole = async (account?: string) => {
-    if (!contract) throw new Error("Contract not initialized");
-    return await contract.hasRole(ROLES.BURNER_ROLE, account || address);
+    if (!contract) {
+      console.log("Contract not initialized yet, cannot check burner role");
+      return false;
+    }
+    try {
+      return await contract.hasRole(ROLES.BURNER_ROLE, account || address);
+    } catch (error) {
+      console.error("Error checking burner role:", error);
+      return false;
+    }
   };
 
   // Check if the current user has blocklist role
   const hasBlocklistRole = async (account?: string) => {
-    if (!contract) throw new Error("Contract not initialized");
-    return await contract.hasRole(ROLES.BLOCKLIST_ROLE, account || address);
+    if (!contract) {
+      console.log("Contract not initialized yet, cannot check blocklist role");
+      return false;
+    }
+    try {
+      return await contract.hasRole(ROLES.BLOCKLIST_ROLE, account || address);
+    } catch (error) {
+      console.error("Error checking blocklist role:", error);
+      return false;
+    }
   };
 
   // Check if the current user has oracle role
   const hasOracleRole = async (account?: string) => {
-    if (!contract) throw new Error("Contract not initialized");
-    return await contract.hasRole(ROLES.ORACLE_ROLE, account || address);
+    if (!contract) {
+      console.log("Contract not initialized yet, cannot check oracle role");
+      return false;
+    }
+    try {
+      return await contract.hasRole(ROLES.ORACLE_ROLE, account || address);
+    } catch (error) {
+      console.error("Error checking oracle role:", error);
+      return false;
+    }
   };
 
   // Check if the current user has pause role
   const hasPauseRole = async (account?: string) => {
-    if (!contract) throw new Error("Contract not initialized");
-    return await contract.hasRole(ROLES.PAUSE_ROLE, account || address);
+    if (!contract) {
+      console.log("Contract not initialized yet, cannot check pause role");
+      return false;
+    }
+    try {
+      return await contract.hasRole(ROLES.PAUSE_ROLE, account || address);
+    } catch (error) {
+      console.error("Error checking pause role:", error);
+      return false;
+    }
   };
 
   // Get transaction history (mock implementation, would normally use contract events)

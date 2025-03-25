@@ -34,6 +34,7 @@ const USDX_ABI = [
   "function grantRole(bytes32 role, address account) external",
   "function revokeRole(bytes32 role, address account) external",
   "function setRewardMultiplier(uint256 newRewardMultiplier) external",
+  "function addRewardMultiplier(uint256 rewardMultiplierIncrement) external",
   
   // Events
   "event Transfer(address indexed from, address indexed to, uint256 value)",
@@ -347,22 +348,30 @@ export async function unblockAccount(account: string) {
   }
 }
 
-export async function updateRewardMultiplier(newValue: string) {
+export async function updateRewardMultiplier(newValue: string, operation: 'set' | 'add' = 'set') {
   try {
     if (!contract) {
       throw new Error("Contract not initialized");
     }
     
-    const tx = await contract.setRewardMultiplier(ethers.parseUnits(newValue, 18));
+    // Choose the appropriate contract function based on the operation
+    let tx;
+    if (operation === 'add') {
+      tx = await contract.addRewardMultiplier(ethers.parseUnits(newValue, 18));
+    } else {
+      tx = await contract.setRewardMultiplier(ethers.parseUnits(newValue, 18));
+    }
+    
     const receipt = await tx.wait();
     
     return {
       success: true,
       transactionHash: receipt.hash,
-      newValue
+      newValue,
+      operation
     };
   } catch (error) {
-    console.error("Error updating reward multiplier:", error);
+    console.error(`Error ${operation === 'add' ? 'adding to' : 'setting'} reward multiplier:`, error);
     throw error;
   }
 }

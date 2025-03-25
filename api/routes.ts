@@ -236,20 +236,36 @@ router.post('/unblock', async (req: Request, res: Response) => {
   }
 });
 
-// Update reward multiplier
+// Update reward multiplier (set or add)
 router.post('/reward-multiplier', async (req: Request, res: Response) => {
   try {
-    const { value } = req.body;
+    const { value, operation = 'set' } = req.body;
     
     if (!value || isNaN(Number(value)) || Number(value) <= 0) {
-      return res.status(400).json({ error: 'Invalid value' });
+      return res.status(400).json({ 
+        error: 'Invalid value',
+        code: 'INVALID_AMOUNT',
+        details: { value },
+        timestamp: new Date().toISOString()
+      });
     }
     
-    const result = await contractService.updateRewardMultiplier(value);
-    res.json(result);
+    if (operation !== 'set' && operation !== 'add') {
+      return res.status(400).json({ 
+        error: 'Invalid operation type',
+        code: 'INVALID_OPERATION',
+        details: { operation, validOperations: ['set', 'add'] },
+        timestamp: new Date().toISOString()
+      });
+    }
+    
+    const result = await contractService.updateRewardMultiplier(value, operation);
+    res.json({
+      ...result,
+      timestamp: new Date().toISOString()
+    });
   } catch (error: any) {
-    console.error('Error updating reward multiplier:', error);
-    res.status(500).json({ error: error.message || 'Failed to update reward multiplier' });
+    handleApiError(res, error, `${req.body.operation || 'set'} reward multiplier`);
   }
 });
 

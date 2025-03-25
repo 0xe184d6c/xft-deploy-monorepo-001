@@ -26,10 +26,10 @@ agentRequireRestartOnSave = false
 [[workflows.workflow.tasks]]
 task = "packager.installForAll"
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd 03_APP && npm start"
-waitForPort = 5000
+# [[workflows.workflow.tasks]]
+# ask = "shell.exec"
+# args = "cd 03_APP && npm start"
+# waitForPort = 5000
 # runButton = "Project"
 
 # [[workflows.workflow]]
@@ -231,8 +231,6 @@ run = ["sh", "-c", "cd project-a && npm install && npx hardhat test && cd ../pro
 
 [[ports]]
 localPort = 3000
-externalPort = 3000
 
 [[ports]]
 localPort = 5000
-externalPort = 80

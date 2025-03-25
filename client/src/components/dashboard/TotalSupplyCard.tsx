@@ -5,13 +5,30 @@ import { useWallet } from "@/lib/wallet";
 import { formatDateTime } from "@/lib/utils";
 import { useTokenInfo } from "@/lib/api";
 
+// Define interface for token data based on API response
+interface TokenInfo {
+  name: string;
+  symbol: string;
+  decimals: string;
+  totalSupply: string;
+  totalShares: string;
+  rewardMultiplier: string;
+  isPaused: boolean;
+}
+
 export default function TotalSupplyCard() {
   const { connected } = useWallet();
   const { data, isLoading, refetch } = useTokenInfo();
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
-  const totalSupply = data?.totalSupply ? Number(data.totalSupply) / 10**Number(data.decimals) : 0;
-  const totalShares = data?.totalShares || '0';
+  // Safely cast data to TokenInfo if it exists
+  const tokenData = data as TokenInfo | undefined;
+  
+  // Calculate values with proper null checks
+  const totalSupply = tokenData?.totalSupply && tokenData?.decimals
+    ? Number(tokenData.totalSupply) / 10**Number(tokenData.decimals) 
+    : 0;
+  const totalShares = tokenData?.totalShares || '0';
 
   const refreshTotalSupply = async () => {
     try {
@@ -45,7 +62,7 @@ export default function TotalSupplyCard() {
         <>
           <div className="flex items-baseline mb-4">
             <span className="text-2xl font-bold mr-2">{totalSupply.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-            <span className="text-sm text-accent-500">{data?.symbol || 'USDX'}</span>
+            <span className="text-sm text-accent-500">{tokenData?.symbol || 'USDX'}</span>
           </div>
           <div className="text-xs text-accent-500 mb-3">
             <span>Total Shares: </span>

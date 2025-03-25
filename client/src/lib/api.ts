@@ -1,6 +1,6 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient, apiRequest } from "./queryClient";
-import { NetworkConfig, Transaction, RoleInfo, BlocklistInfo } from "./types";
+import { NetworkConfig, Transaction, RoleInfo, BlocklistInfo, ContractEvent } from "./types";
 
 // Base API URL
 const BASE_URL = "/api";
@@ -168,5 +168,27 @@ export function useTransaction(txHash: string | undefined) {
   return useQuery({
     queryKey: [`${BASE_URL}/transaction/${txHash}`],
     enabled: !!txHash,
+  });
+}
+
+// Get contract events
+export function useContractEvents(options?: {
+  fromBlock?: number;
+  toBlock?: number;
+  limit?: number;
+  eventName?: string;
+}) {
+  const queryParams = new URLSearchParams();
+  
+  if (options?.fromBlock) queryParams.set('fromBlock', options.fromBlock.toString());
+  if (options?.toBlock) queryParams.set('toBlock', options.toBlock.toString());
+  if (options?.limit) queryParams.set('limit', options.limit.toString());
+  if (options?.eventName) queryParams.set('eventName', options.eventName);
+  
+  const queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
+  
+  return useQuery<{ events: ContractEvent[], range: { fromBlock: number, toBlock: number, totalBlocks: number, totalEvents: number, hasMore: boolean } }>({
+    queryKey: [`${BASE_URL}/events${queryString}`],
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 }

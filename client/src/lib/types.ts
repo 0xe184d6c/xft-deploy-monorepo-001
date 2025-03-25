@@ -27,6 +27,23 @@ export interface Transaction {
   status: 'pending' | 'confirmed' | 'failed';
 }
 
+// Contract Event from blockchain
+export interface ContractEvent {
+  transactionHash: string;
+  blockNumber: number;
+  blockHash: string;
+  logIndex: number;
+  address: string;
+  timestamp: number;
+  name: string;
+  signature: string;
+  topic: string;
+  args: Record<string, any>;
+  data: string;
+  status: string;
+  gasUsed: string;
+}
+
 // Role information
 export interface RoleInfo {
   roleName: string;

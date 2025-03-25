@@ -1,0 +1,13 @@
+{
+  "name": "usdx-dapp",
+  "version": "1.0.0",
+  "description": "USDX Protocol Dashboard",
+  "main": "script.js",
+  "scripts": {
+    "start": "http-server . -p 3000 --bind 0.0.0.0"
+  },
+  "dependencies": {
+    "ethers": "^5.7.2",
+    "http-server": "^14.1.1"
+  }
+}

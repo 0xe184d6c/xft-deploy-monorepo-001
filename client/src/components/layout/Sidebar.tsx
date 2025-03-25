@@ -31,43 +31,33 @@ export default function Sidebar() {
         
         <ul>
           <li>
-            <Link href="/">
-              <a className={`flex items-center px-6 py-3 ${isActive("/") ? "bg-neutral-100 border-l-4 border-black" : "hover:bg-neutral-100 transition-colors"}`}>
+            <Link href="/" className={`flex items-center px-6 py-3 ${isActive("/") ? "bg-neutral-100 border-l-4 border-black" : "hover:bg-neutral-100 transition-colors"}`}>
                 <LayoutDashboard className="w-5 h-5 mr-2" />
                 <span>Dashboard</span>
-              </a>
             </Link>
           </li>
           <li>
-            <Link href="/transactions">
-              <a className={`flex items-center px-6 py-3 ${isActive("/transactions") ? "bg-neutral-100 border-l-4 border-black" : "hover:bg-neutral-100 transition-colors"}`}>
+            <Link href="/transactions" className={`flex items-center px-6 py-3 ${isActive("/transactions") ? "bg-neutral-100 border-l-4 border-black" : "hover:bg-neutral-100 transition-colors"}`}>
                 <ReceiptText className="w-5 h-5 mr-2" />
                 <span>Transactions</span>
-              </a>
             </Link>
           </li>
           <li>
-            <Link href="/roles">
-              <a className={`flex items-center px-6 py-3 ${isActive("/roles") ? "bg-neutral-100 border-l-4 border-black" : "hover:bg-neutral-100 transition-colors"}`}>
+            <Link href="/roles" className={`flex items-center px-6 py-3 ${isActive("/roles") ? "bg-neutral-100 border-l-4 border-black" : "hover:bg-neutral-100 transition-colors"}`}>
                 <UserCog className="w-5 h-5 mr-2" />
                 <span>Role Management</span>
-              </a>
             </Link>
           </li>
           <li>
-            <Link href="/blocklist">
-              <a className={`flex items-center px-6 py-3 ${isActive("/blocklist") ? "bg-neutral-100 border-l-4 border-black" : "hover:bg-neutral-100 transition-colors"}`}>
+            <Link href="/blocklist" className={`flex items-center px-6 py-3 ${isActive("/blocklist") ? "bg-neutral-100 border-l-4 border-black" : "hover:bg-neutral-100 transition-colors"}`}>
                 <Shield className="w-5 h-5 mr-2" />
                 <span>Blocklist</span>
-              </a>
             </Link>
           </li>
           <li>
-            <Link href="/settings">
-              <a className={`flex items-center px-6 py-3 ${isActive("/settings") ? "bg-neutral-100 border-l-4 border-black" : "hover:bg-neutral-100 transition-colors"}`}>
+            <Link href="/settings" className={`flex items-center px-6 py-3 ${isActive("/settings") ? "bg-neutral-100 border-l-4 border-black" : "hover:bg-neutral-100 transition-colors"}`}>
                 <Settings className="w-5 h-5 mr-2" />
                 <span>Settings</span>
-              </a>
             </Link>
           </li>
         </ul>

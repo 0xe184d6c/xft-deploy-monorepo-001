@@ -2,40 +2,95 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>USDX Contract Interface</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USDX Token Manager</title>
     <link rel="stylesheet" href="style.css">
     <!-- Load ethers.js v5 from CDN -->
     <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
   </head>
   <body>
-    <h1>USDX Contract Interface</h1>
-    <button id="connectWallet">Connect Wallet</button>
-    <div id="account"></div>
+    <header>
+      <h1>USDX Token Manager</h1>
+      <p>Network: Sepolia Testnet</p>
+    </header>
+    
+    <div class="wallet-section">
+      <button id="connectWallet">Connect Wallet</button>
+      <div id="account"></div>
+      <div id="networkInfo"></div>
+    </div>
+    
+    <div id="contractInfo" class="info-section">
+      <h2>Token Information</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <span>Name:</span>
+          <span id="tokenName">-</span>
+        </div>
+        <div class="info-item">
+          <span>Symbol:</span>
+          <span id="tokenSymbol">-</span>
+        </div>
+        <div class="info-item">
+          <span>Decimals:</span>
+          <span id="tokenDecimals">-</span>
+        </div>
+        <div class="info-item">
+          <span>Total Supply:</span>
+          <span id="tokenSupply">-</span>
+        </div>
+        <div class="info-item">
+          <span>Your Balance:</span>
+          <span id="userBalance">-</span>
+        </div>
+        <div class="info-item">
+          <span>Contract Address:</span>
+          <span id="contractAddress" class="address"></span>
+        </div>
+      </div>
+    </div>
+    
     <div id="contractData">
       <h2>Contract Functions</h2>
-      <div>
-        <label>Function:</label>
+      <div class="function-selector">
+        <label>Select Function:</label>
         <select id="functionSelect">
-          <option value="name">name</option>
-          <option value="symbol">symbol</option>
-          <option value="decimals">decimals</option>
-          <option value="balanceOf">balanceOf</option>
-          <option value="mint">mint</option>
-          <option value="burn">burn</option>
-          <option value="transfer">transfer</option>
-          <option value="approve">approve</option>
-          <option value="transferFrom">transferFrom</option>
-          <option value="pause">pause</option>
-          <option value="unpause">unpause</option>
-          <option value="setRewardMultiplier">setRewardMultiplier</option>
-          <option value="addRewardMultiplier">addRewardMultiplier</option>
+          <optgroup label="Read Functions">
+            <option value="name">name</option>
+            <option value="symbol">symbol</option>
+            <option value="decimals">decimals</option>
+            <option value="balanceOf">balanceOf</option>
+            <option value="totalSupply">totalSupply</option>
+            <option value="rewardMultiplier">rewardMultiplier</option>
+          </optgroup>
+          <optgroup label="Write Functions">
+            <option value="transfer">transfer</option>
+            <option value="approve">approve</option>
+            <option value="transferFrom">transferFrom</option>
+          </optgroup>
+          <optgroup label="Admin Functions">
+            <option value="mint">mint</option>
+            <option value="burn">burn</option>
+            <option value="pause">pause</option>
+            <option value="unpause">unpause</option>
+            <option value="setRewardMultiplier">setRewardMultiplier</option>
+            <option value="addRewardMultiplier">addRewardMultiplier</option>
+          </optgroup>
         </select>
       </div>
+      
       <!-- Parameter input fields are injected here -->
-      <div id="params"></div>
-      <button id="callFunction">Call Function</button>
+      <div id="params" class="params-container"></div>
+      
+      <button id="callFunction">Execute Function</button>
     </div>
-    <div id="output"></div>
+    
+    <div id="output" class="output-container"></div>
+    
+    <footer>
+      <p>© 2025 USDX Protocol - Deployed on Sepolia Testnet</p>
+    </footer>
+    
     <script src="script.js"></script>
   </body>
 </html>

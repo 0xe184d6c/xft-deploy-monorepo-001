@@ -1,0 +1,1169 @@
+{
+  "name": "workspace",
+  "path": "workspace",
+  "type": "directory",
+  "children": [
+    {
+      "name": "00_admin",
+      "path": "00_admin",
+      "type": "directory",
+      "children": [],
+      "stats": {
+        "fileCount": 0,
+        "dirCount": 0,
+        "fileTypes": {}
+      }
+    },
+    {
+      "name": "CHANGELOG.md",
+      "path": "workspace/CHANGELOG.md",
+      "type": "file",
+      "size": 1288,
+      "extension": ".md"
+    },
+    {
+      "name": "api",
+      "path": "api",
+      "type": "directory",
+      "children": [
+        {
+          "name": "contract.ts",
+          "path": "api/contract.ts",
+          "type": "file",
+          "size": 21919,
+          "extension": ".ts"
+        },
+        {
+          "name": "health.ts",
+          "path": "api/health.ts",
+          "type": "file",
+          "size": 2843,
+          "extension": ".ts"
+        },
+        {
+          "name": "index.ts",
+          "path": "api/index.ts",
+          "type": "file",
+          "size": 1430,
+          "extension": ".ts"
+        },
+        {
+          "name": "routes.ts",
+          "path": "api/routes.ts",
+          "type": "file",
+          "size": 12610,
+          "extension": ".ts"
+        }
+      ],
+      "stats": {
+        "fileCount": 4,
+        "dirCount": 0,
+        "fileTypes": {
+          ".ts": 4
+        }
+      }
+    },
+    {
+      "name": "attached_assets",
+      "path": "attached_assets",
+      "type": "directory",
+      "children": [],
+      "stats": {
+        "fileCount": 0,
+        "dirCount": 0,
+        "fileTypes": {}
+      }
+    },
+    {
+      "name": "ci_cd",
+      "path": "ci_cd",
+      "type": "directory",
+      "children": [
+        {
+          "name": "README.md",
+          "path": "ci_cd/README.md",
+          "type": "file",
+          "size": 3365,
+          "extension": ".md"
+        },
+        {
+          "name": "monitoring",
+          "path": "monitoring",
+          "type": "directory",
+          "children": [
+            {
+              "name": "dashboard.html",
+              "path": "monitoring/dashboard.html",
+              "type": "file",
+              "size": 12901,
+              "extension": ".html"
+            }
+          ],
+          "stats": {
+            "fileCount": 1,
+            "dirCount": 0,
+            "fileTypes": {
+              ".html": 1
+            }
+          }
+        },
+        {
+          "name": "reports",
+          "path": "reports",
+          "type": "directory",
+          "children": [
+            {
+              "name": "deployments",
+              "path": "deployments",
+              "type": "directory",
+              "children": [],
+              "stats": {
+                "fileCount": 0,
+                "dirCount": 0,
+                "fileTypes": {}
+              }
+            }
+          ],
+          "stats": {
+            "fileCount": 0,
+            "dirCount": 1,
+            "fileTypes": {}
+          }
+        },
+        {
+          "name": "scripts",
+          "path": "scripts",
+          "type": "directory",
+          "children": [
+            {
+              "name": "dep-check.js",
+              "path": "scripts/dep-check.js",
+              "type": "file",
+              "size": 4724,
+              "extension": ".js"
+            },
+            {
+              "name": "deploy.js",
+              "path": "scripts/deploy.js",
+              "type": "file",
+              "size": 6976,
+              "extension": ".js"
+            },
+            {
+              "name": "project-map.js",
+              "path": "scripts/project-map.js",
+              "type": "file",
+              "size": 6001,
+              "extension": ".js"
+            },
+            {
+              "name": "version.js",
+              "path": "scripts/version.js",
+              "type": "file",
+              "size": 4181,
+              "extension": ".js"
+            }
+          ],
+          "stats": {
+            "fileCount": 4,
+            "dirCount": 0,
+            "fileTypes": {
+              ".js": 4
+            }
+          }
+        }
+      ],
+      "stats": {
+        "fileCount": 1,
+        "dirCount": 3,
+        "fileTypes": {
+          ".md": 1
+        }
+      }
+    },
+    {
+      "name": "client",
+      "path": "client",
+      "type": "directory",
+      "children": [
+        {
+          "name": "index.html",
+          "path": "client/index.html",
+          "type": "file",
+          "size": 648,
+          "extension": ".html"
+        },
+        {
+          "name": "src",
+          "path": "src",
+          "type": "directory",
+          "children": [
+            {
+              "name": "App.tsx",
+              "path": "src/App.tsx",
+              "type": "file",
+              "size": 2599,
+              "extension": ".tsx"
+            },
+            {
+              "name": "components",
+              "path": "components",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "dashboard",
+                  "path": "dashboard",
+                  "type": "directory",
+                  "children": [
+                    {
+                      "name": "AdminFunctions.tsx",
+                      "path": "dashboard/AdminFunctions.tsx",
+                      "type": "file",
+                      "size": 13818,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "BalanceCard.tsx",
+                      "path": "dashboard/BalanceCard.tsx",
+                      "type": "file",
+                      "size": 2808,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "BlocklistCard.tsx",
+                      "path": "dashboard/BlocklistCard.tsx",
+                      "type": "file",
+                      "size": 4133,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "BurnCard.tsx",
+                      "path": "dashboard/BurnCard.tsx",
+                      "type": "file",
+                      "size": 3810,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "ContractInfo.tsx",
+                      "path": "dashboard/ContractInfo.tsx",
+                      "type": "file",
+                      "size": 6076,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "EventsCard.tsx",
+                      "path": "dashboard/EventsCard.tsx",
+                      "type": "file",
+                      "size": 10811,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "MintCard.tsx",
+                      "path": "dashboard/MintCard.tsx",
+                      "type": "file",
+                      "size": 3807,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "PauseCard.tsx",
+                      "path": "dashboard/PauseCard.tsx",
+                      "type": "file",
+                      "size": 4169,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "RewardMultiplierCard.tsx",
+                      "path": "dashboard/RewardMultiplierCard.tsx",
+                      "type": "file",
+                      "size": 5294,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "RoleManagementCard.tsx",
+                      "path": "dashboard/RoleManagementCard.tsx",
+                      "type": "file",
+                      "size": 5118,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "TotalSupplyCard.tsx",
+                      "path": "dashboard/TotalSupplyCard.tsx",
+                      "type": "file",
+                      "size": 2789,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "TransactionsTable.tsx",
+                      "path": "dashboard/TransactionsTable.tsx",
+                      "type": "file",
+                      "size": 4854,
+                      "extension": ".tsx"
+                    }
+                  ],
+                  "stats": {
+                    "fileCount": 12,
+                    "dirCount": 0,
+                    "fileTypes": {
+                      ".tsx": 12
+                    }
+                  }
+                },
+                {
+                  "name": "layout",
+                  "path": "layout",
+                  "type": "directory",
+                  "children": [
+                    {
+                      "name": "Footer.tsx",
+                      "path": "layout/Footer.tsx",
+                      "type": "file",
+                      "size": 227,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "Header.tsx",
+                      "path": "layout/Header.tsx",
+                      "type": "file",
+                      "size": 1513,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "MobileMenu.tsx",
+                      "path": "layout/MobileMenu.tsx",
+                      "type": "file",
+                      "size": 5735,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "Sidebar.tsx",
+                      "path": "layout/Sidebar.tsx",
+                      "type": "file",
+                      "size": 3790,
+                      "extension": ".tsx"
+                    }
+                  ],
+                  "stats": {
+                    "fileCount": 4,
+                    "dirCount": 0,
+                    "fileTypes": {
+                      ".tsx": 4
+                    }
+                  }
+                },
+                {
+                  "name": "modals",
+                  "path": "modals",
+                  "type": "directory",
+                  "children": [
+                    {
+                      "name": "RewardMultiplierModal.tsx",
+                      "path": "modals/RewardMultiplierModal.tsx",
+                      "type": "file",
+                      "size": 7692,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "TransactionStatusModal.tsx",
+                      "path": "modals/TransactionStatusModal.tsx",
+                      "type": "file",
+                      "size": 3059,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "TransferModal.tsx",
+                      "path": "modals/TransferModal.tsx",
+                      "type": "file",
+                      "size": 6063,
+                      "extension": ".tsx"
+                    }
+                  ],
+                  "stats": {
+                    "fileCount": 3,
+                    "dirCount": 0,
+                    "fileTypes": {
+                      ".tsx": 3
+                    }
+                  }
+                },
+                {
+                  "name": "shared",
+                  "path": "shared",
+                  "type": "directory",
+                  "children": [
+                    {
+                      "name": "NetworkAlert.tsx",
+                      "path": "shared/NetworkAlert.tsx",
+                      "type": "file",
+                      "size": 166,
+                      "extension": ".tsx"
+                    }
+                  ],
+                  "stats": {
+                    "fileCount": 1,
+                    "dirCount": 0,
+                    "fileTypes": {
+                      ".tsx": 1
+                    }
+                  }
+                },
+                {
+                  "name": "ui",
+                  "path": "ui",
+                  "type": "directory",
+                  "children": [
+                    {
+                      "name": "accordion.tsx",
+                      "path": "ui/accordion.tsx",
+                      "type": "file",
+                      "size": 1977,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "alert-dialog.tsx",
+                      "path": "ui/alert-dialog.tsx",
+                      "type": "file",
+                      "size": 4420,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "alert.tsx",
+                      "path": "ui/alert.tsx",
+                      "type": "file",
+                      "size": 1584,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "aspect-ratio.tsx",
+                      "path": "ui/aspect-ratio.tsx",
+                      "type": "file",
+                      "size": 140,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "avatar.tsx",
+                      "path": "ui/avatar.tsx",
+                      "type": "file",
+                      "size": 1405,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "badge.tsx",
+                      "path": "ui/badge.tsx",
+                      "type": "file",
+                      "size": 1128,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "breadcrumb.tsx",
+                      "path": "ui/breadcrumb.tsx",
+                      "type": "file",
+                      "size": 2712,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "button.tsx",
+                      "path": "ui/button.tsx",
+                      "type": "file",
+                      "size": 1901,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "calendar.tsx",
+                      "path": "ui/calendar.tsx",
+                      "type": "file",
+                      "size": 2609,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "card.tsx",
+                      "path": "ui/card.tsx",
+                      "type": "file",
+                      "size": 1877,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "carousel.tsx",
+                      "path": "ui/carousel.tsx",
+                      "type": "file",
+                      "size": 6210,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "chart.tsx",
+                      "path": "ui/chart.tsx",
+                      "type": "file",
+                      "size": 10466,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "checkbox.tsx",
+                      "path": "ui/checkbox.tsx",
+                      "type": "file",
+                      "size": 1056,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "collapsible.tsx",
+                      "path": "ui/collapsible.tsx",
+                      "type": "file",
+                      "size": 315,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "command.tsx",
+                      "path": "ui/command.tsx",
+                      "type": "file",
+                      "size": 4879,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "context-menu.tsx",
+                      "path": "ui/context-menu.tsx",
+                      "type": "file",
+                      "size": 7246,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "dialog.tsx",
+                      "path": "ui/dialog.tsx",
+                      "type": "file",
+                      "size": 3835,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "drawer.tsx",
+                      "path": "ui/drawer.tsx",
+                      "type": "file",
+                      "size": 3007,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "dropdown-menu.tsx",
+                      "path": "ui/dropdown-menu.tsx",
+                      "type": "file",
+                      "size": 7361,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "form.tsx",
+                      "path": "ui/form.tsx",
+                      "type": "file",
+                      "size": 4085,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "hover-card.tsx",
+                      "path": "ui/hover-card.tsx",
+                      "type": "file",
+                      "size": 1184,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "input-otp.tsx",
+                      "path": "ui/input-otp.tsx",
+                      "type": "file",
+                      "size": 2154,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "input.tsx",
+                      "path": "ui/input.tsx",
+                      "type": "file",
+                      "size": 845,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "label.tsx",
+                      "path": "ui/label.tsx",
+                      "type": "file",
+                      "size": 710,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "menubar.tsx",
+                      "path": "ui/menubar.tsx",
+                      "type": "file",
+                      "size": 7974,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "navigation-menu.tsx",
+                      "path": "ui/navigation-menu.tsx",
+                      "type": "file",
+                      "size": 5046,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "pagination.tsx",
+                      "path": "ui/pagination.tsx",
+                      "type": "file",
+                      "size": 2751,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "popover.tsx",
+                      "path": "ui/popover.tsx",
+                      "type": "file",
+                      "size": 1230,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "progress.tsx",
+                      "path": "ui/progress.tsx",
+                      "type": "file",
+                      "size": 777,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "radio-group.tsx",
+                      "path": "ui/radio-group.tsx",
+                      "type": "file",
+                      "size": 1467,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "resizable.tsx",
+                      "path": "ui/resizable.tsx",
+                      "type": "file",
+                      "size": 1709,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "scroll-area.tsx",
+                      "path": "ui/scroll-area.tsx",
+                      "type": "file",
+                      "size": 1642,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "select.tsx",
+                      "path": "ui/select.tsx",
+                      "type": "file",
+                      "size": 5615,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "separator.tsx",
+                      "path": "ui/separator.tsx",
+                      "type": "file",
+                      "size": 756,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "sheet.tsx",
+                      "path": "ui/sheet.tsx",
+                      "type": "file",
+                      "size": 4267,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "sidebar.tsx",
+                      "path": "ui/sidebar.tsx",
+                      "type": "file",
+                      "size": 23337,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "skeleton.tsx",
+                      "path": "ui/skeleton.tsx",
+                      "type": "file",
+                      "size": 261,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "slider.tsx",
+                      "path": "ui/slider.tsx",
+                      "type": "file",
+                      "size": 1077,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "switch.tsx",
+                      "path": "ui/switch.tsx",
+                      "type": "file",
+                      "size": 1139,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "table.tsx",
+                      "path": "ui/table.tsx",
+                      "type": "file",
+                      "size": 2765,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "tabs.tsx",
+                      "path": "ui/tabs.tsx",
+                      "type": "file",
+                      "size": 1883,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "textarea.tsx",
+                      "path": "ui/textarea.tsx",
+                      "type": "file",
+                      "size": 772,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "toast.tsx",
+                      "path": "ui/toast.tsx",
+                      "type": "file",
+                      "size": 4845,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "toaster.tsx",
+                      "path": "ui/toaster.tsx",
+                      "type": "file",
+                      "size": 772,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "toggle-group.tsx",
+                      "path": "ui/toggle-group.tsx",
+                      "type": "file",
+                      "size": 1739,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "toggle.tsx",
+                      "path": "ui/toggle.tsx",
+                      "type": "file",
+                      "size": 1435,
+                      "extension": ".tsx"
+                    },
+                    {
+                      "name": "tooltip.tsx",
+                      "path": "ui/tooltip.tsx",
+                      "type": "file",
+                      "size": 1145,
+                      "extension": ".tsx"
+                    }
+                  ],
+                  "stats": {
+                    "fileCount": 47,
+                    "dirCount": 0,
+                    "fileTypes": {
+                      ".tsx": 47
+                    }
+                  }
+                }
+              ],
+              "stats": {
+                "fileCount": 0,
+                "dirCount": 5,
+                "fileTypes": {}
+              }
+            },
+            {
+              "name": "hooks",
+              "path": "hooks",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "use-mobile.tsx",
+                  "path": "hooks/use-mobile.tsx",
+                  "type": "file",
+                  "size": 565,
+                  "extension": ".tsx"
+                },
+                {
+                  "name": "use-toast.ts",
+                  "path": "hooks/use-toast.ts",
+                  "type": "file",
+                  "size": 3895,
+                  "extension": ".ts"
+                }
+              ],
+              "stats": {
+                "fileCount": 2,
+                "dirCount": 0,
+                "fileTypes": {
+                  ".tsx": 1,
+                  ".ts": 1
+                }
+              }
+            },
+            {
+              "name": "index.css",
+              "path": "src/index.css",
+              "type": "file",
+              "size": 2366,
+              "extension": ".css"
+            },
+            {
+              "name": "lib",
+              "path": "lib",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "api.ts",
+                  "path": "lib/api.ts",
+                  "type": "file",
+                  "size": 5790,
+                  "extension": ".ts"
+                },
+                {
+                  "name": "contract.ts",
+                  "path": "lib/contract.ts",
+                  "type": "file",
+                  "size": 39041,
+                  "extension": ".ts"
+                },
+                {
+                  "name": "queryClient.ts",
+                  "path": "lib/queryClient.ts",
+                  "type": "file",
+                  "size": 1376,
+                  "extension": ".ts"
+                },
+                {
+                  "name": "types.ts",
+                  "path": "lib/types.ts",
+                  "type": "file",
+                  "size": 1798,
+                  "extension": ".ts"
+                },
+                {
+                  "name": "utils.ts",
+                  "path": "lib/utils.ts",
+                  "type": "file",
+                  "size": 3924,
+                  "extension": ".ts"
+                },
+                {
+                  "name": "wallet.ts",
+                  "path": "lib/wallet.ts",
+                  "type": "file",
+                  "size": 7909,
+                  "extension": ".ts"
+                }
+              ],
+              "stats": {
+                "fileCount": 6,
+                "dirCount": 0,
+                "fileTypes": {
+                  ".ts": 6
+                }
+              }
+            },
+            {
+              "name": "main.tsx",
+              "path": "src/main.tsx",
+              "type": "file",
+              "size": 157,
+              "extension": ".tsx"
+            },
+            {
+              "name": "pages",
+              "path": "pages",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "Admin.tsx",
+                  "path": "pages/Admin.tsx",
+                  "type": "file",
+                  "size": 16732,
+                  "extension": ".tsx"
+                },
+                {
+                  "name": "Blocklist.tsx",
+                  "path": "pages/Blocklist.tsx",
+                  "type": "file",
+                  "size": 3668,
+                  "extension": ".tsx"
+                },
+                {
+                  "name": "Dashboard.tsx",
+                  "path": "pages/Dashboard.tsx",
+                  "type": "file",
+                  "size": 7117,
+                  "extension": ".tsx"
+                },
+                {
+                  "name": "RoleManagement.tsx",
+                  "path": "pages/RoleManagement.tsx",
+                  "type": "file",
+                  "size": 3761,
+                  "extension": ".tsx"
+                },
+                {
+                  "name": "Settings.tsx",
+                  "path": "pages/Settings.tsx",
+                  "type": "file",
+                  "size": 4739,
+                  "extension": ".tsx"
+                },
+                {
+                  "name": "Transactions.tsx",
+                  "path": "pages/Transactions.tsx",
+                  "type": "file",
+                  "size": 4686,
+                  "extension": ".tsx"
+                },
+                {
+                  "name": "not-found.tsx",
+                  "path": "pages/not-found.tsx",
+                  "type": "file",
+                  "size": 711,
+                  "extension": ".tsx"
+                }
+              ],
+              "stats": {
+                "fileCount": 7,
+                "dirCount": 0,
+                "fileTypes": {
+                  ".tsx": 7
+                }
+              }
+            },
+            {
+              "name": "types",
+              "path": "types",
+              "type": "directory",
+              "children": [
+                {
+                  "name": "ethereum.d.ts",
+                  "path": "types/ethereum.d.ts",
+                  "type": "file",
+                  "size": 292,
+                  "extension": ".ts"
+                }
+              ],
+              "stats": {
+                "fileCount": 1,
+                "dirCount": 0,
+                "fileTypes": {
+                  ".ts": 1
+                }
+              }
+            }
+          ],
+          "stats": {
+            "fileCount": 3,
+            "dirCount": 5,
+            "fileTypes": {
+              ".tsx": 2,
+              ".css": 1
+            }
+          }
+        }
+      ],
+      "stats": {
+        "fileCount": 1,
+        "dirCount": 1,
+        "fileTypes": {
+          ".html": 1
+        }
+      }
+    },
+    {
+      "name": "docs",
+      "path": "docs",
+      "type": "directory",
+      "children": [
+        {
+          "name": "README.md",
+          "path": "docs/README.md",
+          "type": "file",
+          "size": 859,
+          "extension": ".md"
+        },
+        {
+          "name": "api-reference.html",
+          "path": "docs/api-reference.html",
+          "type": "file",
+          "size": 4410,
+          "extension": ".html"
+        },
+        {
+          "name": "endpoints.md",
+          "path": "docs/endpoints.md",
+          "type": "file",
+          "size": 1422,
+          "extension": ".md"
+        },
+        {
+          "name": "examples.md",
+          "path": "docs/examples.md",
+          "type": "file",
+          "size": 1710,
+          "extension": ".md"
+        },
+        {
+          "name": "implementation.md",
+          "path": "docs/implementation.md",
+          "type": "file",
+          "size": 1269,
+          "extension": ".md"
+        },
+        {
+          "name": "index.md",
+          "path": "docs/index.md",
+          "type": "file",
+          "size": 977,
+          "extension": ".md"
+        },
+        {
+          "name": "roles.md",
+          "path": "docs/roles.md",
+          "type": "file",
+          "size": 1465,
+          "extension": ".md"
+        },
+        {
+          "name": "testing.md",
+          "path": "docs/testing.md",
+          "type": "file",
+          "size": 1790,
+          "extension": ".md"
+        }
+      ],
+      "stats": {
+        "fileCount": 8,
+        "dirCount": 0,
+        "fileTypes": {
+          ".md": 7,
+          ".html": 1
+        }
+      }
+    },
+    {
+      "name": "drizzle.config.ts",
+      "path": "workspace/drizzle.config.ts",
+      "type": "file",
+      "size": 325,
+      "extension": ".ts"
+    },
+    {
+      "name": "package-lock.json",
+      "path": "workspace/package-lock.json",
+      "type": "file",
+      "size": 314762,
+      "extension": ".json"
+    },
+    {
+      "name": "package.json",
+      "path": "workspace/package.json",
+      "type": "file",
+      "size": 3550,
+      "extension": ".json"
+    },
+    {
+      "name": "postcss.config.js",
+      "path": "workspace/postcss.config.js",
+      "type": "file",
+      "size": 80,
+      "extension": ".js"
+    },
+    {
+      "name": "server",
+      "path": "server",
+      "type": "directory",
+      "children": [
+        {
+          "name": "index.ts",
+          "path": "server/index.ts",
+          "type": "file",
+          "size": 2313,
+          "extension": ".ts"
+        },
+        {
+          "name": "routes.ts",
+          "path": "server/routes.ts",
+          "type": "file",
+          "size": 1227,
+          "extension": ".ts"
+        },
+        {
+          "name": "storage.ts",
+          "path": "server/storage.ts",
+          "type": "file",
+          "size": 1012,
+          "extension": ".ts"
+        },
+        {
+          "name": "vite.ts",
+          "path": "server/vite.ts",
+          "type": "file",
+          "size": 2374,
+          "extension": ".ts"
+        }
+      ],
+      "stats": {
+        "fileCount": 4,
+        "dirCount": 0,
+        "fileTypes": {
+          ".ts": 4
+        }
+      }
+    },
+    {
+      "name": "shared",
+      "path": "shared",
+      "type": "directory",
+      "children": [
+        {
+          "name": "schema.ts",
+          "path": "shared/schema.ts",
+          "type": "file",
+          "size": 533,
+          "extension": ".ts"
+        }
+      ],
+      "stats": {
+        "fileCount": 1,
+        "dirCount": 0,
+        "fileTypes": {
+          ".ts": 1
+        }
+      }
+    },
+    {
+      "name": "tailwind.config.ts",
+      "path": "workspace/tailwind.config.ts",
+      "type": "file",
+      "size": 2787,
+      "extension": ".ts"
+    },
+    {
+      "name": "theme.json",
+      "path": "workspace/theme.json",
+      "type": "file",
+      "size": 100,
+      "extension": ".json"
+    },
+    {
+      "name": "tsconfig.json",
+      "path": "workspace/tsconfig.json",
+      "type": "file",
+      "size": 657,
+      "extension": ".json"
+    },
+    {
+      "name": "version.json",
+      "path": "workspace/version.json",
+      "type": "file",
+      "size": 350,
+      "extension": ".json"
+    },
+    {
+      "name": "vite.config.ts",
+      "path": "workspace/vite.config.ts",
+      "type": "file",
+      "size": 1008,
+      "extension": ".ts"
+    }
+  ],
+  "stats": {
+    "fileCount": 10,
+    "dirCount": 8,
+    "fileTypes": {
+      ".md": 1,
+      ".ts": 3,
+      ".json": 5,
+      ".js": 1
+    }
+  }
+}

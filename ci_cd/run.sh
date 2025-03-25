@@ -36,12 +36,12 @@ run_health_check() {
   
   # Basic health check
   echo -e "${YELLOW}Basic health check:${NC}"
-  curl -s http://localhost:3000/api/health | python3 -m json.tool
+  curl -s http://localhost:5000/api/health | node -e "process.stdin.on('data', data => console.log(JSON.stringify(JSON.parse(data.toString()), null, 2)))"
   echo ""
   
   # Detailed health check  
   echo -e "${YELLOW}Detailed health check:${NC}"
-  curl -s http://localhost:3000/api/health/detailed | python3 -m json.tool
+  curl -s http://localhost:5000/api/health/detailed | node -e "process.stdin.on('data', data => console.log(JSON.stringify(JSON.parse(data.toString()), null, 2)))"
   echo ""
   
   echo -e "${GREEN}Health check completed.${NC}"

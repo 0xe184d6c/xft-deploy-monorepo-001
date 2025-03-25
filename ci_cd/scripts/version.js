@@ -1,11 +1,12 @@
 // Version management script for CI/CD
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 // Function to read the current version from package.json
 function getCurrentVersion() {
   try {
-    const packageJsonPath = path.join(process.cwd(), 'package.json');
+    const packageJsonPath = path.join(projectRoot, 'package.json');
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
     return packageJson.version || '0.1.0';
   } catch (error) {
@@ -32,7 +33,7 @@ function bumpVersion(version, type = 'patch') {
 // Function to update the version in package.json
 function updatePackageJsonVersion(newVersion) {
   try {
-    const packageJsonPath = path.join(process.cwd(), 'package.json');
+    const packageJsonPath = path.join(projectRoot, 'package.json');
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
     
     packageJson.version = newVersion;
@@ -59,7 +60,7 @@ function updateVersionInfo(version) {
       environment: process.env.NODE_ENV || 'development'
     };
     
-    const versionFilePath = path.join(process.cwd(), 'version.json');
+    const versionFilePath = path.join(projectRoot, 'version.json');
     fs.writeFileSync(versionFilePath, JSON.stringify(versionInfo, null, 2) + '\n');
     
     return true;
@@ -72,7 +73,7 @@ function updateVersionInfo(version) {
 // Function to update the changelog
 function updateChangelog(version) {
   try {
-    const changelogPath = path.join(process.cwd(), 'CHANGELOG.md');
+    const changelogPath = path.join(projectRoot, 'CHANGELOG.md');
     const timestamp = new Date().toISOString().split('T')[0];
     const newEntry = `\n## [${version}] - ${timestamp}\n\n- Update version to ${version}\n`;
     
@@ -96,6 +97,11 @@ function updateChangelog(version) {
     return false;
   }
 }
+
+// Get current module's directory
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const projectRoot = path.resolve(__dirname, '../..');
 
 // Main function
 function main() {

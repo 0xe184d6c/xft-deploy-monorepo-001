@@ -13,32 +13,6 @@ let provider, signer, contract;
 let activityLog = [];
 let isDarkMode = false;
 
-// Load ethers and initialize the app when the document is ready
-document.addEventListener('DOMContentLoaded', async () => {
-    console.log('Document loaded, initializing app...');
-    
-    try {
-        // Set up the tab functionality
-        setupTabs();
-        
-        // Check if we're in a test environment without MetaMask
-        setupTestEnvironmentIfNeeded();
-        
-        // Set up dark mode toggle
-        setupDarkMode();
-        
-        // Check if MetaMask is already connected
-        if (window.ethereum && window.ethereum.selectedAddress) {
-            connectWallet();
-        }
-        
-        console.log('App initialization complete');
-    } catch (error) {
-        console.error('Error during app initialization:', error);
-        addToActivityLog('Error initializing application: ' + error.message, 'error');
-    }
-});
-
 // Check if ethers library is available
 function isEthersAvailable() {
     return typeof window.ethers !== 'undefined';
@@ -80,60 +54,55 @@ function loadEthers() {
     });
 }
 
-// Initialize the dashboard
+// Initialize the dashboard when document is loaded
 document.addEventListener('DOMContentLoaded', async () => {
-    // Try to load ethers.js
-    try {
-        await loadEthers();
-    } catch (error) {
-        console.error('Failed to load ethers:', error);
-        alert('Failed to load Ethereum library. Some features might not work properly.');
-    }
+    console.log('Document loaded, initializing app...');
     
-    // Set up tab navigation
-    const tabs = document.querySelectorAll('.tab');
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            // Remove active class from all tabs
-            tabs.forEach(t => t.classList.remove('active'));
-            // Add active class to clicked tab
-            tab.classList.add('active');
-            
-            // Hide all tab content
-            const tabContents = document.querySelectorAll('.tab-content');
-            tabContents.forEach(content => content.classList.remove('active'));
-            
-            // Show the corresponding tab content
-            const tabId = tab.getAttribute('data-tab');
-            document.getElementById(tabId).classList.add('active');
-        });
-    });
-
-    // Initialize token amount converter only if ethers is available
-    if (isEthersAvailable()) {
-        const tokenAmountInput = document.getElementById('tokenAmount');
-        if (tokenAmountInput) {
-            tokenAmountInput.addEventListener('input', async () => {
-                if (contract) {
-                    try {
-                        const amount = tokenAmountInput.value;
-                        if (amount && amount > 0) {
-                            const shares = await contract.convertToShares(ethers.utils.parseUnits(amount, 18));
-                            document.getElementById('sharesAmount').value = ethers.utils.formatUnits(shares, 18);
+    try {
+        // Try to load ethers.js if not already loaded
+        await loadEthers();
+        
+        // Set up the tab functionality
+        setupTabs();
+        
+        // Check if we're in a test environment without MetaMask
+        setupTestEnvironmentIfNeeded();
+        
+        // Set up dark mode toggle
+        setupDarkMode();
+        
+        // Initialize token amount converter if ethers is available
+        if (isEthersAvailable()) {
+            const tokenAmountInput = document.getElementById('tokenAmount');
+            if (tokenAmountInput) {
+                tokenAmountInput.addEventListener('input', async () => {
+                    if (contract) {
+                        try {
+                            const amount = tokenAmountInput.value;
+                            if (amount && amount > 0) {
+                                const shares = await contract.convertToShares(ethers.utils.parseUnits(amount, 18));
+                                document.getElementById('sharesAmount').value = ethers.utils.formatUnits(shares, 18);
+                            }
+                        } catch (error) {
+                            console.error('Error converting tokens:', error);
                         }
-                    } catch (error) {
-                        console.error('Error converting tokens:', error);
                     }
-                }
-            });
+                });
+            }
+    
+            // Check if MetaMask is already connected
+            if (window.ethereum && window.ethereum.selectedAddress) {
+                connectWallet();
+            }
+        } else {
+            addToActivityLog('Ethereum library not available. Connect wallet feature disabled.', 'error');
         }
-
-        // Check if MetaMask is already connected
-        if (window.ethereum && window.ethereum.selectedAddress) {
-            connectWallet();
-        }
-    } else {
-        addToActivityLog('Ethereum library not available. Connect wallet feature disabled.', 'error');
+        
+        console.log('App initialization complete');
+    } catch (error) {
+        console.error('Error during app initialization:', error);
+        addToActivityLog('Error initializing application: ' + error.message, 'error');
+        alert('Failed to load Ethereum library. Some features might not work properly.');
     }
 });
 
@@ -1013,4 +982,62 @@ function setupDarkMode() {
             }
         }
     }
+}
+
+// Add entry to activity log
+function addToActivityLog(message, status = 'info', txHash = null) {
+    const timestamp = new Date().toLocaleTimeString();
+    const entry = {
+        timestamp: timestamp,
+        message: message,
+        status: status || 'info',
+        txHash: txHash
+    };
+    
+    // Add to in-memory log
+    activityLog.unshift(entry);
+    
+    // Keep log at a reasonable size
+    if (activityLog.length > 100) {
+        activityLog.pop();
+    }
+    
+    // Update the UI
+    updateActivityLogUI();
+    
+    // Log to console for debugging
+    console.log(`[${status.toUpperCase()}] ${message}`);
+}
+
+// Update the activity log UI
+function updateActivityLogUI() {
+    const logElement = document.getElementById('activityLog');
+    if (!logElement) return;
+    
+    logElement.innerHTML = '';
+    
+    activityLog.forEach(entry => {
+        const logEntry = document.createElement('div');
+        logEntry.className = `log-entry log-${entry.status}`;
+        
+        let logContent = `
+            <span class="log-time">${entry.timestamp}</span>
+            <span class="log-message">${entry.message}</span>
+        `;
+        
+        if (entry.txHash) {
+            const network = provider ? provider.network.chainId : 1;
+            const explorerUrl = networks[network]?.explorer;
+            if (explorerUrl) {
+                logContent += `
+                    <a href="${explorerUrl}/tx/${entry.txHash}" target="_blank" class="log-hash">
+                        <i class="fas fa-external-link-alt"></i> View Transaction
+                    </a>
+                `;
+            }
+        }
+        
+        logEntry.innerHTML = logContent;
+        logElement.appendChild(logEntry);
+    });
 }

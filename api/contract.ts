@@ -482,6 +482,159 @@ export async function getTransaction(txHash: string) {
   }
 }
 
+/**
+ * Gets all events from the contract for a specified event type and block range
+ * @param eventName Name of the event to filter for, or 'all' for all events
+ * @param fromBlock Starting block number (default: latest 10000 blocks)
+ * @param toBlock Ending block number (default: latest)
+ * @param maxEvents Maximum number of events to return
+ * @returns Array of events with decoded data
+ */
+export async function getContractEvents(
+  eventName: string = 'all',
+  fromBlock?: number,
+  toBlock?: number,
+  maxEvents: number = 1000
+) {
+  try {
+    if (!provider || !contract) {
+      throw new Error("Provider or contract not initialized");
+    }
+    
+    // Get the latest block if not specified
+    const latestBlock = await provider.getBlockNumber();
+    
+    // Default to last 10000 blocks (~1.5 days) if not specified
+    const effectiveFromBlock = fromBlock || Math.max(0, latestBlock - 10000);
+    const effectiveToBlock = toBlock || latestBlock;
+
+    console.log(`Fetching events from block ${effectiveFromBlock} to ${effectiveToBlock} (${effectiveToBlock - effectiveFromBlock} blocks)`);
+    
+    // Create filter for all events or specific event
+    let filter;
+    if (eventName === 'all') {
+      filter = { 
+        address: contract.target as string,
+        fromBlock: effectiveFromBlock,
+        toBlock: effectiveToBlock
+      };
+    } else {
+      // Get the event signature from the ABI
+      if (!contract) {
+        throw new Error("Contract not initialized");
+      }
+      
+      try {
+        // In ethers v6, the method changed from getEventTopic to getEvent().format
+        const eventFragment = contract.interface.getEvent(eventName);
+        const eventSignature = eventFragment.format();
+        const eventTopic = ethers.id(eventSignature);
+        
+        filter = {
+          address: contract.target as string,
+          topics: [eventTopic],
+          fromBlock: effectiveFromBlock,
+          toBlock: effectiveToBlock
+        };
+      } catch (error) {
+        console.error(`Error getting event topic for ${eventName}:`, error);
+        throw new Error(`Event ${eventName} not found in contract ABI or is not properly formatted`);
+      }
+    }
+    
+    // Get logs from provider
+    const logs = await provider.getLogs(filter);
+    
+    // Limit the number of logs to process
+    const limitedLogs = logs.slice(0, maxEvents);
+    
+    // Process and decode logs
+    const events = await Promise.all(limitedLogs.map(async (log) => {
+      try {
+        if (!contract || !provider) {
+          throw new Error("Contract or provider not initialized");
+        }
+        
+        // Try to decode the log
+        const parsedLog = contract.interface.parseLog({
+          topics: log.topics as string[],
+          data: log.data
+        });
+        
+        // Get the block for timestamp
+        const block = await provider.getBlock(log.blockNumber);
+        
+        // Get transaction receipt for gas used and status
+        const receipt = await provider.getTransactionReceipt(log.transactionHash);
+        
+        return {
+          transactionHash: log.transactionHash,
+          blockNumber: log.blockNumber,
+          blockHash: log.blockHash,
+          logIndex: log.index,
+          removed: log.removed,
+          address: log.address,
+          timestamp: block?.timestamp || 0,
+          name: parsedLog?.name || 'Unknown',
+          signature: parsedLog?.signature || '',
+          topic: log.topics[0],
+          args: parsedLog?.args ? Object.keys(parsedLog.args)
+            .filter(key => isNaN(Number(key))) // Filter out numeric keys
+            .reduce((obj, key) => {
+              const value = parsedLog.args[key];
+              obj[key] = typeof value === 'bigint' ? value.toString() : value;
+              return obj;
+            }, {} as Record<string, any>) : {},
+          data: log.data,
+          status: receipt?.status === 1 ? 'success' : 'failed',
+          gasUsed: receipt?.gasUsed?.toString() || '0'
+        };
+      } catch (error) {
+        console.warn(`Could not decode log for transaction ${log.transactionHash}:`, error);
+        // Return partial data for logs we couldn't fully decode
+        return {
+          transactionHash: log.transactionHash,
+          blockNumber: log.blockNumber,
+          blockHash: log.blockHash,
+          logIndex: log.index,
+          removed: log.removed,
+          address: log.address,
+          timestamp: 0, // We couldn't get the timestamp
+          name: 'Unknown',
+          signature: '',
+          topic: log.topics[0],
+          args: {},
+          data: log.data,
+          status: 'unknown',
+          gasUsed: '0'
+        };
+      }
+    }));
+    
+    // Sort events by block number (descending) and then by log index (ascending)
+    const sortedEvents = events.sort((a, b) => {
+      if (b.blockNumber !== a.blockNumber) {
+        return b.blockNumber - a.blockNumber; // Newest blocks first
+      }
+      return a.logIndex - b.logIndex; // Within the same block, sort by log index
+    });
+    
+    return {
+      events: sortedEvents,
+      range: {
+        fromBlock: effectiveFromBlock,
+        toBlock: effectiveToBlock,
+        totalBlocks: effectiveToBlock - effectiveFromBlock,
+        totalEvents: sortedEvents.length,
+        hasMore: logs.length > maxEvents
+      }
+    };
+  } catch (error) {
+    console.error(`Error fetching contract events:`, error);
+    throw error;
+  }
+}
+
 // Initialize contract when this module is imported
 initializeContract().catch(error => {
   console.error("Failed to initialize contract on startup:", error);

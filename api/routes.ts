@@ -358,4 +358,47 @@ router.get('/transaction/:txHash', async (req: Request, res: Response) => {
   }
 });
 
+// Get contract events with optional filtering
+router.get('/events', async (req: Request, res: Response) => {
+  try {
+    const eventName = req.query.event as string || 'all';
+    const fromBlock = req.query.fromBlock ? parseInt(req.query.fromBlock as string) : undefined;
+    const toBlock = req.query.toBlock ? parseInt(req.query.toBlock as string) : undefined;
+    const maxEvents = req.query.limit ? parseInt(req.query.limit as string) : 1000;
+    
+    // Validate event name if provided
+    if (eventName !== 'all' && eventName !== undefined) {
+      const validEventNames = [
+        'Transfer', 'Approval', 'Mint', 'Burn', 'Pause', 'Unpause', 
+        'RewardMultiplierUpdated', 'RoleGranted', 'RoleRevoked', 'Blocked', 'Unblocked'
+      ];
+      if (!validEventNames.includes(eventName)) {
+        return res.status(400).json({ 
+          error: 'Invalid event name', 
+          validEvents: validEventNames,
+          timestamp: new Date().toISOString()
+        });
+      }
+    }
+    
+    // Validate block range if provided
+    if (fromBlock !== undefined && toBlock !== undefined && fromBlock > toBlock) {
+      return res.status(400).json({ 
+        error: 'Invalid block range', 
+        details: { fromBlock, toBlock },
+        message: 'fromBlock must be less than or equal to toBlock',
+        timestamp: new Date().toISOString() 
+      });
+    }
+    
+    const events = await contractService.getContractEvents(eventName, fromBlock, toBlock, maxEvents);
+    res.json({
+      ...events,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    handleApiError(res, error, "fetching contract events");
+  }
+});
+
 export default router;

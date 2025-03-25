@@ -100,7 +100,7 @@ interface ContractContextType {
   unblockAccount: (account: string) => Promise<void>;
   pauseContract: () => Promise<void>;
   unpauseContract: () => Promise<void>;
-  updateRewardMultiplier: (newValue: string) => Promise<void>;
+  updateRewardMultiplier: (newValue: string, operation?: 'set' | 'add') => Promise<void>;
   grantRole: (account: string, role: string) => Promise<void>;
   revokeRole: (account: string, role: string) => Promise<void>;
   hasRole: (account: string, role: string) => Promise<boolean>;
@@ -601,7 +601,7 @@ export const ContractProvider = ({ children }: ContractProviderProps) => {
   };
 
   // Update reward multiplier (requires ORACLE_ROLE)
-  const updateRewardMultiplier = async (newValue: string) => {
+  const updateRewardMultiplier = async (newValue: string, operation: 'set' | 'add' = 'set') => {
     if (!contract || !signer) {
       console.error("Contract or signer not initialized, cannot update reward multiplier");
       showTransactionModal("error", "Wallet not connected or contract not initialized");
@@ -611,13 +611,31 @@ export const ContractProvider = ({ children }: ContractProviderProps) => {
     try {
       showTransactionModal("pending");
       
-      const tx = await contract.setRewardMultiplier(newValue);
+      let tx;
+      if (operation === 'add') {
+        tx = await contract.addRewardMultiplier(newValue);
+      } else {
+        tx = await contract.setRewardMultiplier(newValue);
+      }
+      
       const receipt = await tx.wait();
       await Promise.all([
         loadRewardMultiplier(),
         loadUserBalance(),
         loadTotalSupply()
       ]);
+      
+      const newTx: Transaction = {
+        hash: tx.hash,
+        type: 'Unknown',
+        from: signer.address,
+        to: contract.target as string,
+        amount: newValue,
+        timestamp: Math.floor(Date.now() / 1000),
+        status: 'pending'
+      };
+      
+      setTransactionHistory(prev => [newTx, ...prev]);
       
       setTransactionModalState(prev => ({
         ...prev,
@@ -627,7 +645,7 @@ export const ContractProvider = ({ children }: ContractProviderProps) => {
       
       return receipt;
     } catch (error) {
-      console.error("Update reward multiplier failed:", error);
+      console.error(`Update reward multiplier (${operation}) failed:`, error);
       showTransactionModal("error", error instanceof Error ? error.message : "Unknown error");
       return null;
     }

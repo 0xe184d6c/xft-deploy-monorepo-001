@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { X } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { X, Plus, RefreshCw } from "lucide-react";
 import { useWallet } from "@/lib/wallet";
 import { useContract } from "@/lib/contract";
 import { useToast } from "@/hooks/use-toast";
@@ -19,16 +20,22 @@ export default function RewardMultiplierModal({ isOpen, onClose }: RewardMultipl
   const { toast } = useToast();
   
   const [value, setValue] = useState("");
+  const [operation, setOperation] = useState<"set" | "add">("set");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Update form value when reward multiplier changes
+  // Update form value when reward multiplier changes or when operation changes
   useEffect(() => {
     if (isOpen && rewardMultiplier) {
-      // Convert from big decimal to float
-      const multiplierValue = parseFloat(rewardMultiplier) / 1e18;
-      setValue(multiplierValue.toString());
+      if (operation === "set") {
+        // For "set" operation, show the current multiplier
+        const multiplierValue = parseFloat(rewardMultiplier) / 1e18;
+        setValue(multiplierValue.toString());
+      } else {
+        // For "add" operation, default to a small increment (0.01)
+        setValue("0.01");
+      }
     }
-  }, [isOpen, rewardMultiplier]);
+  }, [isOpen, rewardMultiplier, operation]);
 
   const handleUpdateMultiplier = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,6 +66,17 @@ export default function RewardMultiplierModal({ isOpen, onClose }: RewardMultipl
       
       // Convert to big decimal format (multiply by 10^18)
       const bigDecimalValue = (multiplierValue * 1e18).toString();
+      
+      // Call the backend with the appropriate operation
+      await fetch('/api/reward-multiplier', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ value: multiplierValue.toString(), operation }),
+      });
+      
+      // Also update the UI state directly (even though we'll refetch)
       await updateRewardMultiplier(bigDecimalValue);
       
       showTransactionModal("success");
@@ -66,9 +84,10 @@ export default function RewardMultiplierModal({ isOpen, onClose }: RewardMultipl
       // Close modal
       onClose();
       
+      const actionText = operation === "set" ? "set to" : "increased by";
       toast({
         title: "Reward multiplier updated",
-        description: `Reward multiplier has been set to ${value}`,
+        description: `Reward multiplier has been ${actionText} ${value}`,
       });
     } catch (error) {
       console.error("Update reward multiplier error:", error);
@@ -88,7 +107,10 @@ export default function RewardMultiplierModal({ isOpen, onClose }: RewardMultipl
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="bg-white rounded-lg shadow-lg w-full max-w-md">
         <DialogHeader className="flex justify-between items-center p-4 border-b border-neutral-300">
-          <DialogTitle className="font-bold">Update Reward Multiplier</DialogTitle>
+          <div>
+            <DialogTitle className="font-bold">Update Reward Multiplier</DialogTitle>
+            <DialogDescription className="text-sm text-gray-500">Adjust the conversion rate between tokens and shares</DialogDescription>
+          </div>
           <DialogClose asChild>
             <Button variant="ghost" size="icon" className="p-1 hover:bg-neutral-100 rounded">
               <X className="w-5 h-5" />
@@ -104,20 +126,49 @@ export default function RewardMultiplierModal({ isOpen, onClose }: RewardMultipl
           
           <form onSubmit={handleUpdateMultiplier}>
             <div className="mb-4">
-              <Label htmlFor="multiplier-value" className="block text-sm mb-1">New Multiplier</Label>
+              <Label className="block text-sm mb-2">Operation</Label>
+              <RadioGroup 
+                defaultValue="set" 
+                value={operation} 
+                onValueChange={(value) => setOperation(value as "set" | "add")}
+                className="flex gap-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="set" id="set" />
+                  <Label htmlFor="set" className="flex items-center cursor-pointer">
+                    <RefreshCw className="w-4 h-4 mr-1" />
+                    Set new value
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="add" id="add" />
+                  <Label htmlFor="add" className="flex items-center cursor-pointer">
+                    <Plus className="w-4 h-4 mr-1" />
+                    Add to current
+                  </Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+            <div className="mb-4">
+              <Label htmlFor="multiplier-value" className="block text-sm mb-1">
+                {operation === "set" ? "New Multiplier Value" : "Increment Amount"}
+              </Label>
               <Input
                 id="multiplier-value"
                 type="number"
                 className="w-full px-3 py-2 border border-neutral-300 rounded text-sm"
-                placeholder="1.0"
+                placeholder={operation === "set" ? "1.0" : "0.01"}
                 min="0"
-                step="0.000000000000000001"
+                step="0.01"
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
                 disabled={isSubmitting}
               />
               <div className="text-xs text-accent-500 mt-1">
-                BASE value: 1e18 (1,000,000,000,000,000,000)
+                {operation === "set" 
+                  ? "Sets the absolute value of the multiplier" 
+                  : "Adds this value to the current multiplier"}
               </div>
             </div>
             
@@ -136,7 +187,7 @@ export default function RewardMultiplierModal({ isOpen, onClose }: RewardMultipl
                 className="flex-1 px-4 py-2 bg-black text-white text-sm rounded hover:bg-accent-700 transition-colors"
                 disabled={isSubmitting || !connected}
               >
-                {isSubmitting ? "Processing..." : "Update"}
+                {isSubmitting ? "Processing..." : operation === "set" ? "Set Value" : "Add Value"}
               </Button>
             </div>
           </form>

@@ -1,3 +1,23 @@
+// Wait for document and ethers to be ready
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        // Load ethers if not already loaded
+        if (typeof window.ethers === 'undefined') {
+            const script = document.createElement('script');
+            script.src = 'ethers.umd.min.js';
+            script.type = 'text/javascript';
+            document.head.appendChild(script);
+            
+            await new Promise((resolve, reject) => {
+                script.onload = resolve;
+                script.onerror = reject;
+            });
+        }
+    } catch (error) {
+        console.error('Failed to load ethers:', error);
+    }
+});
+
 // Use a test network contract address - this should be replaced with deployed contract address
 const contractAddress = '0x421C76cd7C1550c4fcc974F4d74c870150c45995'; 
 // Network configuration - Add Hardhat local network support

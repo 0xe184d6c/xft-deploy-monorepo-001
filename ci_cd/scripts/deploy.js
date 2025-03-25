@@ -1,7 +1,12 @@
 // Deployment script for CI/CD pipeline
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
+import fs from 'fs';
+import path from 'path';
+import { execSync } from 'child_process';
+import { fileURLToPath } from 'url';
+
+// Get current directory (ES modules don't have __dirname)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Environment handling
 const ENV = process.env.NODE_ENV || 'development';
@@ -238,6 +243,8 @@ function deploy() {
   }
 }
 
-// Run deployment
-const exitCode = deploy();
-process.exit(exitCode);
+// Run deployment as an IIFE for ES modules
+(async () => {
+  const exitCode = deploy();
+  process.exit(exitCode);
+})();

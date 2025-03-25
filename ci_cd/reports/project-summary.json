@@ -1,15 +1,15 @@
 {
   "summary": {
-    "totalFiles": 120,
+    "totalFiles": 125,
     "totalDirectories": 24,
     "fileTypes": {
       ".md": 9,
       ".ts": 20,
       ".html": 3,
+      ".json": 10,
       ".js": 5,
       ".tsx": 77,
-      ".css": 1,
-      ".json": 5
+      ".css": 1
     }
   },
   "keyComponents": {

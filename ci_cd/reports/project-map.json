@@ -18,7 +18,7 @@
       "name": "CHANGELOG.md",
       "path": "workspace/CHANGELOG.md",
       "type": "file",
-      "size": 1288,
+      "size": 1472,
       "extension": ".md"
     },
     {
@@ -113,6 +113,27 @@
           "type": "directory",
           "children": [
             {
+              "name": "dependency-report-2025-03-25T06-49-30.200Z.json",
+              "path": "reports/dependency-report-2025-03-25T06-49-30.200Z.json",
+              "type": "file",
+              "size": 19804,
+              "extension": ".json"
+            },
+            {
+              "name": "dependency-report-2025-03-25T06-50-18.980Z.json",
+              "path": "reports/dependency-report-2025-03-25T06-50-18.980Z.json",
+              "type": "file",
+              "size": 19796,
+              "extension": ".json"
+            },
+            {
+              "name": "dependency-report-latest.json",
+              "path": "reports/dependency-report-latest.json",
+              "type": "file",
+              "size": 19796,
+              "extension": ".json"
+            },
+            {
               "name": "deployments",
               "path": "deployments",
               "type": "directory",
@@ -122,12 +143,28 @@
                 "dirCount": 0,
                 "fileTypes": {}
               }
+            },
+            {
+              "name": "project-map.json",
+              "path": "reports/project-map.json",
+              "type": "file",
+              "size": 34870,
+              "extension": ".json"
+            },
+            {
+              "name": "project-summary.json",
+              "path": "reports/project-summary.json",
+              "type": "file",
+              "size": 5358,
+              "extension": ".json"
             }
           ],
           "stats": {
-            "fileCount": 0,
+            "fileCount": 5,
             "dirCount": 1,
-            "fileTypes": {}
+            "fileTypes": {
+              ".json": 5
+            }
           }
         },
         {
@@ -139,14 +176,14 @@
               "name": "dep-check.js",
               "path": "scripts/dep-check.js",
               "type": "file",
-              "size": 4724,
+              "size": 4952,
               "extension": ".js"
             },
             {
               "name": "deploy.js",
               "path": "scripts/deploy.js",
               "type": "file",
-              "size": 6976,
+              "size": 7204,
               "extension": ".js"
             },
             {
@@ -1145,7 +1182,7 @@
       "name": "version.json",
       "path": "workspace/version.json",
       "type": "file",
-      "size": 350,
+      "size": 132,
       "extension": ".json"
     },
     {

@@ -154,6 +154,8 @@ function main() {
   }
 }
 
-// Execute main function
-const exitCode = main();
-process.exit(exitCode);
+// Execute main function as an IIFE for ES modules
+(async () => {
+  const exitCode = main();
+  process.exit(exitCode);
+})();

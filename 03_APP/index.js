@@ -1,21 +1,16 @@
-// Simplified server for Replit compatibility
 const express = require('express');
 const path = require('path');
 const app = express();
 
-// Required port for Replit
 const PORT = 5000;
 
-// Basic middleware for serving static files
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Main route with health check
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Serve the ABI file
 app.get('/abi.json', (req, res) => {
   res.sendFile(path.join(__dirname, 'abi.json'));
 });

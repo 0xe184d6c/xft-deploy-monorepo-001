@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>USDX Management Interface</title>
+    <script src="https://cdn.ethers.io/lib/ethers-5.7.umd.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="header">
+        <h1>USDX Protocol Management</h1>
+        <div class="wallet-info">
+            <p>Connected: <span id="walletAddress">Not connected</span></p>
+            <p>Balance: <span id="tokenBalance">0</span> USDX</p>
+            <p>Roles: <span id="roleStatus">None</span></p>
+        </div>
+        <button class="button" onclick="connectWallet()">Connect Wallet</button>
+    </div>
+
+    <div class="grid">
+        <!-- Transfer Section -->
+        <div class="section">
+            <h2>Token Transfers</h2>
+            <div class="input-group">
+                <input type="text" id="transferAddress" placeholder="Recipient address">
+                <input type="number" id="transferAmount" placeholder="Amount">
+            </div>
+            <button class="button" onclick="transferTokens()">Transfer</button>
+        </div>
+
+        <!-- Mint/Burn Section -->
+        <div class="section">
+            <h2>Token Management</h2>
+            <div class="input-group">
+                <input type="text" id="mintAddress" placeholder="Recipient address">
+                <input type="number" id="mintAmount" placeholder="Amount">
+            </div>
+            <button class="button" onclick="mintTokens()">Mint</button>
+            <button class="button" onclick="burnTokens()">Burn</button>
+        </div>
+
+        <!-- Account Management -->
+        <div class="section">
+            <h2>Account Controls</h2>
+            <div class="input-group">
+                <input type="text" id="blockAddress" placeholder="Address to block/unblock">
+            </div>
+            <button class="button" onclick="blockAccount()">Block</button>
+            <button class="button" onclick="unblockAccount()">Unblock</button>
+        </div>
+
+        <!-- Protocol Controls -->
+        <div class="section">
+            <h2>Protocol Administration</h2>
+            <button class="button button-admin" onclick="togglePause()">Toggle Pause</button>
+            <button class="button button-admin" onclick="updateRewardMultiplier()">Update Rewards</button>
+        </div>
+
+        <!-- Role Management -->
+        <div class="section">
+            <h2>Role Administration</h2>
+            <div class="input-group">
+                <input type="text" id="roleAddress" placeholder="Address">
+                <select id="roleSelect">
+                    <option value="MINTER_ROLE">Minter</option>
+                    <option value="BURNER_ROLE">Burner</option>
+                    <option value="BLOCKLIST_ROLE">Blocklist</option>
+                </select>
+            </div>
+            <button class="button" onclick="grantRole()">Grant Role</button>
+            <button class="button" onclick="revokeRole()">Revoke Role</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

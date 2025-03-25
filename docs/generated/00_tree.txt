@@ -1,0 +1,108 @@
+.
+├── 00_admin
+│   └── backup.sh
+├── api
+│   ├── contract.ts
+│   ├── health.ts
+│   ├── index.ts
+│   └── routes.ts
+├── attached_assets
+│   ├── image_1742882852956.png
+│   ├── Pasted--inputs-stateMutability-nonpayable-type-constructor--1742873769154.txt
+│   ├── Pasted--inputs-stateMutability-nonpayable-type-constructor-inputs-internalType-addre-1742872064898.txt
+│   ├── Pasted--inputs-stateMutability-nonpayable-type-constructor-inputs-internalType-addre-1742875460362.txt
+│   ├── Pasted--SPDX-License-Identifier-MIT-pragma-solidity-0-8-18-import-UUPSUpgradeable-from-openzepp-1742874215671.txt
+│   ├── Pasted--SPDX-License-Identifier-MIT-pragma-solidity-0-8-18-import-UUPSUpgradeable-from-openzeppeli-1742872052194.txt
+│   ├── Pasted--SPDX-License-Identifier-MIT-pragma-solidity-0-8-18-import-UUPSUpgradeable-from-openzeppeli-1742875477788.txt
+│   ├── Pasted-Uncaught-Error-A-Select-Item-must-have-a-value-prop-that-is-not-an-empty-string-This-is-becaus-1742882755118.txt
+│   ├── Pasted-USDX-Public-and-External-Functions-initialize-string-memory-name-string-memory-symbol-address--1742873593202.txt
+│   └── Pasted-USDX-Public-and-External-Functions-initialize-string-memory-name-string-memory-symbol-address--1742874201420.txt
+├── CHANGELOG.md
+├── ci_cd
+│   ├── monitoring
+│   │   └── dashboard.html
+│   ├── README.md
+│   ├── reports
+│   │   ├── dependency-report-2025-03-25T06-49-30.200Z.json
+│   │   ├── dependency-report-2025-03-25T06-50-18.980Z.json
+│   │   ├── dependency-report.json
+│   │   ├── dependency-report-latest.json
+│   │   ├── deployments
+│   │   ├── project-map.json
+│   │   └── project-summary.json
+│   ├── run.sh
+│   └── scripts
+│       ├── dep-check.js
+│       ├── deploy.js
+│       ├── project-map.js
+│       └── version.js
+├── client
+│   ├── index.html
+│   └── src
+│       ├── App.tsx
+│       ├── components
+│       │   ├── dashboard
+│       │   ├── layout
+│       │   ├── modals
+│       │   ├── shared
+│       │   └── ui
+│       ├── hooks
+│       │   ├── use-mobile.tsx
+│       │   └── use-toast.ts
+│       ├── index.css
+│       ├── lib
+│       │   ├── api.ts
+│       │   ├── contract.ts
+│       │   ├── queryClient.ts
+│       │   ├── types.ts
+│       │   ├── utils.ts
+│       │   └── wallet.ts
+│       ├── main.tsx
+│       ├── pages
+│       │   ├── Admin.tsx
+│       │   ├── Blocklist.tsx
+│       │   ├── Dashboard.tsx
+│       │   ├── not-found.tsx
+│       │   ├── RoleManagement.tsx
+│       │   ├── Settings.tsx
+│       │   └── Transactions.tsx
+│       └── types
+│           └── ethereum.d.ts
+├── docs
+│   ├── api-reference.html
+│   ├── endpoints.md
+│   ├── examples.md
+│   ├── generated
+│   │   ├── 00_tree.txt
+│   │   ├── 01_flat_dir.txt
+│   │   ├── archive
+│   │   │   ├── 00_tree_20250325070316.txt
+│   │   │   ├── 01_flat_dir_20250325070316.txt
+│   │   │   └── dependencies_20250325070321.txt
+│   │   └── dependencies.txt
+│   ├── implementation.md
+│   ├── index.md
+│   ├── README.md
+│   ├── roles.md
+│   ├── serve-docs.sh
+│   └── testing.md
+├── drizzle.config.ts
+├── generated-icon.png
+├── package.json
+├── package-lock.json
+├── postcss.config.js
+├── replit.nix
+├── server
+│   ├── index.ts
+│   ├── routes.ts
+│   ├── storage.ts
+│   └── vite.ts
+├── shared
+│   └── schema.ts
+├── tailwind.config.ts
+├── theme.json
+├── tsconfig.json
+├── version.json
+└── vite.config.ts
+
+26 directories, 80 files

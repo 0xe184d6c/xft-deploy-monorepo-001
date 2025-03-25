@@ -69,10 +69,11 @@ function handleApiError(res: Response, error: any, operation: string) {
 const ETH_ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/;
 const TX_HASH_REGEX = /^0x[a-fA-F0-9]{64}$/;
 
-// Health check endpoint
-router.get('/health', (req: Request, res: Response) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
-});
+// Import our health routes
+import healthRoutes from './health';
+
+// Health check endpoints
+router.use('/health', healthRoutes);
 
 // Get token information
 router.get('/token', async (req: Request, res: Response) => {

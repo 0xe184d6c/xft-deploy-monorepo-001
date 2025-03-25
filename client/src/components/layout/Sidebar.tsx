@@ -5,7 +5,6 @@ import {
   UserCog, 
   Shield, 
   Settings,
-  DollarSign,
   ShieldAlert
 } from "lucide-react";
 import { useWallet } from "@/lib/wallet";
@@ -46,7 +45,6 @@ export default function Sidebar() {
       <nav className="py-6">
         <div className="px-6 mb-6">
           <div className="flex items-center mb-1">
-            <DollarSign className="w-6 h-6 mr-2" />
             <h2 className="font-bold">XFT Digital Dollar</h2>
           </div>
           <div className="text-sm text-accent-500">

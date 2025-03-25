@@ -1,6 +1,7 @@
 // Project structure mapping tool
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 // Configuration
 const CONFIG = {
@@ -142,19 +143,26 @@ function createProjectSummary(projectMap) {
   };
 }
 
+// Get current module's directory
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // Main function
 function main() {
   try {
     console.log('Mapping project structure...');
     
+    // Get project root directory (2 levels up from the script)
+    const projectRoot = path.resolve(__dirname, '../..');
+    
     // Map the project structure
-    const projectMap = mapDirectory('.');
+    const projectMap = mapDirectory(projectRoot);
     
     // Create a summary
     const summary = createProjectSummary(projectMap);
     
     // Create output directory if it doesn't exist
-    const outputDir = path.join(process.cwd(), 'ci_cd', 'reports');
+    const outputDir = path.join(projectRoot, 'ci_cd', 'reports');
     if (!fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir, { recursive: true });
     }

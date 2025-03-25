@@ -1,135 +1,140 @@
 #!/bin/bash
 
-# CI/CD Task Runner Script
-# This script provides a command-line interface to run CI/CD tasks
-
-# Set up colors for better readability
-RED='\033[0;31m'
+# Define color codes
+BLUE='\033[0;34m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
-BLUE='\033[0;34m'
+RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-# Print header
-echo -e "${BLUE}=====================================${NC}"
-echo -e "${BLUE}  USDX Token Dashboard CI/CD Tools   ${NC}"
-echo -e "${BLUE}=====================================${NC}"
-
-# Function to display help message
-show_help() {
-  echo -e "\n${YELLOW}Usage:${NC} ./ci_cd/run.sh [command]"
-  echo
-  echo -e "${YELLOW}Available commands:${NC}"
-  echo -e "  ${GREEN}health${NC}      - Run health check"
-  echo -e "  ${GREEN}version${NC}     - Update version (patch, minor, major)"
-  echo -e "  ${GREEN}deps${NC}        - Check dependencies"
-  echo -e "  ${GREEN}map${NC}         - Generate project structure map"
-  echo -e "  ${GREEN}deploy${NC}      - Run deployment process"
-  echo -e "  ${GREEN}help${NC}        - Show this help message"
-  echo
-  echo -e "${YELLOW}Examples:${NC}"
-  echo -e "  ./ci_cd/run.sh health"
-  echo -e "  ./ci_cd/run.sh version patch"
-  echo -e "  ./ci_cd/run.sh deploy"
-  echo
+# Header function
+print_header() {
+  echo -e "${BLUE}====================================="
+  echo -e "  USDX Token Dashboard CI/CD Tools   "
+  echo -e "=====================================${NC}"
 }
 
-# Function to run health check
-run_health_check() {
-  echo -e "${BLUE}Running health check...${NC}"
-  
-  # Check if curl is available
-  if ! command -v curl &> /dev/null; then
-    echo -e "${RED}Error: curl is not installed. Cannot perform health check.${NC}"
-    return 1
+# Error handling function
+handle_error() {
+  echo -e "${RED}Error: $1${NC}"
+  exit 1
+}
+
+# Function to run a command with error handling
+run_command() {
+  "$@"
+  local status=$?
+  if [ $status -ne 0 ]; then
+    handle_error "Command '$*' failed with status $status"
   fi
+  return $status
+}
+
+# Health check function
+run_health_check() {
+  echo -e "Running health check..."
   
   # Basic health check
   echo -e "${YELLOW}Basic health check:${NC}"
-  HEALTH_RESULT=$(curl -s http://localhost:5000/api/health)
+  curl -s http://localhost:3000/api/health | python3 -m json.tool
+  echo ""
   
-  if [ $? -ne 0 ]; then
-    echo -e "${RED}Error: Could not connect to health endpoint.${NC}"
-    echo -e "${RED}Make sure the application is running.${NC}"
-    return 1
-  fi
+  # Detailed health check  
+  echo -e "${YELLOW}Detailed health check:${NC}"
+  curl -s http://localhost:3000/api/health/detailed | python3 -m json.tool
+  echo ""
   
-  echo -e "${GREEN}$HEALTH_RESULT${NC}"
-  
-  # Detailed health check
-  echo -e "\n${YELLOW}Detailed health check:${NC}"
-  DETAILED_RESULT=$(curl -s http://localhost:5000/api/health/detailed)
-  
-  if [ $? -ne 0 ]; then
-    echo -e "${RED}Error: Could not connect to detailed health endpoint.${NC}"
-    return 1
-  fi
-  
-  echo -e "${GREEN}$DETAILED_RESULT${NC}"
-  
-  echo -e "\n${GREEN}Health check completed.${NC}"
+  echo -e "${GREEN}Health check completed.${NC}"
 }
 
-# Function to update version
-update_version() {
-  local VERSION_TYPE=$1
+# Version bump function
+run_version_bump() {
+  local version_type=${1:-"patch"}
   
-  if [ -z "$VERSION_TYPE" ]; then
-    VERSION_TYPE="patch"
-  fi
+  echo -e "Updating version (${version_type})..."
+  run_command node ci_cd/scripts/version.js "$version_type"
   
-  if [[ "$VERSION_TYPE" != "patch" && "$VERSION_TYPE" != "minor" && "$VERSION_TYPE" != "major" ]]; then
-    echo -e "${RED}Error: Invalid version type. Use 'patch', 'minor', or 'major'.${NC}"
-    return 1
-  fi
-  
-  echo -e "${BLUE}Updating version (${VERSION_TYPE})...${NC}"
-  node ./ci_cd/scripts/version.js ${VERSION_TYPE}
+  echo -e "${GREEN}Version updated successfully.${NC}"
 }
 
-# Function to check dependencies
-check_dependencies() {
-  echo -e "${BLUE}Checking dependencies...${NC}"
-  node ./ci_cd/scripts/dep-check.js
+# Dependency check function
+run_dependency_check() {
+  echo -e "Checking dependencies..."
+  run_command node ci_cd/scripts/dep-check.js
+  
+  echo -e "${GREEN}Dependency check completed.${NC}"
 }
 
-# Function to generate project structure map
-map_project() {
-  echo -e "${BLUE}Generating project structure map...${NC}"
-  node ./ci_cd/scripts/project-map.js
+# Project map function
+run_project_map() {
+  echo -e "Generating project structure map..."
+  run_command node ci_cd/scripts/project-map.js
+  
+  echo -e "${GREEN}Project map generated successfully.${NC}"
 }
 
-# Function to run deployment process
+# Deployment function
 run_deployment() {
-  echo -e "${BLUE}Running deployment process...${NC}"
-  node ./ci_cd/scripts/deploy.js
+  echo -e "Starting deployment process..."
+  run_command node ci_cd/scripts/deploy.js
+  
+  echo -e "${GREEN}Deployment completed successfully.${NC}"
 }
 
-# Main command processing
-case "$1" in
+# Help function
+show_help() {
+  echo -e "USDX Token Dashboard CI/CD Tools"
+  echo -e "Usage: ./ci_cd/run.sh [command] [options]"
+  echo -e ""
+  echo -e "Commands:"
+  echo -e "  health                 Run health check"
+  echo -e "  version [type]         Update version (patch, minor, major). Default: patch"
+  echo -e "  deps                   Check dependencies"
+  echo -e "  map                    Generate project structure map"
+  echo -e "  deploy                 Run deployment process"
+  echo -e "  help                   Show this help message"
+  echo -e ""
+  echo -e "Examples:"
+  echo -e "  ./ci_cd/run.sh health"
+  echo -e "  ./ci_cd/run.sh version minor"
+  echo -e "  ./ci_cd/run.sh deploy"
+}
+
+# Main execution
+print_header
+
+# Check if command is provided
+if [ $# -eq 0 ]; then
+  show_help
+  exit 0
+fi
+
+# Parse command
+command=$1
+shift
+
+case $command in
   health)
     run_health_check
     ;;
   version)
-    update_version "$2"
+    run_version_bump "$1"
     ;;
   deps)
-    check_dependencies
+    run_dependency_check
     ;;
   map)
-    map_project
+    run_project_map
     ;;
   deploy)
     run_deployment
     ;;
-  help|--help|-h)
+  help)
     show_help
     ;;
   *)
-    echo -e "${RED}Error: Unknown command '$1'${NC}"
-    show_help
-    exit 1
+    handle_error "Unknown command: $command"
     ;;
 esac
 
-exit $?
+exit 0

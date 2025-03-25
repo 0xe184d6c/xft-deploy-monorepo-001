@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>USDX Token Dashboard CI/CD Monitoring</title>
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --bg-color: #f9fafb;
+      --card-bg: #ffffff;
+      --text-color: #1f2937;
+      --border-color: #e5e7eb;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    
+    header {
+      background-color: var(--primary);
+      color: white;
+      padding: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      border: 1px solid var(--border-color);
+    }
+    
+    .card h2 {
+      margin-top: 0;
+      font-size: 1.25rem;
+      color: var(--primary);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .status-indicator {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    
+    .status-ok {
+      background-color: var(--success);
+    }
+    
+    .status-warning {
+      background-color: var(--warning);
+    }
+    
+    .status-error {
+      background-color: var(--danger);
+    }
+    
+    .details {
+      margin-top: 1rem;
+      font-size: 0.875rem;
+    }
+    
+    .log-container {
+      background-color: var(--card-bg);
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+    }
+    
+    .log-header {
+      background-color: var(--primary);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      font-weight: bold;
+    }
+    
+    .log {
+      padding: 1.5rem;
+      overflow-x: auto;
+      max-height: 300px;
+      overflow-y: auto;
+      font-family: monospace;
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+    
+    .log pre {
+      margin: 0;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    table th, table td {
+      text-align: left;
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    table th {
+      background-color: #f3f4f6;
+      font-weight: 500;
+    }
+    
+    .btn {
+      display: inline-block;
+      background-color: var(--primary);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 0.25rem;
+      text-decoration: none;
+      font-size: 0.875rem;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .btn:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    .btn-refresh {
+      margin-bottom: 1rem;
+    }
+    
+    footer {
+      padding: 1rem;
+      text-align: center;
+      font-size: 0.875rem;
+      color: #6b7280;
+      border-top: 1px solid var(--border-color);
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>USDX Token Dashboard CI/CD Monitoring</h1>
+    </div>
+  </header>
+  
+  <div class="container">
+    <button id="refresh-btn" class="btn btn-refresh">Refresh Data</button>
+    
+    <div class="dashboard">
+      <!-- Health Status Card -->
+      <div class="card">
+        <h2>Health Status</h2>
+        <div class="status">
+          <span class="status-indicator" id="health-indicator"></span>
+          <span id="health-status">Loading...</span>
+        </div>
+        <div class="details" id="health-details">
+          Checking health status...
+        </div>
+      </div>
+      
+      <!-- Dependency Status Card -->
+      <div class="card">
+        <h2>Dependencies</h2>
+        <div id="dependency-summary">Loading...</div>
+        <div class="details" id="dependency-details"></div>
+      </div>
+      
+      <!-- Version Information Card -->
+      <div class="card">
+        <h2>Version Information</h2>
+        <div id="version-info">Loading...</div>
+      </div>
+      
+      <!-- System Resources Card -->
+      <div class="card">
+        <h2>System Resources</h2>
+        <div id="system-resources">Loading...</div>
+      </div>
+    </div>
+    
+    <!-- Recent Deployments -->
+    <div class="log-container">
+      <div class="log-header">Recent Deployments</div>
+      <div class="log">
+        <table id="deployments-table">
+          <thead>
+            <tr>
+              <th>Version</th>
+              <th>Environment</th>
+              <th>Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="deployments-body">
+            <tr>
+              <td colspan="4">No deployment records found</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Health Check Log -->
+    <div class="log-container">
+      <div class="log-header">Health Check Log</div>
+      <div class="log">
+        <pre id="health-log">Waiting for health check data...</pre>
+      </div>
+    </div>
+  </div>
+  
+  <footer>
+    <div class="container">
+      <p>USDX Token Dashboard CI/CD Monitoring Dashboard &copy; 2025</p>
+    </div>
+  </footer>
+  
+  <script>
+    // Helper functions
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleString();
+    }
+    
+    function setStatusIndicator(elementId, status) {
+      const indicator = document.getElementById(elementId);
+      
+      indicator.classList.remove('status-ok', 'status-warning', 'status-error');
+      
+      if (status === 'ok') {
+        indicator.classList.add('status-ok');
+      } else if (status === 'degraded' || status === 'warning') {
+        indicator.classList.add('status-warning');
+      } else {
+        indicator.classList.add('status-error');
+      }
+    }
+    
+    // Function to fetch health check data
+    async function fetchHealthCheck() {
+      try {
+        const response = await fetch('/api/health/detailed');
+        
+        if (!response.ok) {
+          throw new Error(`Health check failed: ${response.status} ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        
+        // Update health indicator
+        setStatusIndicator('health-indicator', data.status);
+        document.getElementById('health-status').textContent = 
+          data.status.charAt(0).toUpperCase() + data.status.slice(1);
+        
+        // Update health details
+        let detailsHtml = `
+          <table>
+            <tr>
+              <td>Uptime:</td>
+              <td>${Math.floor(data.uptime / 60)} minutes</td>
+            </tr>
+            <tr>
+              <td>Server:</td>
+              <td>${data.components.server.status}</td>
+            </tr>
+            <tr>
+              <td>Blockchain:</td>
+              <td>${data.components.blockchain.status} (Block: ${data.components.blockchain.blockNumber || 'N/A'})</td>
+            </tr>
+            <tr>
+              <td>Contract:</td>
+              <td>${data.components.contract.status} (${data.components.contract.name || 'Unknown'})</td>
+            </tr>
+          </table>
+        `;
+        
+        document.getElementById('health-details').innerHTML = detailsHtml;
+        
+        // Update system resources
+        let resourcesHtml = `
+          <table>
+            <tr>
+              <td>Memory (RSS):</td>
+              <td>${data.system.memory.rss}</td>
+            </tr>
+            <tr>
+              <td>Heap Total:</td>
+              <td>${data.system.memory.heapTotal}</td>
+            </tr>
+            <tr>
+              <td>Heap Used:</td>
+              <td>${data.system.memory.heapUsed}</td>
+            </tr>
+          </table>
+        `;
+        
+        document.getElementById('system-resources').innerHTML = resourcesHtml;
+        
+        // Update health log
+        document.getElementById('health-log').textContent = JSON.stringify(data, null, 2);
+        
+        return data;
+      } catch (error) {
+        console.error('Error fetching health check:', error);
+        
+        // Update with error
+        setStatusIndicator('health-indicator', 'error');
+        document.getElementById('health-status').textContent = 'Error';
+        document.getElementById('health-details').innerHTML = `<p>Failed to fetch health data: ${error.message}</p>`;
+        document.getElementById('health-log').textContent = `Error: ${error.message}`;
+        
+        return null;
+      }
+    }
+    
+    // Simulated function to load deployment data (in a real implementation, this would fetch from an API)
+    function loadDeploymentData() {
+      // This is a placeholder. In a real implementation, you'd fetch this from an endpoint
+      const deployments = [
+        {
+          version: '1.0.0',
+          environment: 'production',
+          timestamp: new Date().toISOString(),
+          status: 'success'
+        }
+      ];
+      
+      const tbody = document.getElementById('deployments-body');
+      tbody.innerHTML = '';
+      
+      if (deployments.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4">No deployment records found</td></tr>';
+        return;
+      }
+      
+      deployments.forEach(deployment => {
+        const row = document.createElement('tr');
+        
+        const versionCell = document.createElement('td');
+        versionCell.textContent = deployment.version;
+        row.appendChild(versionCell);
+        
+        const envCell = document.createElement('td');
+        envCell.textContent = deployment.environment;
+        row.appendChild(envCell);
+        
+        const dateCell = document.createElement('td');
+        dateCell.textContent = formatDate(deployment.timestamp);
+        row.appendChild(dateCell);
+        
+        const statusCell = document.createElement('td');
+        statusCell.textContent = deployment.status;
+        statusCell.style.color = deployment.status === 'success' ? 'var(--success)' : 'var(--danger)';
+        row.appendChild(statusCell);
+        
+        tbody.appendChild(row);
+      });
+    }
+    
+    // Simulated function to load version information
+    function loadVersionInfo() {
+      // In a real implementation, you'd fetch this from an endpoint or from package.json
+      const versionInfo = {
+        version: '1.0.0',
+        lastUpdated: new Date().toISOString()
+      };
+      
+      let versionHtml = `
+        <table>
+          <tr>
+            <td>Current Version:</td>
+            <td>${versionInfo.version}</td>
+          </tr>
+          <tr>
+            <td>Last Updated:</td>
+            <td>${formatDate(versionInfo.lastUpdated)}</td>
+          </tr>
+        </table>
+      `;
+      
+      document.getElementById('version-info').innerHTML = versionHtml;
+    }
+    
+    // Simulated function to load dependency information
+    function loadDependencyInfo() {
+      // In a real implementation, you'd fetch this from an endpoint generated by dep-check.js
+      const dependencyInfo = {
+        total: 120,
+        outdated: 5,
+        vulnerabilities: 0
+      };
+      
+      let summaryHtml = `
+        <table>
+          <tr>
+            <td>Total Dependencies:</td>
+            <td>${dependencyInfo.total}</td>
+          </tr>
+          <tr>
+            <td>Outdated:</td>
+            <td>${dependencyInfo.outdated}</td>
+          </tr>
+          <tr>
+            <td>Vulnerabilities:</td>
+            <td>${dependencyInfo.vulnerabilities}</td>
+          </tr>
+        </table>
+      `;
+      
+      document.getElementById('dependency-summary').innerHTML = summaryHtml;
+      
+      // If we had detailed data, we could show it here
+      document.getElementById('dependency-details').innerHTML = 
+        `<p>Last checked: ${formatDate(new Date())}</p>`;
+    }
+    
+    // Function to refresh all data
+    async function refreshData() {
+      await fetchHealthCheck();
+      loadDeploymentData();
+      loadVersionInfo();
+      loadDependencyInfo();
+    }
+    
+    // Initial load
+    document.addEventListener('DOMContentLoaded', () => {
+      refreshData();
+      
+      // Set up refresh button
+      document.getElementById('refresh-btn').addEventListener('click', refreshData);
+    });
+  </script>
+</body>
+</html>

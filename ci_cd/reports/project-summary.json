@@ -1,12 +1,12 @@
 {
   "summary": {
-    "totalFiles": 125,
+    "totalFiles": 126,
     "totalDirectories": 24,
     "fileTypes": {
       ".md": 9,
       ".ts": 20,
       ".html": 3,
-      ".json": 10,
+      ".json": 11,
       ".js": 5,
       ".tsx": 77,
       ".css": 1

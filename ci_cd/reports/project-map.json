@@ -18,7 +18,7 @@
       "name": "CHANGELOG.md",
       "path": "workspace/CHANGELOG.md",
       "type": "file",
-      "size": 1472,
+      "size": 1651,
       "extension": ".md"
     },
     {
@@ -95,7 +95,7 @@
               "name": "dashboard.html",
               "path": "monitoring/dashboard.html",
               "type": "file",
-              "size": 12901,
+              "size": 16073,
               "extension": ".html"
             }
           ],
@@ -134,6 +134,13 @@
               "extension": ".json"
             },
             {
+              "name": "dependency-report.json",
+              "path": "reports/dependency-report.json",
+              "type": "file",
+              "size": 169,
+              "extension": ".json"
+            },
+            {
               "name": "deployments",
               "path": "deployments",
               "type": "directory",
@@ -148,22 +155,22 @@
               "name": "project-map.json",
               "path": "reports/project-map.json",
               "type": "file",
-              "size": 34870,
+              "size": 36140,
               "extension": ".json"
             },
             {
               "name": "project-summary.json",
               "path": "reports/project-summary.json",
               "type": "file",
-              "size": 5358,
+              "size": 5359,
               "extension": ".json"
             }
           ],
           "stats": {
-            "fileCount": 5,
+            "fileCount": 6,
             "dirCount": 1,
             "fileTypes": {
-              ".json": 5
+              ".json": 6
             }
           }
         },
@@ -1110,7 +1117,7 @@
           "name": "routes.ts",
           "path": "server/routes.ts",
           "type": "file",
-          "size": 1227,
+          "size": 1916,
           "extension": ".ts"
         },
         {

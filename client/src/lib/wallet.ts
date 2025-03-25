@@ -77,13 +77,21 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
       }
     };
 
-    window.ethereum.on("chainChanged", handleChainChanged);
-    window.ethereum.on("accountsChanged", handleAccountsChanged);
-
-    return () => {
-      window.ethereum.removeListener("chainChanged", handleChainChanged);
-      window.ethereum.removeListener("accountsChanged", handleAccountsChanged);
-    };
+    // Safely add event listeners with proper null checks
+    const ethereum = window.ethereum;
+    if (ethereum) {
+      ethereum.on("chainChanged", handleChainChanged);
+      ethereum.on("accountsChanged", handleAccountsChanged);
+      
+      return () => {
+        if (ethereum) {
+          ethereum.removeListener("chainChanged", handleChainChanged);
+          ethereum.removeListener("accountsChanged", handleAccountsChanged);
+        }
+      };
+    }
+    
+    return undefined;
   }, [connected]);
 
   const updateBalance = async (addr: string) => {
@@ -115,12 +123,17 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
       const customRpc = localStorage.getItem("usdx-custom-rpc");
       
       // Create provider
-      let ethProvider;
-      if (customRpc) {
-        // Use custom RPC if available
-        ethProvider = new ethers.JsonRpcProvider(customRpc);
+      let ethProvider: ethers.BrowserProvider;
+      
+      // Always default to BrowserProvider for setProvider compatibility
+      if (!customRpc) {
+        // Use MetaMask provider directly
+        ethProvider = new ethers.BrowserProvider(window.ethereum);
       } else {
-        // Use MetaMask provider
+        // When using a custom RPC, we still set up BrowserProvider for the UI
+        // but we'll use the custom RPC for specific contract calls
+        console.log("Custom RPC detected, using it for specific operations only");
+        localStorage.setItem("usdx-custom-rpc-url", customRpc);
         ethProvider = new ethers.BrowserProvider(window.ethereum);
       }
       
@@ -182,7 +195,10 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
         ethProvider = new ethers.BrowserProvider(window.ethereum);
       }
       
-      await window.ethereum.request({ method: "eth_requestAccounts" });
+      if (window.ethereum) {
+        await window.ethereum.request({ method: "eth_requestAccounts" });
+      }
+      
       const ethSigner = await ethProvider.getSigner();
       const userAddress = await ethSigner.getAddress();
       

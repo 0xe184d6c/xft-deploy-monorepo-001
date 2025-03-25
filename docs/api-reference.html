@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>USDX API Reference</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      color: #333;
+    }
+    h1 {
+      border-bottom: 2px solid #eee;
+      padding-bottom: 10px;
+    }
+    h2 {
+      margin-top: 30px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 5px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #f3f3f3;
+    }
+    code {
+      background-color: #f5f5f5;
+      padding: 2px 5px;
+      border-radius: 3px;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    }
+    .method {
+      display: inline-block;
+      padding: 3px 6px;
+      border-radius: 3px;
+      font-weight: bold;
+      min-width: 50px;
+      text-align: center;
+    }
+    .get {
+      background-color: #e7f5ff;
+      color: #0366d6;
+    }
+    .post {
+      background-color: #e7f7e7;
+      color: #28a745;
+    }
+  </style>
+</head>
+<body>
+  <h1>USDX Token API Reference</h1>
+  <p>API endpoints for interacting with USDX token smart contract on Sepolia testnet.</p>
+
+  <h2>Read Endpoints</h2>
+  <table>
+    <tr>
+      <th>Endpoint</th>
+      <th>Method</th>
+      <th>Purpose</th>
+    </tr>
+    <tr>
+      <td><code>/api/token</code></td>
+      <td><span class="method get">GET</span></td>
+      <td>Get token name, symbol, supply, shares, multiplier, and pause status</td>
+    </tr>
+    <tr>
+      <td><code>/api/account/:address</code></td>
+      <td><span class="method get">GET</span></td>
+      <td>Get address balance, shares, and blocklist status</td>
+    </tr>
+    <tr>
+      <td><code>/api/has-role/:account/:role</code></td>
+      <td><span class="method get">GET</span></td>
+      <td>Check if account has specific role</td>
+    </tr>
+    <tr>
+      <td><code>/api/transaction/:txHash</code></td>
+      <td><span class="method get">GET</span></td>
+      <td>Get transaction details and status</td>
+    </tr>
+  </table>
+
+  <h2>Transfer Endpoints</h2>
+  <table>
+    <tr>
+      <th>Endpoint</th>
+      <th>Method</th>
+      <th>Purpose</th>
+    </tr>
+    <tr>
+      <td><code>/api/transfer</code></td>
+      <td><span class="method post">POST</span></td>
+      <td>Transfer tokens to address</td>
+    </tr>
+    <tr>
+      <td><code>/api/mint</code></td>
+      <td><span class="method post">POST</span></td>
+      <td>Mint new tokens to address (requires MINTER_ROLE)</td>
+    </tr>
+    <tr>
+      <td><code>/api/burn</code></td>
+      <td><span class="method post">POST</span></td>
+      <td>Burn tokens from address (requires BURNER_ROLE)</td>
+    </tr>
+  </table>
+
+  <h2>Admin Endpoints</h2>
+  <table>
+    <tr>
+      <th>Endpoint</th>
+      <th>Method</th>
+      <th>Purpose</th>
+    </tr>
+    <tr>
+      <td><code>/api/pause</code></td>
+      <td><span class="method post">POST</span></td>
+      <td>Pause all token transfers (requires PAUSE_ROLE)</td>
+    </tr>
+    <tr>
+      <td><code>/api/unpause</code></td>
+      <td><span class="method post">POST</span></td>
+      <td>Unpause token transfers (requires PAUSE_ROLE)</td>
+    </tr>
+    <tr>
+      <td><code>/api/block</code></td>
+      <td><span class="method post">POST</span></td>
+      <td>Block account from transfers (requires BLOCKLIST_ROLE)</td>
+    </tr>
+    <tr>
+      <td><code>/api/unblock</code></td>
+      <td><span class="method post">POST</span></td>
+      <td>Unblock account (requires BLOCKLIST_ROLE)</td>
+    </tr>
+    <tr>
+      <td><code>/api/reward-multiplier</code></td>
+      <td><span class="method post">POST</span></td>
+      <td>Update reward multiplier (requires ORACLE_ROLE)</td>
+    </tr>
+    <tr>
+      <td><code>/api/grant-role</code></td>
+      <td><span class="method post">POST</span></td>
+      <td>Grant role to account (requires DEFAULT_ADMIN_ROLE)</td>
+    </tr>
+    <tr>
+      <td><code>/api/revoke-role</code></td>
+      <td><span class="method post">POST</span></td>
+      <td>Revoke role from account (requires DEFAULT_ADMIN_ROLE)</td>
+    </tr>
+  </table>
+</body>
+</html>

@@ -1,31 +1,50 @@
-# USDX Token API Documentation
+# USDX Token API
 
-API for interacting with USDX token smart contract on Sepolia testnet.
+REST API for the XFT Digital Dollar (USDX) smart contract on Sepolia testnet.
 
-## Base URL
+## Quick Start
 
-```
-/api
-```
+1. Set environment variables:
+   ```
+   PRIVATE_KEY=your_wallet_private_key
+   ALCHEMY_API_KEY=your_alchemy_api_key
+   ```
 
-## Authentication
+2. Install dependencies:
+   ```
+   npm install
+   ```
 
-Currently no authentication required. Server uses private key to sign transactions.
+3. Start server:
+   ```
+   npm run dev
+   ```
 
-## Response Format
+4. API runs at:
+   ```
+   http://localhost:5000/api
+   ```
 
-All responses are JSON with the following structure:
+## Features
 
-```json
-// Success response
-{
-  "success": true,
-  "transactionHash": "0x...",
-  ...
-}
+- Token information retrieval
+- Balance checking
+- Token transfers
+- Administrative functions (mint, burn, pause)
+- Role management
+- Account blocklisting
+- Reward multiplier updates
 
-// Error response
-{
-  "error": "Error message"
-}
-```
+## Documentation
+
+- [API Endpoints](endpoints.md)
+- [Implementation Details](implementation.md)
+- [Usage Examples](examples.md)
+- [Role System](roles.md)
+- [Testing Guide](testing.md)
+
+## Requirements
+
+- Node.js 18+
+- Wallet with Sepolia ETH
+- Alchemy API account

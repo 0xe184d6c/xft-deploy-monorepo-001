@@ -8,6 +8,7 @@ import Transactions from "@/pages/Transactions";
 import RoleManagement from "@/pages/RoleManagement";
 import Blocklist from "@/pages/Blocklist";
 import Settings from "@/pages/Settings";
+import Admin from "@/pages/Admin";
 import NotFound from "@/pages/not-found";
 import Header from "@/components/layout/Header";
 import Sidebar from "@/components/layout/Sidebar";
@@ -24,6 +25,7 @@ function Router() {
       <Route path="/roles" component={RoleManagement} />
       <Route path="/blocklist" component={Blocklist} />
       <Route path="/settings" component={Settings} />
+      <Route path="/admin" component={Admin} />
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>

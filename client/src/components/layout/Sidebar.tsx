@@ -5,8 +5,12 @@ import {
   UserCog, 
   Shield, 
   Settings,
-  DollarSign
+  DollarSign,
+  ShieldAlert
 } from "lucide-react";
+import { useWallet } from "@/lib/wallet";
+import { useContract } from "@/lib/contract";
+import { useEffect, useState } from "react";
 
 export default function Sidebar() {
   const [location] = useLocation();

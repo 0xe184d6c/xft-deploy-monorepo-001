@@ -1,20 +1,36 @@
-const contractAddress = "0xYourContractAddress"; // Replace with your deployed contract address
+// USDX contract address on Sepolia testnet (this is an example address, replace with your actual deployed contract address)
+const contractAddress = "0x8431717927C4A3343bCf1626e7B5B1D31E240406";
 let provider, signer, contract, abi;
 
 // Connect wallet, load ABI, and instantiate contract using ethers.js
 document.getElementById('connectWallet').addEventListener('click', async () => {
-  if (window.ethereum) {
-    provider = new ethers.providers.Web3Provider(window.ethereum);
-    await provider.send("eth_requestAccounts", []);
-    signer = provider.getSigner();
-    const userAddress = await signer.getAddress();
-    document.getElementById('account').innerText = "Connected: " + userAddress;
-    // Fetch the ABI from /abi.json
-    const res = await fetch('/abi.json');
-    abi = await res.json();
-    contract = new ethers.Contract(contractAddress, abi, signer);
-  } else {
-    alert("MetaMask not detected");
+  try {
+    if (window.ethereum) {
+      provider = new ethers.providers.Web3Provider(window.ethereum);
+      await provider.send("eth_requestAccounts", []);
+      signer = provider.getSigner();
+      const userAddress = await signer.getAddress();
+      document.getElementById('account').innerText = "Connected: " + userAddress;
+      
+      // Fetch the ABI from /abi.json
+      try {
+        const res = await fetch('/abi.json');
+        abi = await res.json();
+        contract = new ethers.Contract(contractAddress, abi, signer);
+        console.log("Contract initialized successfully");
+      } catch (error) {
+        console.error("Error loading ABI:", error);
+        document.getElementById('output').innerText = "Error loading ABI: " + error.message;
+      }
+    } else {
+      console.log("MetaMask not detected");
+      document.getElementById('output').innerText = "MetaMask not detected. Please install MetaMask extension to interact with this dApp.";
+    }
+  } catch (error) {
+    console.error("Error connecting wallet:", error);
+    document.getElementById('output').innerText = "Error connecting wallet: " + error.message;
+    const timestamp = new Date().toLocaleTimeString();
+    console.log(`[${timestamp}] Failed to connect wallet`);
   }
 });
 
@@ -45,10 +61,84 @@ document.getElementById('callFunction').addEventListener('click', async () => {
       else if (func === "unpause") tx = await contract.unpause();
       result = await tx.wait();
     }
-    document.getElementById('output').innerText = JSON.stringify(result, null, 2);
+    // Format the output for better readability
+    const timestamp = new Date().toLocaleTimeString();
+    
+    // Create a formatted output based on result type
+    let formattedOutput = "";
+    if (typeof result === 'object' && result.hash) {
+      // Transaction receipt
+      formattedOutput = `
+        <div style="color: #27ae60; margin-bottom: 10px;">Transaction Successful at ${timestamp}</div>
+        <strong>Transaction Hash:</strong> ${result.hash}<br>
+        <strong>Block Number:</strong> ${result.blockNumber}<br>
+        <strong>From:</strong> ${result.from}<br>
+        ${result.to ? `<strong>To:</strong> ${result.to}<br>` : ''}
+        <strong>Gas Used:</strong> ${result.gasUsed ? result.gasUsed.toString() : 'N/A'}<br>
+        <hr>
+        <details>
+          <summary>View Full Transaction Details</summary>
+          <pre>${JSON.stringify(result, null, 2)}</pre>
+        </details>
+      `;
+    } else if (ethers.BigNumber.isBigNumber(result)) {
+      // If it's a BigNumber (like balanceOf result)
+      const readableValue = ethers.utils.formatUnits(result, 18); // Assuming 18 decimals, adjust as needed
+      formattedOutput = `
+        <div style="color: #27ae60; margin-bottom: 10px;">Query Result at ${timestamp}</div>
+        <strong>Value (Wei):</strong> ${result.toString()}<br>
+        <strong>Value (ETH):</strong> ${readableValue}<br>
+      `;
+    } else if (typeof result === 'string') {
+      // Simple string result (like name, symbol)
+      formattedOutput = `
+        <div style="color: #27ae60; margin-bottom: 10px;">Query Result at ${timestamp}</div>
+        <strong>Result:</strong> ${result}
+      `;
+    } else if (typeof result === 'number') {
+      // Number result (like decimals)
+      formattedOutput = `
+        <div style="color: #27ae60; margin-bottom: 10px;">Query Result at ${timestamp}</div>
+        <strong>Result:</strong> ${result}
+      `;
+    } else {
+      // Default for any other types
+      formattedOutput = `
+        <div style="color: #27ae60; margin-bottom: 10px;">Operation Successful at ${timestamp}</div>
+        <pre>${JSON.stringify(result, null, 2)}</pre>
+      `;
+    }
+    
+    document.getElementById('output').innerHTML = formattedOutput;
   } catch (err) {
-    console.error(err);
-    document.getElementById('output').innerText = err.message;
+    console.error("Error executing function:", err);
+    
+    // Format error message for better readability
+    let errorMsg = err.message;
+    
+    // Check if it's a blockchain/contract error
+    if (errorMsg.includes("execution reverted")) {
+      const reasonMatch = errorMsg.match(/reason="([^"]+)"/);
+      if (reasonMatch && reasonMatch[1]) {
+        errorMsg = `Transaction Failed: ${reasonMatch[1]}`;
+      } else {
+        errorMsg = "Transaction Failed: The contract reverted the transaction";
+      }
+    }
+    
+    // Check for common MetaMask errors
+    if (errorMsg.includes("user rejected")) {
+      errorMsg = "Transaction Cancelled: You rejected the transaction in your wallet";
+    }
+    
+    // Check for network errors
+    if (errorMsg.includes("network error") || errorMsg.includes("connection error")) {
+      errorMsg = "Network Error: Unable to connect to the Ethereum network. Please check your internet connection.";
+    }
+    
+    // Add a timestamp
+    const timestamp = new Date().toLocaleTimeString();
+    document.getElementById('output').innerHTML = `<div style="color: #e74c3c; margin-bottom: 10px;">Error at ${timestamp}:</div>${errorMsg}`;
   }
 });
 

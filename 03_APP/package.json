@@ -1,0 +1,25 @@
+{
+  "name": "usdx-dapp",
+  "version": "1.0.0",
+  "description": "A dApp interface for the USDX token contract",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ethereum",
+    "dapp",
+    "web3",
+    "token"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

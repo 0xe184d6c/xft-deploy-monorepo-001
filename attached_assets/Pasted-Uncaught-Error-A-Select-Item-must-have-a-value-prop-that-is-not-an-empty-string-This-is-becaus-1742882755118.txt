@@ -1,0 +1,83 @@
+Uncaught Error: A <Select.Item /> must have a value prop that is not an empty string. This is because the Select value can be set to an empty string to clear the selection and show the placeholder.
+    at @radix-ui_react-select.js?v=521f3b54:870:13
+    at renderWithHooks (chunk-RPCDYKBN.js?v=521f3b54:11548:26)
+    at updateForwardRef (chunk-RPCDYKBN.js?v=521f3b54:14325:28)
+    at beginWork (chunk-RPCDYKBN.js?v=521f3b54:15946:22)
+    at HTMLUnknownElement.callCallback2 (chunk-RPCDYKBN.js?v=521f3b54:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-RPCDYKBN.js?v=521f3b54:3699:24)
+    at invokeGuardedCallback (chunk-RPCDYKBN.js?v=521f3b54:3733:39)
+    at beginWork$1 (chunk-RPCDYKBN.js?v=521f3b54:19765:15)
+    at performUnitOfWork (chunk-RPCDYKBN.js?v=521f3b54:19198:20)
+    at workLoopSync (chunk-RPCDYKBN.js?v=521f3b54:19137:13)Understand this errorAI
+chunk-RPCDYKBN.js?v=521f3b54:14032 The above error occurred in the <SelectItem> component:
+
+    at https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-select.js?v=521f3b54:843:7
+    at _c11 (https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/src/components/ui/select.tsx:207:13)
+    at div
+    at https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RLTE5R7I.js?v=521f3b54:41:13
+    at https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UACHJROW.js?v=521f3b54:52:11
+    at https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UACHJROW.js?v=521f3b54:33:11
+    at https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-MRB2OOEX.js?v=521f3b54:98:15
+    at https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-select.js?v=521f3b54:754:13
+    at div
+    at https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UACHJROW.js?v=521f3b54:52:11
+    at https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UACHJROW.js?v=521f3b54:33:11
+    at https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-MRB2OOEX.js?v=521f3b54:98:15
+    at Provider (https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-6J5IXUBZ.js?v=521f3b54:48:15)
+    at https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-select.js?v=521f3b54:298:58
+    at https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UACHJROW.js?v=521f3b54:52:11
+    at https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UACHJROW.js?v=521f3b54:33:11
+    at https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RLTE5R7I.js?v=521f3b54:41:13
+    at https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RUNWM7OT.js?v=521f3b54:258:22
+    at SelectPortal
+    at _c7 (https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/src/components/ui/select.tsx:122:12)
+    at Provider (https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-6J5IXUBZ.js?v=521f3b54:48:15)
+    at Provider (https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-MRB2OOEX.js?v=521f3b54:28:15)
+    at CollectionProvider (https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-MRB2OOEX.js?v=521f3b54:89:13)
+    at Provider (https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-6J5IXUBZ.js?v=521f3b54:48:15)
+    at Provider (https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-Z3F6WIWQ.js?v=521f3b54:1915:15)
+    at Popper (https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-Z3F6WIWQ.js?v=521f3b54:1972:11)
+    at Select (https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-select.js?v=521f3b54:86:5)
+    at div
+    at div
+    at div
+    at _c3 (https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/src/components/ui/card.tsx:45:12)
+    at div
+    at _c (https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/src/components/ui/card.tsx:20:11)
+    at EventsCard (https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/src/components/dashboard/EventsCard.tsx:31:37)
+    at div
+    at https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RLTE5R7I.js?v=521f3b54:41:13
+    at Presence (https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-HHXI44QP.js?v=521f3b54:24:11)
+    at https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=521f3b54:171:13
+    at _c5 (https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/src/components/ui/tabs.tsx:72:12)
+    at div
+    at https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-RLTE5R7I.js?v=521f3b54:41:13
+    at Provider (https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-6J5IXUBZ.js?v=521f3b54:48:15)
+    at https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=521f3b54:49:7
+    at div
+    at Transactions (https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/src/pages/Transactions.tsx:28:25)
+    at Route (https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=521f3b54:323:16)
+    at Switch (https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=521f3b54:379:17)
+    at Router
+    at main
+    at div
+    at div
+    at ContractProvider (https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/src/lib/contract.ts:133:36)
+    at WalletProvider (https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/src/lib/wallet.ts:19:34)
+    at QueryClientProvider (https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=521f3b54:2805:3)
+    at App (https://afba253a-ea54-489f-9ef1-83976feacdbb-00-wtf7nrd9ajs0.worf.replit.dev/src/App.tsx?v=SuqAUDraB09UTW5XdVcIa:83:45)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+logCapturedError @ chunk-RPCDYKBN.js?v=521f3b54:14032Understand this errorAI
+chunk-RPCDYKBN.js?v=521f3b54:9129 Uncaught Error: A <Select.Item /> must have a value prop that is not an empty string. This is because the Select value can be set to an empty string to clear the selection and show the placeholder.
+    at @radix-ui_react-select.js?v=521f3b54:870:13
+    at renderWithHooks (chunk-RPCDYKBN.js?v=521f3b54:11548:26)
+    at updateForwardRef (chunk-RPCDYKBN.js?v=521f3b54:14325:28)
+    at beginWork (chunk-RPCDYKBN.js?v=521f3b54:15946:22)
+    at beginWork$1 (chunk-RPCDYKBN.js?v=521f3b54:19753:22)
+    at performUnitOfWork (chunk-RPCDYKBN.js?v=521f3b54:19198:20)
+    at workLoopSync (chunk-RPCDYKBN.js?v=521f3b54:19137:13)
+    at renderRootSync (chunk-RPCDYKBN.js?v=521f3b54:19116:15)
+    at recoverFromConcurrentError (chunk-RPCDYKBN.js?v=521f3b54:18736:28)
+    at performSyncWorkOnRoot (chunk-RPCDYKBN.js?v=521f3b54:18879:28)

@@ -12,7 +12,7 @@ import { ContractEvent } from "@/lib/types";
 import { formatAddress } from "@/lib/utils";
 
 export default function EventsCard() {
-  const [eventType, setEventType] = useState<string>("");
+  const [eventType, setEventType] = useState<string>("all");
   const [limit, setLimit] = useState<number>(10);
   const [blockRange, setBlockRange] = useState<{ from?: number; to?: number }>({});
   const [applyFilters, setApplyFilters] = useState<boolean>(false);
@@ -23,7 +23,7 @@ export default function EventsCard() {
       fromBlock: blockRange.from,
       toBlock: blockRange.to,
       limit,
-      eventName: eventType || undefined
+      eventName: eventType !== "all" ? eventType : undefined
     } : { limit }
   );
   
@@ -36,7 +36,7 @@ export default function EventsCard() {
   };
 
   const handleFilterReset = () => {
-    setEventType("");
+    setEventType("all");
     setBlockRange({});
     setLimit(10);
     setApplyFilters(false);
@@ -90,7 +90,7 @@ export default function EventsCard() {
                 <SelectValue placeholder="Filter by event type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Events</SelectItem>
+                <SelectItem value="all">All Events</SelectItem>
                 <SelectItem value="Transfer">Transfer</SelectItem>
                 <SelectItem value="Approval">Approval</SelectItem>
                 <SelectItem value="Paused">Paused</SelectItem>

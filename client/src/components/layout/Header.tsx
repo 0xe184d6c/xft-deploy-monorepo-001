@@ -10,7 +10,7 @@ export default function Header() {
   return (
     <header className="bg-white border-b border-neutral-300 py-3 px-4 flex justify-between items-center">
       <div className="flex items-center">
-        <h1 className="text-lg font-bold">USDX Dashboard</h1>
+        <h1 className="text-lg font-bold">XFT Digital Dollar</h1>
         <span className="ml-4 px-2 py-1 text-xs bg-neutral-200 rounded text-accent-500">
           Sepolia Testnet
         </span>

@@ -1,23 +1,3 @@
-// Wait for document and ethers to be ready
-document.addEventListener('DOMContentLoaded', async () => {
-    try {
-        // Load ethers if not already loaded
-        if (typeof window.ethers === 'undefined') {
-            const script = document.createElement('script');
-            script.src = 'ethers.umd.min.js';
-            script.type = 'text/javascript';
-            document.head.appendChild(script);
-            
-            await new Promise((resolve, reject) => {
-                script.onload = resolve;
-                script.onerror = reject;
-            });
-        }
-    } catch (error) {
-        console.error('Failed to load ethers:', error);
-    }
-});
-
 // Use a test network contract address - this should be replaced with deployed contract address
 const contractAddress = '0x421C76cd7C1550c4fcc974F4d74c870150c45995'; 
 // Network configuration - Add Hardhat local network support
@@ -27,9 +7,37 @@ const networks = {
     11155111: { name: 'Sepolia', explorer: 'https://sepolia.etherscan.io' },
     31337: { name: 'Hardhat', explorer: '' }
 };
+
+// Global variables
 let provider, signer, contract;
 let activityLog = [];
 let isDarkMode = false;
+
+// Load ethers and initialize the app when the document is ready
+document.addEventListener('DOMContentLoaded', async () => {
+    console.log('Document loaded, initializing app...');
+    
+    try {
+        // Set up the tab functionality
+        setupTabs();
+        
+        // Check if we're in a test environment without MetaMask
+        setupTestEnvironmentIfNeeded();
+        
+        // Set up dark mode toggle
+        setupDarkMode();
+        
+        // Check if MetaMask is already connected
+        if (window.ethereum && window.ethereum.selectedAddress) {
+            connectWallet();
+        }
+        
+        console.log('App initialization complete');
+    } catch (error) {
+        console.error('Error during app initialization:', error);
+        addToActivityLog('Error initializing application: ' + error.message, 'error');
+    }
+});
 
 // Check if ethers library is available
 function isEthersAvailable() {
@@ -951,5 +959,58 @@ async function incrementRewardMultiplier() {
         console.error('Error incrementing reward multiplier:', error);
         addToActivityLog('Error incrementing reward multiplier: ' + error.message, 'error');
         alert(`Error incrementing reward multiplier: ${error.message}`);
+    }
+}
+
+// Setup tabs in UI
+function setupTabs() {
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            // Remove active class from all tabs
+            tabs.forEach(t => t.classList.remove('active'));
+            // Add active class to clicked tab
+            tab.classList.add('active');
+            
+            // Hide all tab content
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Show the corresponding tab content
+            const tabId = tab.getAttribute('data-tab');
+            document.getElementById(tabId).classList.add('active');
+        });
+    });
+}
+
+// Setup test environment if needed
+function setupTestEnvironmentIfNeeded() {
+    // For development environments - show a warning if no ethereum provider
+    if (typeof window.ethereum === 'undefined') {
+        console.warn('No Ethereum provider detected. Running in development mode.');
+        document.getElementById('connectButton').disabled = true;
+        document.getElementById('connectButton').textContent = 'No Wallet Available';
+        
+        addToActivityLog('No Ethereum wallet detected. Some features will be disabled.', 'error');
+    }
+}
+
+// Setup dark mode toggle
+function setupDarkMode() {
+    const darkModeToggle = document.querySelector('.dark-mode-toggle');
+    if (darkModeToggle) {
+        darkModeToggle.addEventListener('click', toggleDarkMode);
+        
+        // Check for saved preference
+        const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+        if (savedDarkMode) {
+            isDarkMode = true;
+            document.body.classList.add('dark-mode');
+            const icon = darkModeToggle.querySelector('i');
+            if (icon) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            }
+        }
     }
 }

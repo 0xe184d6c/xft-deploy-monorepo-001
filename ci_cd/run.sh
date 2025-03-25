@@ -100,8 +100,17 @@ show_help() {
   echo -e "  ./ci_cd/run.sh deploy"
 }
 
+# Ensure reports directory exists
+ensure_reports_dir() {
+  mkdir -p ci_cd/reports
+  echo -e "Ensured reports directory exists."
+}
+
 # Main execution
 print_header
+
+# Ensure the reports directory exists
+ensure_reports_dir
 
 # Check if command is provided
 if [ $# -eq 0 ]; then

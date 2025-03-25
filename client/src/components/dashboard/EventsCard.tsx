@@ -197,28 +197,25 @@ export default function EventsCard() {
               </Table>
             </div>
             
-            {/* Display pagination if there are more events */}
+            {/* Display load more button if there are more events */}
             {range?.hasMore && (
-              <div className="mt-4">
-                <Pagination>
-                  <PaginationContent>
-                    <PaginationItem>
-                      <PaginationPrevious href="#" />
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationLink href="#">1</PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationLink href="#">2</PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationLink href="#">3</PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationNext href="#" />
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination>
+              <div className="mt-4 flex justify-center">
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    if (range && blockRange.from === undefined) {
+                      // If using default range, load next block range
+                      setBlockRange({
+                        from: Math.max(0, range.fromBlock - 100),
+                        to: range.fromBlock - 1
+                      });
+                      setApplyFilters(true);
+                    }
+                  }}
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Loading..." : "Load Previous Events"}
+                </Button>
               </div>
             )}
           </>

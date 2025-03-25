@@ -577,18 +577,86 @@ export const ContractProvider = ({ children }: ContractProviderProps) => {
   };
 
   // Get transaction history (mock implementation, would normally use contract events)
-  const getTransactionHistory = async (limit?: number): Promise<Transaction[]> => {
+  const getTransactionHistory = async (limit: number = 50): Promise<Transaction[]> => {
     if (!contract || !provider) {
       return [];
     }
 
     try {
-      // In a real implementation, this would query events from the contract
-      // For now, return the locally tracked transactions
-      return transactionHistory.slice(0, limit);
+      // Get the latest block number
+      const latestBlock = await provider.getBlockNumber();
+      
+      // Define a starting block (e.g., last 10000 blocks or about ~1 day of blocks)
+      const fromBlock = Math.max(0, latestBlock - 10000);
+      
+      // Create filter for Transfer events
+      const transferFilter = contract.filters.Transfer();
+      
+      // Query transfer events
+      const transferEvents = await contract.queryFilter(transferFilter, fromBlock, latestBlock);
+      
+      // Process events into transactions
+      const transactions: Transaction[] = [];
+      
+      for (const event of transferEvents) {
+        // Skip failed transactions
+        if (!event.blockNumber) continue;
+        
+        // We need to cast the event to get typed access to args
+        const typedEvent = event as unknown as {
+          args: {
+            from: string;
+            to: string;
+            value: bigint;
+          };
+          blockNumber: number;
+          transactionHash: string;
+        };
+        
+        if (!typedEvent.args) continue;
+        
+        // Get transaction type
+        let type: 'Transfer' | 'Mint' | 'Burn' | 'Unknown' = 'Transfer';
+        if (typedEvent.args.from === ethers.ZeroAddress) {
+          type = 'Mint';
+        } else if (typedEvent.args.to === ethers.ZeroAddress) {
+          type = 'Burn';
+        }
+        
+        // Get block for timestamp
+        const block = await provider.getBlock(typedEvent.blockNumber);
+        
+        if (!block) continue;
+        
+        // Format amount
+        const amount = ethers.formatUnits(typedEvent.args.value, 18);
+        
+        // Add transaction to list
+        transactions.push({
+          hash: typedEvent.transactionHash,
+          type,
+          from: typedEvent.args.from,
+          to: typedEvent.args.to,
+          amount,
+          blockNumber: typedEvent.blockNumber,
+          timestamp: block.timestamp * 1000, // Convert to milliseconds
+          status: 'confirmed'
+        });
+      }
+      
+      // Add any pending transactions from local state that might not be confirmed yet
+      const pendingTransactions = transactionHistory.filter(tx => tx.status === 'pending');
+      
+      // Combine and sort by timestamp (newest first)
+      const allTransactions = [...pendingTransactions, ...transactions]
+        .sort((a, b) => b.timestamp - a.timestamp)
+        .slice(0, limit);
+      
+      return allTransactions;
     } catch (error) {
       console.error("Failed to get transaction history:", error);
-      return [];
+      // Fall back to local transaction history on error
+      return transactionHistory.slice(0, limit);
     }
   };
 
@@ -599,39 +667,103 @@ export const ContractProvider = ({ children }: ContractProviderProps) => {
     }
 
     try {
-      // For a real implementation, this would query role events
-      // Simplified version checking default roles for the owner and current user
+      // Query role granted and revoked events from the chain
       const roleInfoList: RoleInfo[] = [];
-      const owner = networkConfig.token.owner;
+      const latestBlock = await provider.getBlockNumber();
+      const fromBlock = Math.max(0, latestBlock - 10000); // Get about ~1 day of events
       
-      // Check roles for owner
-      for (const [roleName, roleHash] of Object.entries(ROLES)) {
-        const granted = await contract.hasRole(roleHash, owner);
-        roleInfoList.push({
-          roleName,
-          roleHash,
-          address: owner,
-          granted
-        });
+      // Known addresses to check for roles (add the owner and current user)
+      const addressesToCheck = new Set<string>();
+      const owner = networkConfig.token.owner;
+      addressesToCheck.add(owner);
+      
+      if (address) {
+        addressesToCheck.add(address);
       }
       
-      // Check roles for current user if different from owner
-      if (address && address.toLowerCase() !== owner.toLowerCase()) {
+      // Get all RoleGranted events to find all role holders
+      const roleGrantedFilter = contract.filters.RoleGranted();
+      const roleGrantedEvents = await contract.queryFilter(roleGrantedFilter, fromBlock, latestBlock);
+      
+      // Track addresses with roles
+      for (const event of roleGrantedEvents) {
+        // Cast to get typed access to args
+        const typedEvent = event as unknown as {
+          args: {
+            role: string;
+            account: string;
+            sender: string;
+          };
+        };
+        
+        if (typedEvent.args && typedEvent.args.account) {
+          addressesToCheck.add(typedEvent.args.account);
+        }
+      }
+      
+      // Get RoleRevoked events to know which roles were revoked
+      const roleRevokedFilter = contract.filters.RoleRevoked();
+      const roleRevokedEvents = await contract.queryFilter(roleRevokedFilter, fromBlock, latestBlock);
+      
+      // Check all roles for all addresses in our set
+      for (const addr of Array.from(addressesToCheck)) {
         for (const [roleName, roleHash] of Object.entries(ROLES)) {
-          const granted = await contract.hasRole(roleHash, address);
+          // Query current role status from contract
+          const granted = await contract.hasRole(roleHash, addr);
+          
           roleInfoList.push({
             roleName,
             roleHash,
-            address,
+            address: addr,
             granted
           });
         }
       }
       
-      return roleInfoList;
+      // Sort by role name and then by address
+      return roleInfoList.sort((a, b) => {
+        if (a.roleName !== b.roleName) {
+          return a.roleName.localeCompare(b.roleName);
+        }
+        return a.address.toLowerCase().localeCompare(b.address.toLowerCase());
+      });
     } catch (error) {
       console.error("Failed to get role info:", error);
-      return [];
+      
+      // Fallback: check roles for owner and current user
+      const roleInfoList: RoleInfo[] = [];
+      const owner = networkConfig.token.owner;
+      
+      try {
+        // Check roles for owner
+        for (const [roleName, roleHash] of Object.entries(ROLES)) {
+          const granted = await contract.hasRole(roleHash, owner);
+          roleInfoList.push({
+            roleName,
+            roleHash,
+            address: owner,
+            granted
+          });
+        }
+        
+        // Check roles for current user if different from owner
+        if (address && address.toLowerCase() !== owner.toLowerCase()) {
+          for (const [roleName, roleHash] of Object.entries(ROLES)) {
+            const granted = await contract.hasRole(roleHash, address);
+            roleInfoList.push({
+              roleName,
+              roleHash,
+              address,
+              granted
+            });
+          }
+        }
+        
+        return roleInfoList;
+      } catch (fallbackError) {
+        console.error("Fallback role check failed:", fallbackError);
+        return [];
+      }
     }
   };
 
@@ -642,30 +774,90 @@ export const ContractProvider = ({ children }: ContractProviderProps) => {
     }
 
     try {
-      // In a real implementation, this would query blocklist events
-      // Simplified version checking known addresses
+      // Get blocklist events from the contract
       const blocklistInfo: BlocklistInfo[] = [];
-      const addressesToCheck = [
-        networkConfig.token.owner,
-        address,
-        // Add some example addresses to check
-        "0x000000000000000000000000000000000000dEaD",
-        "0x1111111111111111111111111111111111111111"
-      ];
+      const addressesMap = new Map<string, boolean>(); // Map address to blocked status
       
-      for (const addr of addressesToCheck) {
-        if (!addr) continue;
-        const isBlocked = await contract.isBlocked(addr);
+      const latestBlock = await provider.getBlockNumber();
+      const fromBlock = Math.max(0, latestBlock - 10000); // ~1 day of blocks
+      
+      // Get blocked events
+      const blockedFilter = contract.filters.AccountBlocked();
+      const blockedEvents = await contract.queryFilter(blockedFilter, fromBlock, latestBlock);
+      
+      // Get unblocked events
+      const unblockedFilter = contract.filters.AccountUnblocked();
+      const unblockedEvents = await contract.queryFilter(unblockedFilter, fromBlock, latestBlock);
+      
+      // Add addresses from events to our tracking map
+      for (const event of blockedEvents) {
+        if (event.args && event.args.addr) {
+          addressesMap.set(event.args.addr, true);
+        }
+      }
+      
+      for (const event of unblockedEvents) {
+        if (event.args && event.args.addr) {
+          addressesMap.set(event.args.addr, false);
+        }
+      }
+      
+      // Add owner and current user to check 
+      const knownAddresses = [
+        networkConfig.token.owner,
+        address
+      ].filter(Boolean) as string[];
+      
+      for (const addr of knownAddresses) {
+        if (!addressesMap.has(addr)) {
+          // Only query the contract if we don't have this address from events
+          try {
+            const isBlocked = await contract.isBlocked(addr);
+            addressesMap.set(addr, isBlocked);
+          } catch (error) {
+            console.error(`Failed to check if ${addr} is blocked:`, error);
+          }
+        }
+      }
+      
+      // Convert map to array of BlocklistInfo objects
+      for (const [addr, isBlocked] of addressesMap.entries()) {
         blocklistInfo.push({
           address: addr,
           isBlocked
         });
       }
       
-      return blocklistInfo;
+      // Sort by blocked status (blocked first) then by address
+      return blocklistInfo.sort((a, b) => {
+        if (a.isBlocked !== b.isBlocked) {
+          return a.isBlocked ? -1 : 1;
+        }
+        return a.address.toLowerCase().localeCompare(b.address.toLowerCase());
+      });
     } catch (error) {
       console.error("Failed to get blocklist info:", error);
-      return [];
+      
+      // Fallback: check blocklist status for owner and current user
+      const blocklistInfo: BlocklistInfo[] = [];
+      const addressesToCheck = [
+        networkConfig.token.owner,
+        address
+      ].filter(Boolean) as string[];
+      
+      try {
+        for (const addr of addressesToCheck) {
+          const isBlocked = await contract.isBlocked(addr);
+          blocklistInfo.push({
+            address: addr,
+            isBlocked
+          });
+        }
+        return blocklistInfo;
+      } catch (fallbackError) {
+        console.error("Fallback blocklist check failed:", fallbackError);
+        return [];
+      }
     }
   };
 

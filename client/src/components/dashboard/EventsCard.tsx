@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle, RefreshCw } from "lucide-react";
 import { useContractEvents } from "@/lib/api";
 import { ContractEvent } from "@/lib/types";
 import { formatAddress } from "@/lib/utils";
@@ -17,8 +18,8 @@ export default function EventsCard() {
   const [blockRange, setBlockRange] = useState<{ from?: number; to?: number }>({});
   const [applyFilters, setApplyFilters] = useState<boolean>(false);
 
-  // Query contract events
-  const { data, isLoading, error } = useContractEvents(
+  // Query contract events with timeout handling
+  const { data, isLoading, error, refetch } = useContractEvents(
     applyFilters ? {
       fromBlock: blockRange.from,
       toBlock: blockRange.to,
@@ -26,6 +27,26 @@ export default function EventsCard() {
       eventName: eventType !== "all" ? eventType : undefined
     } : { limit }
   );
+  
+  // Handle failed query due to timeout
+  const [queryTimeout, setQueryTimeout] = useState(false);
+  
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    
+    if (isLoading) {
+      // Set a timeout for the query (10 seconds)
+      timer = setTimeout(() => {
+        setQueryTimeout(true);
+      }, 10000);
+    } else {
+      setQueryTimeout(false);
+    }
+    
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [isLoading]);
   
   const events = data?.events || [];
   const range = data?.range;
@@ -132,7 +153,29 @@ export default function EventsCard() {
       </CardHeader>
       
       <CardContent>
-        {isLoading ? (
+        {queryTimeout ? (
+          <Alert variant="destructive" className="mb-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Request Timeout</AlertTitle>
+            <AlertDescription>
+              The request for contract events is taking longer than expected. 
+              <div className="mt-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => {
+                    setQueryTimeout(false);
+                    refetch();
+                  }}
+                  className="flex items-center"
+                >
+                  <RefreshCw className="mr-2 h-4 w-4" />
+                  Retry with smaller block range
+                </Button>
+              </div>
+            </AlertDescription>
+          </Alert>
+        ) : isLoading ? (
           <div className="space-y-2">
             <Skeleton className="h-10 w-full" />
             <Skeleton className="h-10 w-full" />
@@ -140,9 +183,24 @@ export default function EventsCard() {
             <Skeleton className="h-10 w-full" />
           </div>
         ) : error ? (
-          <div className="text-center py-8 text-red-500">
-            Error loading events: {(error as Error).message}
-          </div>
+          <Alert variant="destructive" className="mb-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>
+              Failed to load contract events: {(error as Error).message}
+              <div className="mt-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => refetch()}
+                  className="flex items-center"
+                >
+                  <RefreshCw className="mr-2 h-4 w-4" />
+                  Retry
+                </Button>
+              </div>
+            </AlertDescription>
+          </Alert>
         ) : events.length > 0 ? (
           <>
             <div className="overflow-x-auto">

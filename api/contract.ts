@@ -511,6 +511,15 @@ export async function getContractEvents(
     const effectiveFromBlock = fromBlock || Math.max(0, latestBlock - MAX_BLOCK_RANGE);
     let effectiveToBlock = toBlock || latestBlock;
     
+    // Validate block ranges
+    if (effectiveFromBlock < 0) {
+      throw new Error("From block cannot be negative");
+    }
+    
+    if (effectiveToBlock < effectiveFromBlock) {
+      throw new Error("To block must be greater than or equal to from block");
+    }
+    
     // Ensure we don't exceed the maximum range
     if (effectiveToBlock - effectiveFromBlock > MAX_BLOCK_RANGE) {
       effectiveToBlock = effectiveFromBlock + MAX_BLOCK_RANGE;
@@ -565,8 +574,32 @@ export async function getContractEvents(
       }
     }
     
-    // Get logs from provider
-    const logs = await provider.getLogs(filter);
+    // Get logs from provider with timeout
+    let logs;
+    try {
+      // Create a promise with timeout
+      const timeoutDuration = 15000; // 15 seconds
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Request timed out - blockchain query took too long')), timeoutDuration);
+      });
+      
+      // Race between the actual request and timeout
+      logs = await Promise.race([
+        provider.getLogs(filter),
+        timeoutPromise
+      ]) as ethers.Log[];
+    } catch (error: any) {
+      if (error.message.includes('timed out')) {
+        // If timeout occurred, try with a smaller block range
+        if (effectiveToBlock - effectiveFromBlock > 20) {
+          console.log(`Query timed out. Retrying with smaller block range...`);
+          const midBlock = Math.floor((effectiveFromBlock + effectiveToBlock) / 2);
+          return await getContractEvents(eventName, effectiveFromBlock, midBlock, maxEvents);
+        }
+        throw error;
+      }
+      throw error;
+    }
     
     // Limit the number of logs to process
     const limitedLogs = logs.slice(0, maxEvents);

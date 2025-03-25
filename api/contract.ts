@@ -171,7 +171,7 @@ export async function getTokenInfo() {
     return {
       name,
       symbol,
-      decimals,
+      decimals: decimals.toString(),
       totalSupply: totalSupply.toString(),
       totalShares: totalShares.toString(),
       rewardMultiplier: rewardMultiplier.toString(),
@@ -309,6 +309,10 @@ export async function unpauseContract() {
 
 export async function blockAccount(account: string) {
   try {
+    if (!contract) {
+      throw new Error("Contract not initialized");
+    }
+    
     const tx = await contract.blockAccount(account);
     const receipt = await tx.wait();
     
@@ -325,6 +329,10 @@ export async function blockAccount(account: string) {
 
 export async function unblockAccount(account: string) {
   try {
+    if (!contract) {
+      throw new Error("Contract not initialized");
+    }
+    
     const tx = await contract.unblockAccount(account);
     const receipt = await tx.wait();
     
@@ -341,6 +349,10 @@ export async function unblockAccount(account: string) {
 
 export async function updateRewardMultiplier(newValue: string) {
   try {
+    if (!contract) {
+      throw new Error("Contract not initialized");
+    }
+    
     const tx = await contract.setRewardMultiplier(ethers.parseUnits(newValue, 18));
     const receipt = await tx.wait();
     
@@ -357,6 +369,10 @@ export async function updateRewardMultiplier(newValue: string) {
 
 export async function grantRole(account: string, roleName: string) {
   try {
+    if (!contract) {
+      throw new Error("Contract not initialized");
+    }
+    
     const roleHash = ROLES[roleName as keyof typeof ROLES];
     if (!roleHash) {
       throw new Error(`Invalid role: ${roleName}`);
@@ -379,6 +395,10 @@ export async function grantRole(account: string, roleName: string) {
 
 export async function revokeRole(account: string, roleName: string) {
   try {
+    if (!contract) {
+      throw new Error("Contract not initialized");
+    }
+    
     const roleHash = ROLES[roleName as keyof typeof ROLES];
     if (!roleHash) {
       throw new Error(`Invalid role: ${roleName}`);
@@ -401,6 +421,10 @@ export async function revokeRole(account: string, roleName: string) {
 
 export async function hasRole(account: string, roleName: string) {
   try {
+    if (!contract) {
+      throw new Error("Contract not initialized");
+    }
+    
     const roleHash = ROLES[roleName as keyof typeof ROLES];
     if (!roleHash) {
       throw new Error(`Invalid role: ${roleName}`);

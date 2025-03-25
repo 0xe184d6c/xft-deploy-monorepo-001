@@ -80,8 +80,17 @@ async function initContract() {
 
 // Connect to wallet
 async function connectWallet() {
+    // Verify ethers is available
+    if (typeof ethers === 'undefined') {
+        console.error('Ethers library not loaded');
+        addToActivityLog('Ethers library not loaded. Please refresh the page.', 'error');
+        alert('Ethers library not loaded. Please refresh the page and try again.');
+        return;
+    }
+
     if (!window.ethereum) {
         alert('Please install MetaMask or another Ethereum wallet!');
+        addToActivityLog('No Ethereum provider detected', 'error');
         return;
     }
 
@@ -91,10 +100,17 @@ async function connectWallet() {
         connectButton.innerHTML = '<span class="loading"></span> Connecting...';
         connectButton.disabled = true;
 
-        provider = new ethers.providers.Web3Provider(window.ethereum);
-        await provider.send("eth_requestAccounts", []);
-        signer = provider.getSigner();
+        // Initialize provider with error handling
+        try {
+            provider = new ethers.providers.Web3Provider(window.ethereum);
+            await provider.send("eth_requestAccounts", []);
+            signer = provider.getSigner();
+        } catch (connectionError) {
+            console.error('Provider connection error:', connectionError);
+            throw new Error('Failed to connect to Ethereum provider: ' + connectionError.message);
+        }
 
+        // Initialize contract with error handling
         if (await initContract()) {
             // Update UI elements
             await updateDashboard();
@@ -105,16 +121,20 @@ async function connectWallet() {
             // Start periodic updates
             setInterval(updateDashboard, 30000); // Update every 30 seconds
             
-            addToActivityLog('Wallet connected');
+            addToActivityLog('Wallet connected successfully');
         } else {
             connectButton.innerHTML = 'Connect Wallet';
             connectButton.disabled = false;
+            throw new Error('Contract initialization failed');
         }
     } catch (error) {
         console.error('Error connecting wallet:', error);
         document.getElementById('connectButton').innerHTML = 'Connect Wallet';
         document.getElementById('connectButton').disabled = false;
-        addToActivityLog('Failed to connect wallet', 'error');
+        addToActivityLog('Failed to connect wallet: ' + error.message, 'error');
+        
+        // Show user-friendly error
+        alert('Connection failed: ' + (error.message || 'Unknown error'));
     }
 }
 
@@ -552,32 +572,43 @@ async function incrementRewardMultiplier() {
 
 // Activity Log Management
 function addToActivityLog(message, status = 'info', txHash = null) {
-    const timestamp = new Date().toLocaleTimeString();
-    let logEntry = `[${timestamp}] ${message}`;
-    
-    if (txHash) {
-        logEntry += ` (TX: ${txHash.slice(0,6)}...${txHash.slice(-4)})`;
+    try {
+        const timestamp = new Date().toLocaleTimeString();
+        let logEntry = `[${timestamp}] ${message}`;
+        
+        if (txHash) {
+            logEntry += ` (TX: ${txHash.slice(0,6)}...${txHash.slice(-4)})`;
+        }
+        
+        // Add to our log array
+        activityLog.push({ message: logEntry, status });
+        
+        // Limit to last 50 entries
+        if (activityLog.length > 50) {
+            activityLog.shift();
+        }
+        
+        // Update the activity log display
+        updateActivityLog();
+        
+        // Also log to console for debugging
+        console.log(logEntry);
+    } catch (error) {
+        // Failsafe for any logging errors
+        console.error('Error adding to activity log:', error);
     }
-    
-    // Add to our log array
-    activityLog.push({ message: logEntry, status });
-    
-    // Limit log to last 50 entries
-    if (activityLog.length > 50) {
-        activityLog.shift();
-    }
-    
-    // Update the activity log display
-    updateActivityLog();
-    
-    // Also log to console
-    console.log(logEntry);
 }
 
 function updateActivityLog() {
-    const logElement = document.getElementById('activityLog');
-    
-    if (logElement) {
+    try {
+        const logElement = document.getElementById('activityLog');
+        
+        if (!logElement) {
+            console.error('Activity log element not found');
+            return;
+        }
+        
+        // Clear current log display
         logElement.innerHTML = '';
         
         if (activityLog.length === 0) {
@@ -585,22 +616,38 @@ function updateActivityLog() {
             return;
         }
         
+        // Create a document fragment for better performance
+        const fragment = document.createDocumentFragment();
+        
         // Display logs in reverse order (newest first)
         for (let i = activityLog.length - 1; i >= 0; i--) {
             const entry = activityLog[i];
             const logEntryElement = document.createElement('div');
             logEntryElement.className = 'log-entry';
             
-            if (entry.status === 'error') {
-                logEntryElement.style.color = 'red';
-            } else if (entry.status === 'success') {
-                logEntryElement.style.color = 'green';
-            } else if (entry.status === 'pending') {
-                logEntryElement.style.color = 'orange';
+            // Set color based on status
+            switch (entry.status) {
+                case 'error':
+                    logEntryElement.style.color = 'red';
+                    break;
+                case 'success':
+                    logEntryElement.style.color = 'green';
+                    break;
+                case 'pending':
+                    logEntryElement.style.color = 'orange';
+                    break;
+                default:
+                    // Default color from CSS
+                    break;
             }
             
             logEntryElement.textContent = entry.message;
-            logElement.appendChild(logEntryElement);
+            fragment.appendChild(logEntryElement);
         }
+        
+        // Append all entries at once for better performance
+        logElement.appendChild(fragment);
+    } catch (error) {
+        console.error('Error updating activity log display:', error);
     }
 }

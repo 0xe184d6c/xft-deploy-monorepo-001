@@ -1,31 +1,24 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
 import { useWallet } from "@/lib/wallet";
-import { useContract } from "@/lib/contract";
 import { formatDateTime } from "@/lib/utils";
+import { useTokenInfo } from "@/lib/api";
 
 export default function TotalSupplyCard() {
   const { connected } = useWallet();
-  const { totalSupply, totalShares, loadTotalSupply } = useContract();
-  const [isLoading, setIsLoading] = useState(false);
+  const { data, isLoading, refetch } = useTokenInfo();
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
-  useEffect(() => {
-    if (connected) {
-      refreshTotalSupply();
-    }
-  }, [connected]);
+  const totalSupply = data?.totalSupply ? Number(data.totalSupply) / 10**Number(data.decimals) : 0;
+  const totalShares = data?.totalShares || '0';
 
   const refreshTotalSupply = async () => {
-    setIsLoading(true);
     try {
-      await loadTotalSupply();
+      await refetch();
       setLastUpdated(new Date());
     } catch (error) {
       console.error("Failed to load total supply:", error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -38,7 +31,7 @@ export default function TotalSupplyCard() {
           size="icon"
           className="p-1 hover:bg-neutral-100 rounded"
           onClick={refreshTotalSupply}
-          disabled={isLoading || !connected}
+          disabled={isLoading}
         >
           <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
         </Button>
@@ -51,12 +44,12 @@ export default function TotalSupplyCard() {
       ) : (
         <>
           <div className="flex items-baseline mb-4">
-            <span className="text-2xl font-bold mr-2">{connected ? totalSupply : '0.00'}</span>
-            <span className="text-sm text-accent-500">USDX</span>
+            <span className="text-2xl font-bold mr-2">{totalSupply.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+            <span className="text-sm text-accent-500">{data?.symbol || 'USDX'}</span>
           </div>
           <div className="text-xs text-accent-500 mb-3">
             <span>Total Shares: </span>
-            <span>{connected ? totalShares : '0'}</span>
+            <span>{totalShares}</span>
           </div>
         </>
       )}

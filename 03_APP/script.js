@@ -1,4 +1,12 @@
-const contractAddress = '0x421C76cd7C1550c4fcc974F4d74c870150c45995'; // Replace with your contract address
+// Use a test network contract address - this should be replaced with deployed contract address
+const contractAddress = '0x421C76cd7C1550c4fcc974F4d74c870150c45995'; 
+// Network configuration - Add Hardhat local network support
+const networks = {
+    1: { name: 'Mainnet', explorer: 'https://etherscan.io' },
+    5: { name: 'Goerli', explorer: 'https://goerli.etherscan.io' },
+    11155111: { name: 'Sepolia', explorer: 'https://sepolia.etherscan.io' },
+    31337: { name: 'Hardhat', explorer: '' }
+};
 let provider, signer, contract;
 let activityLog = [];
 let isDarkMode = false;

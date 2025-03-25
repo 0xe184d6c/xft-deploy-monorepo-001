@@ -15,6 +15,7 @@ import Sidebar from "@/components/layout/Sidebar";
 import MobileMenu from "@/components/layout/MobileMenu";
 import Footer from "@/components/layout/Footer";
 import { WalletProvider } from "@/lib/wallet";
+import { ContractProvider } from "@/lib/contract";
 import TransactionStatusModal from "@/components/modals/TransactionStatusModal";
 
 function Router() {
@@ -50,23 +51,25 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <WalletProvider>
-        <div className="min-h-screen flex flex-col">
-          <Header />
-          <div className="flex flex-1">
-            <Sidebar />
-            <MobileMenu 
-              isOpen={isSidebarOpen} 
-              onClose={() => setIsSidebarOpen(false)}
-              onOpen={() => setIsSidebarOpen(true)}
-            />
-            <main className="flex-1 p-6 overflow-auto">
-              <Router />
-            </main>
+        <ContractProvider>
+          <div className="min-h-screen flex flex-col">
+            <Header />
+            <div className="flex flex-1">
+              <Sidebar />
+              <MobileMenu 
+                isOpen={isSidebarOpen} 
+                onClose={() => setIsSidebarOpen(false)}
+                onOpen={() => setIsSidebarOpen(true)}
+              />
+              <main className="flex-1 p-6 overflow-auto">
+                <Router />
+              </main>
+            </div>
+            <Footer />
           </div>
-          <Footer />
-        </div>
-        <TransactionStatusModal />
-        <Toaster />
+          <TransactionStatusModal />
+          <Toaster />
+        </ContractProvider>
       </WalletProvider>
     </QueryClientProvider>
   );

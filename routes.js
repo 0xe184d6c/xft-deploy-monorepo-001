@@ -1,6 +1,3 @@
-/**
- * Route definitions for the ABI to OpenAPI converter
- */
 
 const express = require('express');
 const { validateAbi } = require('./validators');
@@ -9,15 +6,18 @@ const { generateOpenApiSpec } = require('./apiGenerator');
 
 const router = express.Router();
 
-/**
- * POST endpoint to generate OpenAPI specification from an Ethereum ABI
- * Accepts ABI JSON in request body
- * Returns OpenAPI specification as JSON
- */
 router.post('/generateSpec', async (req, res) => {
   try {
     const abiJson = req.body;
     
+    // Check for empty request body
+    if (!abiJson || Object.keys(abiJson).length === 0) {
+      return res.status(400).json({
+        error: true,
+        message: 'Request body is empty'
+      });
+    }
+
     // Validate the ABI structure
     const validationResult = validateAbi(abiJson);
     if (!validationResult.valid) {
@@ -28,14 +28,27 @@ router.post('/generateSpec', async (req, res) => {
       });
     }
     
-    // Parse the ABI to extract functions, parameters, etc.
-    const parsedAbi = parseAbi(abiJson);
-    
-    // Generate OpenAPI specification
-    const openApiSpec = generateOpenApiSpec(parsedAbi);
-    
-    // Return the generated specification
-    return res.status(200).json(openApiSpec);
+    try {
+      // Parse the ABI
+      const parsedAbi = parseAbi(abiJson);
+      
+      // Generate OpenAPI specification
+      const openApiSpec = generateOpenApiSpec(parsedAbi);
+      
+      // Validate the generated spec has required fields
+      if (!openApiSpec || !openApiSpec.openapi || !openApiSpec.paths) {
+        throw new Error('Generated OpenAPI spec is invalid');
+      }
+      
+      return res.status(200).json(openApiSpec);
+    } catch (processingError) {
+      console.error('Processing error:', processingError);
+      return res.status(422).json({
+        error: true,
+        message: 'Failed to process ABI',
+        details: processingError.message
+      });
+    }
   } catch (error) {
     console.error('Error generating OpenAPI spec:', error);
     return res.status(500).json({
@@ -46,9 +59,18 @@ router.post('/generateSpec', async (req, res) => {
   }
 });
 
-// Root endpoint that redirects to the static HTML
 router.get('/', (req, res) => {
-  res.sendFile('index.html', { root: './public' });
+  try {
+    res.sendFile('index.html', { root: './public' });
+  } catch (error) {
+    console.error('Error serving index.html:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// Health check endpoint
+router.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
 });
 
 module.exports = router;

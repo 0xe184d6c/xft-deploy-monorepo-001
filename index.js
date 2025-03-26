@@ -2,19 +2,14 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
-
-// Import core modules
 const abiParser = require('./src/abiParser');
 const apiGenerator = require('./src/apiGenerator');
 const validators = require('./src/validators');
 const routes = require('./src/routes');
 
-// Create Express application
 const app = express();
 
-// Trust proxy for rate limiting behind reverse proxy
 app.set('trust proxy', 1);
-
 const rateLimit = require('express-rate-limit');
 
 // Configure middleware
@@ -50,7 +45,7 @@ app.use((req, res, next) => {
 // Register routes
 app.use('/', routes);
 
-// 404 handler for routes that don't exist
+// 404 handler 
 app.use((req, res, next) => {
   const error = new Error('Not Found');
   error.statusCode = 404;
@@ -75,7 +70,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Server configuration
+// Server config
 let PORT = process.env.PORT || 5000;
 let maxRetries = 3;
 let retryCount = 0;
@@ -106,7 +101,6 @@ function startServer(port) {
   return server;
 }
 
-// Start server
 const server = startServer(PORT);
 
 module.exports = server;

@@ -1,47 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XFT ABI Tool</title>
-    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>XFT ABI Tool</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-    <div class="container">
-        <header class="text-start my-3">
-            <h1>ABI to OpenAPI</h1>
-            <div>
-                <a href="/docs" class="btn btn-sm btn-outline-secondary">API Docs</a>
-            </div>
-        </header>
-        
-        <main>
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="mb-3">
-                        <label for="contractName">Contract Name:</label>
-                        <input type="text" class="form-control" id="contractName" placeholder="Enter contract name">
-                    </div>
-                    <div class="mb-3">
-                        <label for="abiInput">JSON:</label>
-                        <textarea class="form-control" id="abiInput" rows="8" placeholder='[{"inputs": [],"name": "totalSupply","outputs": [{"internalType": "uint256","name": "","type": "uint256"}],"stateMutability": "view","type": "function"}]'></textarea>
-                    </div>
-                    
-                    <button id="convertButton" class="btn btn-sm">Convert</button>
-                    
-                    <div class="mt-3">
-                        <div class="d-flex justify-content-center gap-2">
-                            <button id="downloadButton" class="btn btn-sm">Download Spec</button>
-                            <button id="copyButton" class="btn btn-sm">Copy to Clipboard</button>
-                        </div>
-                        <div id="resultOutput" class="d-none"></div>
-                        <div id="endpointsList" class="mt-3 d-none"></div>
-                    </div>
-                </div>
-            </div>
-        </main>
+  <div class="row">
+    <div class="col-2 sidenav">
+      <h4>ABI to OpenAPI</h4>
+      <a href="/docs" class="btn">API Docs</a>
     </div>
-    <script src="script.js"></script>
+    <div class="col-10 content">
+      
+      <div class="card">
+        <div class="card-body">
+          <label for="contractName">Contract Name:</label>
+          <input type="text" id="contractName" class="form-control" placeholder="Enter contract name"/>
+          <label for="abiInput">JSON:</label>
+          <textarea
+            id="abiInput"
+            class="form-control"
+            rows="8"
+            placeholder='[{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}]'
+          ></textarea>
+
+          <button id="convertButton" class="btn">Convert</button>
+
+          <div class="actions">
+            <button id="downloadButton" class="btn">Download Spec</button>
+            <button id="copyButton" class="btn">Copy to Clipboard</button>
+          </div>
+
+          <div id="resultOutput" class="d-none"></div>
+          <div id="endpointsList" class="d-none"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>

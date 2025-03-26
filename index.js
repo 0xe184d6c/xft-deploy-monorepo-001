@@ -62,20 +62,37 @@ app.use((err, req, res, next) => {
 });
 
 // Server configuration
-const PORT = process.env.PORT || 8000;
+let PORT = process.env.PORT || 8000;
+let maxRetries = 3;
+let retryCount = 0;
 
-// Graceful shutdown
-process.on('SIGTERM', () => {
-  console.log('Received SIGTERM. Performing graceful shutdown...');
-  server.close(() => {
-    console.log('Server closed');
-    process.exit(0);
+function startServer(port) {
+  const server = app.listen(port, '0.0.0.0', () => {
+    console.log(`ABI to OpenAPI converter service running on http://0.0.0.0:${port}`);
+  }).on('error', (err) => {
+    if (err.code === 'EADDRINUSE' && retryCount < maxRetries) {
+      retryCount++;
+      console.log(`Port ${port} in use, trying ${port + 1}...`);
+      startServer(port + 1);
+    } else {
+      console.error('Server failed to start:', err.message);
+      process.exit(1);
+    }
   });
-});
+
+  // Graceful shutdown
+  process.on('SIGTERM', () => {
+    console.log('Received SIGTERM. Performing graceful shutdown...');
+    server.close(() => {
+      console.log('Server closed');
+      process.exit(0);
+    });
+  });
+
+  return server;
+}
 
 // Start server
-const server = app.listen(PORT, '0.0.0.0', () => {
-  console.log(`ABI to OpenAPI converter service running on http://0.0.0.0:${PORT}`);
-});
+const server = startServer(PORT);
 
 module.exports = server;

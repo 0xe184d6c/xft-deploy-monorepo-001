@@ -9,13 +9,18 @@
  * @returns {Object} Parsed ABI with function definitions and parameters
  */
 function parseAbi(abiJson) {
-  // Object to store parsed ABI data
-  const parsedAbi = {
-    contractName: 'SmartContract', // Default name if not provided
-    functions: [],
-    events: [],
-    errors: []
-  };
+  try {
+    // Object to store parsed ABI data
+    const parsedAbi = {
+      contractName: 'SmartContract', // Default name if not provided
+      functions: [],
+      events: [],
+      errors: []
+    };
+
+    if (!abiJson) {
+      throw new Error('ABI input is null or undefined');
+    }
 
   // Extract contract name if available (some ABIs include this)
   if (abiJson.contractName) {

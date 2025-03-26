@@ -12,7 +12,15 @@ const routes = require('./src/routes');
 // Create Express application
 const app = express();
 
+const rateLimit = require('express-rate-limit');
+
 // Configure middleware
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100 // limit each IP to 100 requests per windowMs
+});
+
+app.use(limiter);
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));

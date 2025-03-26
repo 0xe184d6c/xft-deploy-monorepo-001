@@ -47,3 +47,72 @@ Map POST routes to contract writes
 Add validation middleware
 Handle gas/transaction details
 The ABI essentially becomes the source of truth for the entire API structure.
+
+
+
+Project Files and Their Use Cases
+Here's a list of the main project files and their functions:
+
+index.js
+
+Main entry point for the Node.js application
+Sets up the Express server and middleware
+Configures error handling and routes
+Starts the server on port 8000
+src/abiParser.js
+
+Parses Ethereum ABI JSON structures
+Extracts function definitions, parameters, and types
+Builds function signatures and determines appropriate HTTP methods
+src/apiGenerator.js
+
+Generates OpenAPI specifications from parsed ABI data
+Maps ABI functions to OpenAPI paths and components
+Creates schema definitions for inputs and outputs
+src/validators.js
+
+Validates ABI JSON structure before processing
+Ensures required fields are present and data types are correct
+Returns detailed validation errors when issues are found
+src/utils.js
+
+Provides utility functions for Solidity to JSON Schema conversion
+Handles complex array structures recursively
+Formats numbers for JSON output
+src/routes.js
+
+Defines API endpoints including /generateSpec
+Handles route registration and request processing
+Implements documentation routes and health checks
+public/index.html
+
+Frontend interface for the application
+Allows users to input ABI JSON and view OpenAPI output
+public/script.js
+
+Client-side JavaScript for the web interface
+Handles form submission and API communication
+public/style.css
+
+Styling for the web interface
+Ensures responsive design and visual appeal
+package.json & package-lock.json
+
+Defines project dependencies and scripts
+Locks dependency versions for consistent installations
+The project is now a clean Node.js application focused on converting Ethereum ABIs to OpenAPI specifications, with all Python references removed.
+
+
+
+Contract functions handle:
+
+Token transfers
+Minting/burning
+Role management
+Account blocking
+Contract pausing
+Event monitoring
+
+
+chmod +x 01_admin/backup.sh
+./01_admin/backup.sh

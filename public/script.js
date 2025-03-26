@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
       copyButton.disabled = false;
 
       const endpointsList = document.getElementById('endpointsList');
-      endpointsList.innerHTML = '';
+      endpointsList.innerHTML = '<h3>API Endpoints</h3>';
       endpointsList.classList.remove('d-none');
 
       const ul = document.createElement('ul');
@@ -64,6 +64,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       });
       endpointsList.appendChild(ul);
+
+      // Fetch and display events
+      const eventsResponse = await fetch('/api/parseEvents', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ abi: abiJson })
+      });
+
+      if (eventsResponse.ok) {
+        const { events } = await eventsResponse.json();
+        const eventsList = document.createElement('div');
+        eventsList.id = 'eventsList';
+        eventsList.innerHTML = '<h3>Events</h3>';
+        
+        const eventsUl = document.createElement('ul');
+        events.forEach(event => {
+          const li = document.createElement('li');
+          const code = document.createElement('code');
+          code.textContent = event;
+          li.appendChild(code);
+          eventsUl.appendChild(li);
+        });
+        
+        eventsList.appendChild(eventsUl);
+        endpointsList.after(eventsList);
+      }
     } catch (error) {
       resultOutput.textContent = 'Error: ' + error.message;
     } finally {

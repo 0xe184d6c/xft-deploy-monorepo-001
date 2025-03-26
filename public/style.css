@@ -1,82 +1,117 @@
-/* Custom styles for the ABI to OpenAPI converter - Black and White color scheme */
+/* Minimal sleek style with black and white color scheme */
+
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 /* Global font settings */
 body, h1, h2, h3, h4, p, label, button, input, textarea, select, .btn, .form-control, pre, code {
     font-family: Arial, sans-serif !important;
-    color: black !important;
+    color: #000 !important;
 }
 
-/* Override Bootstrap styles for black and white theme */
+/* Layout and background */
 body {
-    background-color: white !important;
+    background-color: #fff !important;
+    line-height: 1.5;
+    padding: 0;
+    margin: 0;
 }
 
-.card, .container, .btn {
-    background-color: white !important;
-    border-color: black !important;
+.container {
+    max-width: 800px !important;
+    margin-left: 0 !important;
+    padding: 1rem !important;
+}
+
+/* Header and typography */
+h1 {
+    font-size: 1.75rem !important;
+    font-weight: bold !important;
+    margin-bottom: 0.5rem !important;
+}
+
+label {
+    font-weight: bold !important;
+    display: block;
+    margin-bottom: 0.25rem !important;
+}
+
+/* Card styling */
+.card {
+    background-color: #fff !important;
+    border: 2px solid #000 !important;
+    border-radius: 0 !important;
+    margin-bottom: 1rem !important;
+}
+
+.card-body {
+    padding: 1rem !important;
+}
+
+/* Form elements */
+.form-control {
+    background-color: #f8f8f8 !important;
+    border: 1px solid #000 !important;
+    border-radius: 0 !important;
+    padding: 0.5rem !important;
+    width: 100% !important;
+}
+
+#abiInput {
+    min-height: 180px !important;
+    font-family: monospace !important;
 }
 
 /* Result output styling */
 #resultOutput {
-    min-height: 200px;
-    overflow: auto;
-    background-color: white !important;
-    color: black !important;
-    font-family: Arial, monospace !important;
-    border: 1px solid black !important;
-}
-
-/* Position the copy button */
-.position-relative {
-    position: relative;
-}
-
-.position-absolute {
-    position: absolute;
-}
-
-/* Textarea height and styling */
-#abiInput {
-    min-height: 200px;
-    background-color: white !important;
-    color: black !important;
-    border: 1px solid black !important;
-}
-
-/* Spacing adjustments */
-.container {
-    max-width: 900px;
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-}
-
-/* Black and white specific adjustments for code blocks */
-pre, code {
-    background-color: white !important;
-    color: black !important;
-    border-color: black !important;
-}
-
-/* Card styling - no hover effect for minimalist design */
-.card {
-    box-shadow: none !important;
-    border: 1px solid black !important;
+    background-color: #f0f0f0 !important;
+    color: #000 !important;
+    border: 1px solid #000 !important;
+    padding: 0.5rem !important;
+    min-height: 180px !important;
+    overflow: auto !important;
+    font-family: monospace !important;
+    white-space: pre-wrap !important;
 }
 
 /* Button styling */
 .btn {
-    border: 1px solid black !important;
-    color: black !important;
+    background-color: #fff !important;
+    color: #000 !important;
+    border: 1px solid #000 !important;
+    border-radius: 0 !important;
+    padding: 0.25rem 0.75rem !important;
+    cursor: pointer !important;
+    font-weight: bold !important;
+    transition: background-color 0.2s !important;
+}
+
+.btn:hover {
+    background-color: #000 !important;
+    color: #fff !important;
 }
 
 /* Link styling */
-a, a:hover, a:visited {
-    color: black !important;
+a {
+    color: #000 !important;
+    text-decoration: none !important;
+}
+
+a:hover {
     text-decoration: underline !important;
 }
 
-/* Form controls */
-.form-control:focus {
-    border-color: black !important;
-    box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.25) !important;
+/* Footer styling */
+footer {
+    margin-top: 1rem !important;
+    font-size: 0.8rem !important;
+}
+
+/* Remove Replit dark mode */
+[data-bs-theme="dark"] {
+    background-color: #fff !important;
 }

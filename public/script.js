@@ -10,6 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const convertButton = document.getElementById('convertButton');
   const resultOutput = document.getElementById('resultOutput');
   const copyButton = document.getElementById('copyButton');
+  const downloadButton = document.getElementById('downloadButton');
+  
+  downloadButton.disabled = true;
+  copyButton.disabled = true;
   
   // Convert button click handler
   convertButton.addEventListener('click', async () => {
@@ -51,8 +55,12 @@ document.addEventListener('DOMContentLoaded', () => {
       // Get the OpenAPI spec
       const openApiSpec = await response.json();
       
-      // Display formatted JSON
-      resultOutput.textContent = JSON.stringify(openApiSpec, null, 2);
+      const specString = JSON.stringify(openApiSpec, null, 2);
+      resultOutput.textContent = specString;
+
+      // Enable buttons after successful conversion
+      downloadButton.disabled = false;
+      copyButton.disabled = false;
     } catch (error) {
       resultOutput.textContent = 'Error: ' + error.message;
     } finally {
@@ -74,5 +82,18 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch(err => {
         console.error('Failed to copy: ', err);
       });
+  });
+
+  // Download button handler
+  downloadButton.addEventListener('click', () => {
+    const blob = new Blob([resultOutput.textContent], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'openapi-spec.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   });
 });

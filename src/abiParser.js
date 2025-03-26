@@ -22,7 +22,7 @@ function parseAbi(abiJson) {
       throw new Error('ABI input is null or undefined');
     }
 
-  // Extract contract name if available (some ABIs include this)
+    // Extract contract name if available (some ABIs include this)
   if (abiJson.contractName) {
     parsedAbi.contractName = abiJson.contractName;
     // If contractName exists at the top level, the functions might be in the abi property
@@ -64,6 +64,9 @@ function parseAbi(abiJson) {
   });
 
   return parsedAbi;
+  } catch (error) {
+    throw new Error(`Failed to parse ABI: ${error.message}`);
+  }
 }
 
 /**

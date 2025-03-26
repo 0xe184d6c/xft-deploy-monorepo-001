@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethereum ABI to OpenAPI Converter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Ethereum ABI to OpenAPI Converter</h1>
+            <p>Convert your Ethereum smart contract ABI to an OpenAPI specification</p>
+        </header>
+        
+        <main>
+            <div class="card">
+                <h2>How to Use</h2>
+                <p>This service provides an API endpoint that converts Ethereum smart contract ABIs to OpenAPI specifications.</p>
+                <p>Send a POST request to <code>/generateSpec</code> with your ABI JSON in the request body.</p>
+                
+                <h3>Example curl request:</h3>
+                <pre><code>curl -X POST http://localhost:8000/generateSpec \
+    -H "Content-Type: application/json" \
+    -d @your-abi.json</code></pre>
+            </div>
+        </main>
+        
+        <footer>
+            <p>ABI to OpenAPI Converter Service</p>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

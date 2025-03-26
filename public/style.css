@@ -10,7 +10,6 @@ body, h1, h2, h3, h4, p, label, button, input, textarea, select, .btn, .form-con
     color: #000 !important;
 }
 
-/* Layout and background */
 body {
     background-color: #fff !important;
     line-height: 1.5;

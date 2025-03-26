@@ -10,13 +10,13 @@ const { convertSolidityTypeToJsonSchema } = require('./utils');
  * @param {Object} parsedAbi - Parsed ABI from abiParser
  * @returns {Object} OpenAPI specification
  */
-function generateOpenApiSpec(parsedAbi) {
+function generateOpenApiSpec(parsedAbi, contractName = 'SmartContract') {
   // Create base OpenAPI structure
   const openApiSpec = {
     openapi: '3.0.0',
     info: {
-      title: `${parsedAbi.contractName} API`,
-      description: `API for interacting with the ${parsedAbi.contractName} smart contract`,
+      title: `${contractName} API`,
+      description: `API for interacting with the ${contractName} smart contract`,
       version: '1.0.0'
     },
     paths: {},

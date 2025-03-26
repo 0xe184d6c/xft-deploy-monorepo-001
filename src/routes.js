@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.post('/generateSpec', async (req, res) => {
   try {
-    const abiJson = req.body;
+    const { abi: abiJson, contractName = 'SmartContract' } = req.body;
     
     // Check for empty request body
     if (!abiJson || Object.keys(abiJson).length === 0) {
@@ -36,7 +36,7 @@ router.post('/generateSpec', async (req, res) => {
       const parsedAbi = parseAbi(abiJson);
       
       // Generate OpenAPI specification
-      const openApiSpec = generateOpenApiSpec(parsedAbi);
+      const openApiSpec = generateOpenApiSpec(parsedAbi, contractName);
       
       // Validate the generated spec has required fields
       if (!openApiSpec || !openApiSpec.openapi || !openApiSpec.paths) {

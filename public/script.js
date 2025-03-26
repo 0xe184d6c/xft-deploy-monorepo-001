@@ -38,13 +38,19 @@ document.addEventListener('DOMContentLoaded', () => {
       convertButton.disabled = true;
       resultOutput.textContent = 'Converting...';
 
-      // Send the ABI to the server
+      // Get contract name or use default
+      const contractName = document.getElementById('contractName').value.trim() || 'SmartContract';
+
+      // Send the ABI and contract name to the server
       const response = await fetch('/api/generateSpec', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: abiJsonText
+        body: JSON.stringify({
+          abi: JSON.parse(abiJsonText),
+          contractName: contractName
+        })
       });
 
       // Handle the response

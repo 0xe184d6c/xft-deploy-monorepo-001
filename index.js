@@ -17,6 +17,9 @@ app.use(bodyParser.json({ limit: '10mb' }));
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Register API routes
+app.use('/api', routes);
+
 // Basic request logging
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} ${req.method} ${req.url}`);

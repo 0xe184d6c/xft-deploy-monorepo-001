@@ -1,79 +1,82 @@
-/* Basic styles for the ABI to OpenAPI converter */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+/* Custom styles for the ABI to OpenAPI converter - Black and White color scheme */
+
+/* Global font settings */
+body, h1, h2, h3, h4, p, label, button, input, textarea, select, .btn, .form-control, pre, code {
+    font-family: Arial, sans-serif !important;
+    color: black !important;
 }
 
+/* Override Bootstrap styles for black and white theme */
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    line-height: 1.6;
-    color: #333;
-    background-color: #f5f5f5;
-    padding: 20px;
+    background-color: white !important;
 }
 
+.card, .container, .btn {
+    background-color: white !important;
+    border-color: black !important;
+}
+
+/* Result output styling */
+#resultOutput {
+    min-height: 200px;
+    overflow: auto;
+    background-color: white !important;
+    color: black !important;
+    font-family: Arial, monospace !important;
+    border: 1px solid black !important;
+}
+
+/* Position the copy button */
+.position-relative {
+    position: relative;
+}
+
+.position-absolute {
+    position: absolute;
+}
+
+/* Textarea height and styling */
+#abiInput {
+    min-height: 200px;
+    background-color: white !important;
+    color: black !important;
+    border: 1px solid black !important;
+}
+
+/* Spacing adjustments */
 .container {
-    max-width: 800px;
-    margin: 0 auto;
+    max-width: 900px;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
 }
 
-header {
-    text-align: center;
-    margin-bottom: 30px;
+/* Black and white specific adjustments for code blocks */
+pre, code {
+    background-color: white !important;
+    color: black !important;
+    border-color: black !important;
 }
 
-header h1 {
-    margin-bottom: 10px;
-    color: #2c3e50;
-}
-
+/* Card styling - no hover effect for minimalist design */
 .card {
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    box-shadow: none !important;
+    border: 1px solid black !important;
 }
 
-h2, h3 {
-    color: #2c3e50;
-    margin: 15px 0;
+/* Button styling */
+.btn {
+    border: 1px solid black !important;
+    color: black !important;
 }
 
-h2 {
-    font-size: 1.5em;
+/* Link styling */
+a, a:hover, a:visited {
+    color: black !important;
+    text-decoration: underline !important;
 }
 
-h3 {
-    font-size: 1.2em;
-}
-
-pre {
-    background-color: #f8f8f8;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 10px;
-    overflow-x: auto;
-    margin: 15px 0;
-}
-
-code {
-    font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
-    font-size: 0.9em;
-    padding: 2px 4px;
-    background-color: #f8f8f8;
-    border-radius: 3px;
-}
-
-pre code {
-    padding: 0;
-    background-color: transparent;
-}
-
-footer {
-    text-align: center;
-    margin-top: 30px;
-    color: #666;
-    font-size: 0.9em;
+/* Form controls */
+.form-control:focus {
+    border-color: black !important;
+    box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.25) !important;
 }

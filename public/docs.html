@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation - Ethereum ABI to OpenAPI Converter</title>
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-bs-theme="dark">
+    <div class="container">
+        <header class="text-center my-4">
+            <h1>API Documentation</h1>
+            <p class="lead">Ethereum ABI to OpenAPI Converter Service</p>
+            <nav class="mt-4">
+                <a href="index.html" class="btn btn-outline-primary">Back to Converter</a>
+            </nav>
+        </header>
+        
+        <main>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">API Endpoints</h2>
+                    
+                    <div class="mt-4">
+                        <h3>POST /generateSpec</h3>
+                        <p>Converts an Ethereum ABI JSON into an OpenAPI specification.</p>
+                        
+                        <h4 class="mt-3">Request</h4>
+                        <p><strong>Content-Type:</strong> application/json</p>
+                        <p><strong>Body:</strong> Ethereum ABI JSON array</p>
+                        
+                        <pre><code class="p-3 border rounded">[
+  {
+    "inputs": [],
+    "name": "totalSupply",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "transfer",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]</code></pre>
+                        
+                        <h4 class="mt-3">Response</h4>
+                        <p><strong>Content-Type:</strong> application/json</p>
+                        <p><strong>Body:</strong> OpenAPI specification in JSON format</p>
+                        
+                        <pre><code class="p-3 border rounded">{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Smart Contract API",
+    "version": "1.0.0",
+    "description": "API for interacting with a smart contract"
+  },
+  "paths": {
+    "/totalSupply": {
+      "get": {
+        "summary": "totalSupply",
+        "description": "Function: totalSupply()",
+        "operationId": "totalSupply",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "type": "string",
+                      "description": "uint256"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transfer": {
+      "post": {
+        "summary": "transfer",
+        "description": "Function: transfer(address,uint256)",
+        "operationId": "transfer",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["to", "amount"],
+                "properties": {
+                  "to": {
+                    "type": "string",
+                    "description": "address"
+                  },
+                  "amount": {
+                    "type": "string",
+                    "description": "uint256"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">Usage Examples</h2>
+                    
+                    <h3 class="mt-4">Curl Example</h3>
+                    <pre><code class="p-3 border rounded">curl -X POST https://your-app-url/generateSpec \
+  -H "Content-Type: application/json" \
+  -d @your-abi.json</code></pre>
+                    
+                    <h3 class="mt-4">JavaScript Example</h3>
+                    <pre><code class="p-3 border rounded">async function convertAbiToOpenApi(abiJson) {
+  const response = await fetch('https://your-app-url/generateSpec', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(abiJson)
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+
+  return await response.json();
+}</code></pre>
+                    
+                    <h3 class="mt-4">Node.js Example</h3>
+                    <pre><code class="p-3 border rounded">const fetch = require('node-fetch');
+const fs = require('fs');
+
+// Read ABI from file
+const abiJson = JSON.parse(fs.readFileSync('path/to/your-abi.json', 'utf8'));
+
+// Convert to OpenAPI
+fetch('https://your-app-url/generateSpec', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(abiJson)
+})
+.then(response => {
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+  return response.json();
+})
+.then(openApiSpec => {
+  console.log(JSON.stringify(openApiSpec, null, 2));
+  // Optionally save to file
+  fs.writeFileSync('openapi-spec.json', JSON.stringify(openApiSpec, null, 2));
+})
+.catch(error => console.error('Error:', error));</code></pre>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="text-center text-muted py-3">
+            <p>ABI to OpenAPI Converter Service</p>
+        </footer>
+    </div>
+</body>
+</html>

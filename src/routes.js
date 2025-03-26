@@ -9,6 +9,20 @@ const { generateOpenApiSpec } = require('./apiGenerator');
 
 const router = express.Router();
 
+
+const { parseEvents } = require('./eventsParser');
+
+// Events parsing endpoint
+router.post('/parseEvents', async (req, res) => {
+  try {
+    const { abi } = req.body;
+    const events = parseEvents(abi);
+    res.json({ events });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
 router.post('/generateSpec', async (req, res) => {
   try {
     const { abi: abiJson, contractName = 'SmartContract' } = req.body;

@@ -1,13 +1,4 @@
-/**
- * ABI Parser module
- * Extracts function definitions, parameters, and types from Ethereum ABI JSON
- */
-
-/**
- * Parse an Ethereum ABI JSON into a structured format for OpenAPI generation
- * @param {Array} abiJson - The Ethereum ABI as a JSON array
- * @returns {Object} Parsed ABI with function definitions and parameters
- */
+// src/abiParser.js
 function parseAbi(abiJson) {
   try {
     // Object to store parsed ABI data

@@ -1,6 +1,7 @@
 /**
  * API Generator module
- * Maps ABI functions to OpenAPI paths and components
+ * Maps ABI functions to OpenAPI paths and components with enhanced schema generation
+ * for complex/nested Solidity types and arrays.
  */
 
 const { convertSolidityTypeToJsonSchema } = require('./utils');
@@ -8,10 +9,10 @@ const { convertSolidityTypeToJsonSchema } = require('./utils');
 /**
  * Generate OpenAPI specification from parsed ABI
  * @param {Object} parsedAbi - Parsed ABI from abiParser
+ * @param {String} contractName - Name of the contract (default: SmartContract)
  * @returns {Object} OpenAPI specification
  */
 function generateOpenApiSpec(parsedAbi, contractName = 'SmartContract') {
-  // Create base OpenAPI structure
   const openApiSpec = {
     openapi: '3.0.0',
     info: {
@@ -25,38 +26,32 @@ function generateOpenApiSpec(parsedAbi, contractName = 'SmartContract') {
     }
   };
 
-  // Add function paths
+  // Process functions to add paths and schemas
   parsedAbi.functions.forEach(func => {
     const pathKey = `/contract/${func.name}`;
-    
-    // Create path object if it doesn't exist
     if (!openApiSpec.paths[pathKey]) {
       openApiSpec.paths[pathKey] = {};
     }
-    
-    // Add operation (GET or POST)
     const operation = createOperationObject(func);
     openApiSpec.paths[pathKey][func.httpMethod.toLowerCase()] = operation;
-    
-    // Add function input and output schemas to components
+
     if (func.inputs.length > 0) {
       const requestSchemaName = `${func.name}Request`;
       openApiSpec.components.schemas[requestSchemaName] = createInputSchema(func);
     }
-    
     if (func.outputs.length > 0) {
       const responseSchemaName = `${func.name}Response`;
       openApiSpec.components.schemas[responseSchemaName] = createOutputSchema(func);
     }
   });
 
-  // Add event schemas
+  // Process events to add schemas
   parsedAbi.events.forEach(event => {
     const schemaName = `${event.name}Event`;
     openApiSpec.components.schemas[schemaName] = createEventSchema(event);
   });
 
-  // Add error schemas
+  // Process errors to add schemas
   parsedAbi.errors.forEach(error => {
     const schemaName = `${error.name}Error`;
     openApiSpec.components.schemas[schemaName] = createErrorSchema(error);
@@ -89,18 +84,16 @@ function createOperationObject(func) {
     }
   };
 
-  // Add parameters/request body based on HTTP method
+  // For GET requests, map inputs to query parameters; for others, use request body.
   if (func.httpMethod === 'GET' && func.inputs.length > 0) {
-    // For GET requests, inputs become query parameters
     operation.parameters = func.inputs.map(input => ({
       name: input.name || `param${func.inputs.indexOf(input)}`,
       in: 'query',
       description: `Function parameter: ${input.type}`,
       required: true,
-      schema: convertSolidityTypeToJsonSchema(input.type, input.components)
+      schema: generateEnhancedJsonSchema(input.type, input.components)
     }));
   } else if (func.inputs.length > 0) {
-    // For POST requests, inputs become request body
     operation.requestBody = {
       content: {
         'application/json': {
@@ -113,7 +106,6 @@ function createOperationObject(func) {
     };
   }
 
-  // Add response schema if function has outputs
   if (func.outputs.length > 0) {
     operation.responses['200'].content = {
       'application/json': {
@@ -128,7 +120,7 @@ function createOperationObject(func) {
 }
 
 /**
- * Create a JSON schema for function inputs
+ * Create a JSON schema for function inputs.
  * @param {Object} func - Parsed function from ABI
  * @returns {Object} JSON schema for inputs
  */
@@ -136,9 +128,9 @@ function createInputSchema(func) {
   const properties = {};
   const required = [];
 
-  func.inputs.forEach(input => {
-    const paramName = input.name || `param${func.inputs.indexOf(input)}`;
-    properties[paramName] = convertSolidityTypeToJsonSchema(input.type, input.components);
+  func.inputs.forEach((input, index) => {
+    const paramName = input.name || `param${index}`;
+    properties[paramName] = generateEnhancedJsonSchema(input.type, input.components);
     required.push(paramName);
   });
 
@@ -150,22 +142,20 @@ function createInputSchema(func) {
 }
 
 /**
- * Create a JSON schema for function outputs
+ * Create a JSON schema for function outputs.
  * @param {Object} func - Parsed function from ABI
  * @returns {Object} JSON schema for outputs
  */
 function createOutputSchema(func) {
-  // If there's only one output and it doesn't have a name, we return it directly
+  // If only one unnamed output, return its schema directly.
   if (func.outputs.length === 1 && !func.outputs[0].name) {
-    return convertSolidityTypeToJsonSchema(func.outputs[0].type, func.outputs[0].components);
+    return generateEnhancedJsonSchema(func.outputs[0].type, func.outputs[0].components);
   }
 
-  // Otherwise, create an object with named outputs
   const properties = {};
-  
-  func.outputs.forEach(output => {
-    const paramName = output.name || `return${func.outputs.indexOf(output)}`;
-    properties[paramName] = convertSolidityTypeToJsonSchema(output.type, output.components);
+  func.outputs.forEach((output, index) => {
+    const paramName = output.name || `return${index}`;
+    properties[paramName] = generateEnhancedJsonSchema(output.type, output.components);
   });
 
   return {
@@ -175,21 +165,19 @@ function createOutputSchema(func) {
 }
 
 /**
- * Create a JSON schema for events
+ * Create a JSON schema for events.
  * @param {Object} event - Parsed event from ABI
  * @returns {Object} JSON schema for the event
  */
 function createEventSchema(event) {
   const properties = {};
-  
-  event.inputs.forEach(input => {
-    const paramName = input.name || `param${event.inputs.indexOf(input)}`;
+  event.inputs.forEach((input, index) => {
+    const paramName = input.name || `param${index}`;
     properties[paramName] = {
-      ...convertSolidityTypeToJsonSchema(input.type, input.components),
+      ...generateEnhancedJsonSchema(input.type, input.components),
       description: input.indexed ? 'Indexed parameter (used in event filters)' : 'Non-indexed parameter'
     };
   });
-
   return {
     type: 'object',
     properties,
@@ -198,18 +186,16 @@ function createEventSchema(event) {
 }
 
 /**
- * Create a JSON schema for errors
+ * Create a JSON schema for errors.
  * @param {Object} error - Parsed error from ABI
  * @returns {Object} JSON schema for the error
  */
 function createErrorSchema(error) {
   const properties = {};
-  
-  error.inputs.forEach(input => {
-    const paramName = input.name || `param${error.inputs.indexOf(input)}`;
-    properties[paramName] = convertSolidityTypeToJsonSchema(input.type, input.components);
+  error.inputs.forEach((input, index) => {
+    const paramName = input.name || `param${index}`;
+    properties[paramName] = generateEnhancedJsonSchema(input.type, input.components);
   });
-
   return {
     type: 'object',
     properties,
@@ -218,9 +204,48 @@ function createErrorSchema(error) {
 }
 
 /**
- * Capitalize the first letter of a string
+ * Generate an enhanced JSON schema for complex and nested Solidity types,
+ * including arrays and tuple (struct) types.
+ * @param {String} solType - Solidity type string
+ * @param {Array} components - Components for tuple types
+ * @returns {Object} JSON schema
+ */
+function generateEnhancedJsonSchema(solType, components) {
+  // Handle tuple types (structs) with components
+  if (solType === 'tuple') {
+    const schema = {
+      type: 'object',
+      properties: {},
+      required: []
+    };
+    if (components && Array.isArray(components)) {
+      components.forEach((comp, index) => {
+        const compName = comp.name || `field${index}`;
+        schema.properties[compName] = generateEnhancedJsonSchema(comp.type, comp.components);
+        schema.required.push(compName);
+      });
+    }
+    return schema;
+  }
+
+  // Handle dynamic array types (e.g., uint256[], tuple[])
+  const arrayMatch = solType.match(/(.*)\[\]$/);
+  if (arrayMatch) {
+    const baseType = arrayMatch[1];
+    return {
+      type: 'array',
+      items: generateEnhancedJsonSchema(baseType, components)
+    };
+  }
+
+  // Fallback: use the base conversion utility for simple types
+  return convertSolidityTypeToJsonSchema(solType, components);
+}
+
+/**
+ * Capitalize the first letter of a string.
  * @param {String} str - Input string
- * @returns {String} String with first letter capitalized
+ * @returns {String} String with the first letter capitalized
  */
 function capitalizeFirstLetter(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);

@@ -71,11 +71,27 @@ label {
     background-color: #f0f0f0 !important;
     color: #000 !important;
     border: 1px solid #000 !important;
-    padding: 0.5rem !important;
+    padding: 1rem !important;
     min-height: 180px !important;
     overflow: auto !important;
     font-family: monospace !important;
     white-space: pre-wrap !important;
+    margin: 0.5rem 0 !important;
+    max-height: 400px !important;
+}
+
+#resultOutput::-webkit-scrollbar {
+    width: 12px !important;
+}
+
+#resultOutput::-webkit-scrollbar-track {
+    background: #f8f8f8 !important;
+}
+
+#resultOutput::-webkit-scrollbar-thumb {
+    background-color: #000 !important;
+    border: 3px solid #f8f8f8 !important;
+    border-radius: 6px !important;
 }
 
 /* Button styling */

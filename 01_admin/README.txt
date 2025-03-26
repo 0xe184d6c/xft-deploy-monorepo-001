@@ -23,3 +23,27 @@ src/api/
 routes
 middleware
 services
+
+
+
+
+Parse ABI JSON:
+Extract function definitions
+Identify view/pure vs state-changing functions
+Capture input/output parameters and types
+Map to REST endpoints:
+View functions -> GET endpoints
+State-changing -> POST endpoints
+Events -> Webhook endpoints
+Parameters become request/response schema
+Generate OpenAPI/Swagger:
+Paths from functions
+Components from types
+Authentication from roles
+Error responses from reverts
+Create API routes:
+Map GET routes to contract reads
+Map POST routes to contract writes
+Add validation middleware
+Handle gas/transaction details
+The ABI essentially becomes the source of truth for the entire API structure.

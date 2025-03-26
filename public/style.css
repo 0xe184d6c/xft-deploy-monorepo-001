@@ -29,6 +29,7 @@ body {
   border-right: 2px solid #000;
   min-height: 100vh;
   padding: 1rem;
+  background-color: #f5f5f5;
 }
 .sidenav h4 {
   margin-bottom: 1rem;

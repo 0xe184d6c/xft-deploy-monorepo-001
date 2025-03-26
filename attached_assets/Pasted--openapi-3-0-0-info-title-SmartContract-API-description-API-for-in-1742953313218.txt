@@ -1,0 +1,324 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "SmartContract API",
+    "description": "API for interacting with the SmartContract smart contract",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/contract/BLOCKLIST_ROLE": {
+      "get": {
+        "summary": "Call the BLOCKLIST_ROLE function",
+        "description": "Calls the 'BLOCKLIST_ROLE' function on the smart contract (view)",
+        "operationId": "callBLOCKLIST_ROLE",
+        "tags": [
+          "Contract Functions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BLOCKLIST_ROLEResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/contract/BURNER_ROLE": {
+      "get": {
+        "summary": "Call the BURNER_ROLE function",
+        "description": "Calls the 'BURNER_ROLE' function on the smart contract (view)",
+        "operationId": "callBURNER_ROLE",
+        "tags": [
+          "Contract Functions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BURNER_ROLEResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/contract/DEFAULT_ADMIN_ROLE": {
+      "get": {
+        "summary": "Call the DEFAULT_ADMIN_ROLE function",
+        "description": "Calls the 'DEFAULT_ADMIN_ROLE' function on the smart contract (view)",
+        "operationId": "callDEFAULT_ADMIN_ROLE",
+        "tags": [
+          "Contract Functions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DEFAULT_ADMIN_ROLEResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/contract/DOMAIN_SEPARATOR": {
+      "get": {
+        "summary": "Call the DOMAIN_SEPARATOR function",
+        "description": "Calls the 'DOMAIN_SEPARATOR' function on the smart contract (view)",
+        "operationId": "callDOMAIN_SEPARATOR",
+        "tags": [
+          "Contract Functions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DOMAIN_SEPARATORResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/contract/MINTER_ROLE": {
+      "get": {
+        "summary": "Call the MINTER_ROLE function",
+        "description": "Calls the 'MINTER_ROLE' function on the smart contract (view)",
+        "operationId": "callMINTER_ROLE",
+        "tags": [
+          "Contract Functions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MINTER_ROLEResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/contract/ORACLE_ROLE": {
+      "get": {
+        "summary": "Call the ORACLE_ROLE function",
+        "description": "Calls the 'ORACLE_ROLE' function on the smart contract (view)",
+        "operationId": "callORACLE_ROLE",
+        "tags": [
+          "Contract Functions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ORACLE_ROLEResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/contract/PAUSE_ROLE": {
+      "get": {
+        "summary": "Call the PAUSE_ROLE function",
+        "description": "Calls the 'PAUSE_ROLE' function on the smart contract (view)",
+        "operationId": "callPAUSE_ROLE",
+        "tags": [
+          "Contract Functions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PAUSE_ROLEResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/contract/UPGRADE_ROLE": {
+      "get": {
+        "summary": "Call the UPGRADE_ROLE function",
+        "description": "Calls the 'UPGRADE_ROLE' function on the smart contract (view)",
+        "operationId": "callUPGRADE_ROLE",
+        "tags": [
+          "Contract Functions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UPGRADE_ROLEResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/contract/addRewardMultiplier": {
+      "post": {
+        "summary": "Call the addRewardMultiplier function",
+        "description": "Calls the 'addRewardMultiplier' function on the smart contract (nonpayable)",
+        "operationId": "callAddRewardMultiplier",
+        "tags": [
+          "Contract Functions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/addRewardMultiplierRequest"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/contract/allowance": {
+      "get": {
+        "summary": "Call the allowance function",
+        "description": "Calls the 'allowance' function on the smart contract (view)",
+        "operationId": "callAllowance",
+        "tags": [
+          "Contract Functions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/allowanceResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "query",
+            "description": "Function parameter: address",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Ethereum address (40 hex characters prefixed with 0x)",
+              "pattern": "^0x[a-fA-F0-9]{40}$"
+            }
+          },
+          {
+            "name": "spender",
+            "in": "query",
+            "description": "Function parameter: address",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Ethereum address (40 hex characters prefixed with 0x)",
+              "pattern": "^0x[a-fA-F0-9]{40}$"
+            }
+          }
+        ]
+      }
+    },
+    "/contract/approve": {
+      "post": {
+        "summary": "Call the approve function",
+        "description": "Calls the 'approve' function on the smart contract (nonpayable)",
+        "operationId": "callApprove",
+        "tags": [
+          "Contract Functions"
+        ],
+        "responses": {

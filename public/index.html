@@ -11,14 +11,16 @@
     <div class="container">
         <header class="text-start my-3">
             <h1>ABI to OpenAPI</h1>
-            <a href="docs.html" class="btn btn-sm btn-outline-secondary">Docs</a>
+            <div>
+                <a href="/docs" class="btn btn-sm btn-outline-secondary">API Docs</a>
+            </div>
         </header>
         
         <main>
             <div class="card mb-3">
                 <div class="card-body">
                     <div class="mb-3">
-                        <label for="abiInput">ABI JSON:</label>
+                        <label for="abiInput">JSON:</label>
                         <textarea class="form-control" id="abiInput" rows="8" placeholder='[{"inputs": [],"name": "totalSupply","outputs": [{"internalType": "uint256","name": "","type": "uint256"}],"stateMutability": "view","type": "function"}]'></textarea>
                     </div>
                     
@@ -34,10 +36,6 @@
                 </div>
             </div>
         </main>
-        
-        <footer class="text-start py-2">
-            <p>© ABI to OpenAPI Converter</p>
-        </footer>
     </div>
     <script src="script.js"></script>
 </body>

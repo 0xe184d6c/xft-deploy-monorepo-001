@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
       resultOutput.textContent = 'Converting...';
       
       // Send the ABI to the server
-      const response = await fetch('/generateSpec', {
+      const response = await fetch('/api/generateSpec', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -1,14 +1,18 @@
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
-const routes = require('./routes');
 
+// Import core modules
+const abiParser = require('./src/abiParser');
+const apiGenerator = require('./src/apiGenerator');
+const validators = require('./src/validators');
+const routes = require('./src/routes');
+
+// Create Express application
 const app = express();
-const PORT = process.env.PORT || 8000;
 
-// Increase JSON payload limit and add error handling
+// Configure middleware
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -22,7 +26,9 @@ app.use((req, res, next) => {
 // Request timeout handler
 app.use((req, res, next) => {
   req.setTimeout(30000, () => {
-    res.status(408).json({ error: true, message: 'Request timeout' });
+    const error = new Error('Request timeout');
+    error.statusCode = 408;
+    next(error);
   });
   next();
 });
@@ -30,30 +36,33 @@ app.use((req, res, next) => {
 // Register routes
 app.use('/', routes);
 
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ error: true, message: 'Route not found' });
+// 404 handler for routes that don't exist
+app.use((req, res, next) => {
+  const error = new Error('Not Found');
+  error.statusCode = 404;
+  next(error);
 });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error('Server error:', err);
+  const statusCode = err.statusCode || 500;
+  const message = err.message || 'Internal Server Error';
   
-  // Handle body-parser errors
-  if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
-    return res.status(400).json({ 
-      error: true, 
-      message: 'Invalid JSON payload',
-      details: err.message 
-    });
+  console.error(`Error: ${statusCode} - ${message}`);
+  if (err.stack) {
+    console.error(err.stack);
   }
-
-  res.status(500).json({
-    error: true,
-    message: 'Internal server error',
-    details: process.env.NODE_ENV === 'development' ? err.message : 'An unexpected error occurred'
+  
+  res.status(statusCode).json({
+    error: {
+      status: statusCode,
+      message: message
+    }
   });
 });
+
+// Server configuration
+const PORT = process.env.PORT || 8000;
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
@@ -64,8 +73,9 @@ process.on('SIGTERM', () => {
   });
 });
 
+// Start server
 const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`ABI to OpenAPI converter service running on http://0.0.0.0:${PORT}`);
 });
 
-module.exports = app;
+module.exports = server;

@@ -1,0 +1,11 @@
+REPO STRUCTURE
+index.js: Entry point; Express server & middleware setup
+routes.js: Route registration; POST /generateSpec endpoint
+abiParser.js: Extracts function definitions, parameters, types from ABI JSON
+apiGenerator.js: Maps ABI functions to OpenAPI paths/components
+validators.js: Validates ABI JSON structure
+utils.js: Helpers (Solidity → JSON Schema conversion, recursive array handling)
+package.json: Dependencies & scripts
+public/index.html: Hello World
+public/style.css: Hello World
+public/script.css: Hello World

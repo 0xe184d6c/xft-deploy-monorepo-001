@@ -113,7 +113,7 @@ body {
 }
 #endpointsList h3,
 #eventsList h3 {
-  margin-bottom: 1rem;
+  margin: 2rem 0 1rem;
 }
 
 /* Actions container */

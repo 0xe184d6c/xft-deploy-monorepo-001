@@ -12,6 +12,9 @@ const routes = require('./src/routes');
 // Create Express application
 const app = express();
 
+// Trust proxy for rate limiting behind reverse proxy
+app.set('trust proxy', 1);
+
 const rateLimit = require('express-rate-limit');
 
 // Configure middleware
@@ -73,7 +76,7 @@ app.use((err, req, res, next) => {
 });
 
 // Server configuration
-let PORT = process.env.PORT || 8000;
+let PORT = process.env.PORT || 5000;
 let maxRetries = 3;
 let retryCount = 0;
 

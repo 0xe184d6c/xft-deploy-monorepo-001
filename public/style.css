@@ -123,3 +123,7 @@ footer {
     font-size: 0.8rem !important;
 }
 
+/* Endpoint list styling */
+.endpoint-list {
+    margin-top: 1rem !important;
+}

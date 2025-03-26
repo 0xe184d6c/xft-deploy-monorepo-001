@@ -5,16 +5,16 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   console.log('ABI to OpenAPI Converter loaded');
-  
+
   const abiInput = document.getElementById('abiInput');
   const convertButton = document.getElementById('convertButton');
   const resultOutput = document.getElementById('resultOutput');
   const copyButton = document.getElementById('copyButton');
   const downloadButton = document.getElementById('downloadButton');
-  
+
   downloadButton.disabled = true;
   copyButton.disabled = true;
-  
+
   // Convert button click handler
   convertButton.addEventListener('click', async () => {
     try {
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resultOutput.textContent = 'Please enter an ABI JSON';
         return;
       }
-      
+
       // Parse the ABI to validate it's proper JSON
       let abiJson;
       try {
@@ -33,11 +33,11 @@ document.addEventListener('DOMContentLoaded', () => {
         resultOutput.textContent = 'Invalid JSON: ' + e.message;
         return;
       }
-      
+
       // Update UI to show loading
       convertButton.disabled = true;
       resultOutput.textContent = 'Converting...';
-      
+
       // Send the ABI to the server
       const response = await fetch('/api/generateSpec', {
         method: 'POST',
@@ -46,28 +46,45 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         body: abiJsonText
       });
-      
+
       // Handle the response
       if (!response.ok) {
         throw new Error(`Server error: ${response.status} ${response.statusText}`);
       }
-      
+
       // Get the OpenAPI spec
       const openApiSpec = await response.json();
-      
+
       const specString = JSON.stringify(openApiSpec, null, 2);
       resultOutput.textContent = specString;
 
       // Enable buttons after successful conversion
       downloadButton.disabled = false;
       copyButton.disabled = false;
+
+      // Display endpoints list
+      const endpointsList = document.getElementById('endpointsList');
+      endpointsList.innerHTML = '';
+      endpointsList.classList.remove('d-none');
+
+      const ul = document.createElement('ul');
+      Object.entries(openApiSpec.paths).forEach(([path, methods]) => {
+        Object.entries(methods).forEach(([method, _]) => {
+          const li = document.createElement('li');
+          const code = document.createElement('code');
+          code.textContent = `${method.toUpperCase()} ${path}`;
+          li.appendChild(code);
+          ul.appendChild(li);
+        });
+      });
+      endpointsList.appendChild(ul);
     } catch (error) {
       resultOutput.textContent = 'Error: ' + error.message;
     } finally {
       convertButton.disabled = false;
     }
   });
-  
+
   // Copy button click handler
   copyButton.addEventListener('click', () => {
     const textToCopy = resultOutput.textContent;
